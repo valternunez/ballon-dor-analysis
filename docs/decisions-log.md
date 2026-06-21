@@ -487,3 +487,11 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
   ~15:00 UTC (EU-afternoon/US-morning overlap, global audience), strong 2-line hook, ~1,700 chars,
   link in the FIRST COMMENT (body links cut reach ~60%), 4 hashtags, work the first 60 min. Balanced
   finding-led copy + first-comment text + alt hooks + a PDF-carousel fallback if it underperforms.
+
+### 2026-06-21 (addendum) — Figure-5 legend, publish date, emoji-free post
+- Figure 5 labels still collided in the *interactive* report at its real (~700–760px) column width
+  (the on-line splay only held at ~900px). Replaced on-line labels with a colour-keyed legend in the
+  empty upper-left (pageviews ~0 pre-2023) — robust at any width (verified 680/760/900 + PNG).
+- Publish date set to **2026-06-24** (upload day): `report/ballon-dor.qmd` `date:` + JSON-LD
+  `datePublished` in `site/index.html`.
+- LinkedIn post: removed all emojis per request (`docs/linkedin-post.md`).

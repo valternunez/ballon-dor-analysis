@@ -2,7 +2,7 @@
 title: "The Ballon d'Or Rewards Goals. It Also Rewards Stories."
 subtitle: "Can you tell them apart? Mostly no — and that's the interesting part."
 author: "Valter Antonio"
-date: today
+date: "2026-06-24"
 format:
   html:
     theme: cosmo

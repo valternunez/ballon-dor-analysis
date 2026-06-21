@@ -253,17 +253,17 @@ def fig_spike(player: str = "Rodri", year: int = 2024):
     w = load_windows().loc[year]
     # datetimes -> numpy / ISO strings: kaleido (PNG export) can't JSON-serialize pandas Timestamps.
     fig = go.Figure(go.Scatter(x=s["date"].to_numpy(), y=s["views"], mode="lines", name="views"))
-    # shortlist-cut and ceremony are only days apart, so a shared "top" anchor collides the labels.
-    # Draw the lines, then splay the labels to opposite sides so they never overlap, however close
-    # the dates are (window-start & cut extend left, ceremony extends right).
-    markers = [(w["perf_start"], "window start", "green", "right"),
-               (w["hype_cut"], "shortlist cut", "orange", "right"),
-               (w["ceremony_date"], "ceremony", "red", "left")]
-    for when, label, color, xanchor in markers:
+    # Markers cluster on the right (2023-24), shortlist-cut & ceremony days apart, so on-line top
+    # labels collide at narrow widths. Leave the lines unlabelled and put a colour-keyed legend in
+    # the empty upper-left (pageviews ~0 there pre-2023) instead — robust at any width.
+    markers = [(w["perf_start"], "window start", "green"),
+               (w["hype_cut"], "shortlist cut", "orange"),
+               (w["ceremony_date"], "ceremony", "red")]
+    for i, (when, label, color) in enumerate(markers):
         fig.add_vline(x=when.isoformat(), line_dash="dash", line_color=color)
-        fig.add_annotation(x=when.isoformat(), y=1.0, yref="paper", yanchor="bottom",
-                           xanchor=xanchor, text=label, showarrow=False,
-                           font={"color": color, "size": 11})
+        fig.add_annotation(xref="paper", yref="paper", x=0.015, y=0.97 - i * 0.11,
+                           xanchor="left", yanchor="top", text=f"╌ {label}", showarrow=False,
+                           font={"color": color, "size": 12})
     fig.update_layout(template=_TEMPLATE, height=360, margin={"t": 50},
                       title=f"Attention is event-driven — {player} daily pageviews ({year} award)",
                       xaxis_title="", yaxis_title="all-language daily views")

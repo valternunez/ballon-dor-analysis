@@ -12,17 +12,17 @@ Every year we accuse the Ballon d'Or of rewarding the story, not the season.
 
 So I built a model to test it — and the bias isn't where everyone thinks.
 
-⚽ The question
+The question
 Not "hype vs merit" — they're hopelessly tangled (players get talked about because they're good). The sharper, fairer question: does attention still predict the award AFTER you control for what a player actually did and how their team performed?
 
-📊 How
-→ Merit, graded per position from match-level data: goals & chance-creation for attackers, tackles & interceptions for midfielders, goals prevented for keepers, duels & ball-progression for defenders.
-→ A "Hype Score": how much the world actually watched a player (Wikipedia views, every language) minus what their performance, fame and team success predict. The gap is attention they didn't earn on the pitch.
+How it works
+Merit, graded per position from match-level data: goals and chance-creation for attackers, tackles and interceptions for midfielders, goals prevented for keepers, duels and ball-progression for defenders.
+Then a "Hype Score": how much the world actually watched a player (Wikipedia views, every language) minus what their performance, fame and team success predict. The gap is attention they didn't earn on the pitch.
 
-🔑 The finding
+The finding
 The award is really two decisions: making the 30-player shortlist, then placing in the vote.
 
-Narrative's pull on getting NOTICED is ~5× its pull on who actually WINS. One extra standard deviation of buzz roughly doubles your odds of being shortlisted — but barely moves the final ranking.
+Narrative's pull on getting NOTICED is about five times its pull on who actually WINS. One extra standard deviation of buzz roughly doubles your odds of being shortlisted — but barely moves the final ranking.
 
 So the bias isn't in who wins. It's in who gets considered.
 
@@ -30,7 +30,7 @@ So the bias isn't in who wins. It's in who gets considered.
 
 The honest caveats are in there too: 7 award years is a small sample, and it leans on one attention proxy. Fully open-source — Python, Bayesian models, leakage-safe windows, and an interactive site where you can explore every player and year.
 
-Curious what football people and data people make of it. 👇
+Curious what football people and data people make of it.
 
 #DataScience #Football #Statistics #BallonDor
 ```
