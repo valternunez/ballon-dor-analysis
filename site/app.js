@@ -179,13 +179,21 @@
       const pos = r.h_perp >= 0, w = Math.abs(r.h_perp) * F;
       const tag = DESC[`${r.player}|${r.year}`] || (pos ? "narrative excess" : "under the radar");
       const fill = `left:${pos ? 50 : 50 - w}%;width:${w}%;background:${pos ? HOT : COOL}`;
-      const lab = pos ? `left:${50 + w}%;text-align:left` : `right:${50 + w}%;text-align:right`;
+      // place the value just past the bar end — but flip it *inside* near the edge so it never
+      // overflows the screen (the longest bars otherwise push the number off the right).
+      const end = pos ? 50 + w : 50 - w;          // fill's outer edge, % of bar
+      let lab, inside = false;
+      if (pos) {
+        if (end > 86) { inside = true; lab = `right:${(100 - end).toFixed(1)}%;text-align:right`; }
+        else lab = `left:${end.toFixed(1)}%;text-align:left`;
+      } else if (end < 14) { inside = true; lab = `left:${end.toFixed(1)}%;text-align:left`; }
+      else lab = `right:${(100 - end).toFixed(1)}%;text-align:right`;
       return (
         `<div class="lb-row" data-tip="<b>${esc(r.player)}</b> · ${r.year}<br>Hype Score ${sgn(r.h_perp)} · finished #${r.rank}">
           <div class="lb-name"><div class="nm">${esc(r.player)}</div><div class="tag">${r.year} · ${esc(tag)}</div></div>
           <div class="lb-bar"><div class="lb-zero"></div>
             <div class="lb-fill" style="${fill}"></div>
-            <div class="lb-val" style="${lab}">${sgn(r.h_perp)}</div></div>
+            <div class="lb-val${inside ? " lb-val-in" : ""}" style="${lab}">${sgn(r.h_perp)}</div></div>
         </div>`);
     }).join("");
     host.querySelectorAll(".lb-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
