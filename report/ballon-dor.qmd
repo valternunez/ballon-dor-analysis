@@ -1,7 +1,7 @@
 ---
 title: "The Ballon d'Or Rewards Goals. It Also Rewards Stories."
 subtitle: "Can you tell them apart? Mostly no — and that's the interesting part."
-author: "Valter Antonio"
+author: "Valter Nunez"
 date: "2026-06-24"
 format:
   html:
@@ -26,6 +26,15 @@ execute:
 
 ```{python}
 # | label: setup
+# | output: false
+# Silence library import chatter (soccerdata / arviz / pytensor "g++ not available") so it doesn't
+# leak into the rendered report — these are logged to stderr, which echo/warning options don't catch.
+import logging
+import warnings
+
+warnings.filterwarnings("ignore")
+logging.disable(logging.WARNING)
+
 from bdor import report
 
 stats = report.headline_stats()

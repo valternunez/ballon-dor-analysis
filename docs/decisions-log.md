@@ -495,3 +495,6 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
 - Publish date set to **2026-06-24** (upload day): `report/ballon-dor.qmd` `date:` + JSON-LD
   `datePublished` in `site/index.html`.
 - LinkedIn post: removed all emojis per request (`docs/linkedin-post.md`).
+- Report render leaked library import logging (soccerdata/arviz/pytensor "g++ not available") into the
+  HTML — `echo`/`warning` options don't catch stderr logging. Fixed: `logging.disable(WARNING)` +
+  `warnings.filterwarnings("ignore")` + `#| output: false` in the setup cell. Author → "Valter Nunez".
