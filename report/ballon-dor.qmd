@@ -1,0 +1,239 @@
+---
+title: "The Ballon d'Or Rewards Goals. It Also Rewards Stories."
+subtitle: "Can you tell them apart? Mostly no — and that's the interesting part."
+author: "Valter Antonio"
+date: today
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    embed-resources: true
+    fig-align: center
+    code-tools: false
+jupyter: bdor
+execute:
+  echo: false
+  warning: false
+---
+
+```{python}
+# | label: setup
+from bdor import report
+
+stats = report.headline_stats()
+A, B = stats["gate_a"], stats["gate_b"]
+E = report.effect_sizes(stats)        # odds ratios + Gate-A predicted-probability effect
+RX = report.robustness_extras()       # bootstrap (generated-regressor) + Heckman rows
+```
+
+Every December, football argues about one trophy. Did the right player win the Ballon d'Or? The
+complaint is always some version of the same thing: *that was a story, not a season.* The winner had
+a narrative — a World Cup, a transfer saga, a fairy-tale rise — and the voters fell for it.
+
+It's a satisfying accusation. It's also almost impossible to test, because **hype and merit are
+hopelessly tangled**: players get talked about *because* they produce. So this isn't a "hype vs.
+merit" exposé. It's a narrower, more honest question:
+
+> **Does media attention have *independent* explanatory power for the Ballon d'Or — after you control
+> for what a player actually did on the pitch and how their team performed?**
+
+If attention still predicts the award once production and team success are held constant, *that's* the
+bias. If it doesn't, then "they're inseparable" is itself the answer. Here's what seven years of data
+(2018–2025, the years with clean expected-goals coverage) say.
+
+## How you measure a "story"
+
+Two ingredients, both built to be conservative.
+
+**Merit.** For every attacking player–season I standardize the expected and actual output — non-penalty
+xG, expected assists, buildup involvement, goals, assists — *within position and season*, so "good"
+means "good for your role this year." Two PCA axes summarize it. The point of being generous here is
+that the more merit absorbs, the more credible whatever's left over.
+
+**Attention beyond merit — "H⊥".** I take each player's all-language Wikipedia pageviews over the
+qualifying window (cut *before* the shortlist is announced, so the award can't leak backwards into the
+predictor), and I strip out the parts of attention that *aren't* narrative: baseline fame (Messi pulls
+10× the traffic of a full-back every day), performance-driven attention, and the Champions-League /
+trophy bump. **What remains — the residual — is H⊥: attention a player got that their merit and team
+don't explain.** A regression's leftovers, turned into a measure of buzz. (On the companion
+[scrollytelling site](../site/index.html) this same quantity is called the **Hype Score** — same number,
+friendlier name.)
+
+A high H⊥ doesn't mean a player is bad. It means they were talked about *more than their on-pitch case
+warrants*. A negative H⊥ means the opposite: a great season nobody made a fuss about.
+
+One honest qualifier, up front: H⊥ is attention beyond the merit I can *measure*. For roles the public
+data captures well — attackers — that residual really is buzz. For roles it captures poorly — a
+deep-lying playmaker, a positional center-back whose value is in the actions he *prevents* — some of the
+residual may be genuine on-pitch value the box score misses, read as narrative because nothing in the
+data accounts for it. I flag those cases where they appear rather than pretend the merit index sees
+everything.
+
+```{python}
+# | label: fig-leaderboard
+# | fig-cap: "H⊥ among Ballon d'Or finishers. Red = more attention than merit explains; blue = elite production that flew under the radar."
+# | fig-alt: "Diverging horizontal bar chart ranking finishers by H⊥: wonderkids and breakout stories at the positive end, under-the-radar elite producers (Lewandowski, De Bruyne, Jorginho) at the negative end."
+report.fig_leaderboard()
+```
+
+The leaderboard passes the smell test immediately. The over-attended end is **wonderkids and
+breakout stories** — a 16-year-old Euro-winning Lamine Yamal, Kvaratskhelia's debut-season explosion,
+teenage Pedri, a €50m Désiré Doué. The under-the-radar end is **elite producers who never got the
+volume their numbers deserved** — Lewandowski, a peak-years De Bruyne, and Jorginho, who won the
+Champions League *and* the Euros in 2021 and somehow did it quietly.
+
+## The finding: the bias is in who gets *considered*
+
+The award is really two decisions. First, a 30-man shortlist (**Gate A — do you get noticed?**). Then,
+a vote that ranks them (**Gate B — given you're in, do you finish higher?**). So I ask the H⊥ question
+*twice*, once at each gate, controlling for merit and team success both times.
+
+```{python}
+# | label: fig-two-gate
+# | fig-cap: "The H⊥ coefficient at each gate (94% credible interval). Both controlled for merit + team success."
+# | fig-alt: "Forest plot: H⊥'s coefficient is large and clearly positive at the nomination gate and small (interval near zero) at the placement gate."
+report.fig_two_gate()
+```
+
+This is the whole project in one chart.
+
+- **At the nomination gate, narrative matters a lot.** H⊥'s effect is large and certain
+  (`{python} f"{A['mean']:+.2f}"`, 94% interval `{python} f"[{A['lo']:.2f}, {A['hi']:.2f}]"`,
+  probability positive `{python} f"{A['p_pos']:.0%}"`). Being talked about *beyond what you did* makes
+  you meaningfully more likely to make the 30 — even after merit and team success are in the model.
+- **At the placement gate, it matters much less** (`{python} f"{B['mean']:+.2f}"`,
+  `{python} f"[{B['lo']:.2f}, {B['hi']:.2f}]"`). Once you're in the room, the vote is driven far more
+  by production and trophies; narrative adds only a modest nudge.
+
+**In plain numbers** (since log-odds aren't anyone's intuition): at equal merit and team success, a
+one-standard-deviation rise in Hype Score **roughly `{python} f"{E['gate_a_or']['or']:.1f}"`× the odds
+of being shortlisted** — about **+`{python} f"{E['gate_a_ame']['mean']:.0f}"` percentage points**,
+lifting a typical candidate from ~`{python} f"{E['gate_a_ame']['base_pct']:.0f}"`% to
+~`{python} f"{E['gate_a_ame']['base_pct'] + E['gate_a_ame']['mean']:.0f}"`%. For placement the same jump
+moves the odds only ~`{python} f"{E['gate_b_or']['or']:.2f}"`× (about
+`{python} f"+{(E['gate_b_or']['or'] - 1) * 100:.0f}"`%). On the shared per-SD log-odds scale that's the
+~`{python} f"{E['ratio']:.0f}"`× gap the chart shows — directional, since the two gates are different
+likelihoods (a yes/no shortlist vs a vote share).
+
+Going in, the working hypothesis was exactly this — and it landed. **The Ballon d'Or's attention bias
+isn't mostly in who *wins*. It's in who gets *considered*.** The gate the public never sees — the
+shortlist — is where the story does its work. Crucially, merit still dominates nomination; H⊥ piles on
+*top* of it (the two are orthogonal by construction), so this is genuine narrative lift, not merit
+wearing a disguise.
+
+## The cases everyone argues about
+
+```{python}
+# | label: tbl-cases
+# | tbl-cap: "Four contested years, by the numbers."
+cases = report.case_studies()
+cases = cases.rename(columns={
+    "player": "Player", "award_year": "Year", "label": "The story",
+    "rank": "Finish", "h_perp_pv": "H⊥", "merit_pc1": "Merit (PC1)"})
+cases[["Player", "Year", "Finish", "Merit (PC1)", "H⊥", "The story"]].round(2)
+```
+
+**Modrić, 2018.** The patron saint of "narrative wins." A fine season, a World Cup final — and the
+single highest narrative residual of any *winner* in the sample. The data agrees with the complaint —
+with one honest asterisk: Modrić is a deep-lying playmaker, exactly the role the merit index reads
+*least* well, so part of that residual may be value the box score can't see rather than pure story.
+
+**Lewandowski, 2019.** The mirror image, and a cleaner one: one of the highest *merit* scores in seven
+years — a relentless goalscorer — paired with a *negative* H⊥. Elite production, little fuss, 8th place.
+The underrated profile, quantified.
+
+**Messi, 2023 vs. Lewandowski, 2019.** The two have nearly identical elite merit — and opposite H⊥. Same
+production, opposite narrative. That contrast is the entire thesis in two dots:
+
+```{python}
+# | label: fig-scatter
+# | fig-cap: "Merit vs. attention among finishers (colour = H⊥). Two players, near-identical production, opposite buzz."
+# | fig-alt: "Scatter of finishers, merit on x and log attention on y, coloured by H⊥; Messi 2023 and Lewandowski 2019 are annotated at near-identical merit with opposite H⊥."
+report.fig_merit_vs_attention()
+```
+
+## Is it real, or an artifact?
+
+With a sample this small, one specification proves nothing. So I re-estimated the H⊥ effect under
+deliberately varied choices — dropping the Messi/Ronaldo duopoly, dropping breakout newcomers, leaving
+out each year in turn.
+
+```{python}
+# | label: fig-robustness
+# | fig-cap: "The H⊥ coefficient across specifications. Gate A barely moves; Gate B is smaller and leans partly on the duopoly."
+# | fig-alt: "Caterpillar plot faceted by gate: Gate A's H⊥ estimate clusters tightly away from zero across every specification; Gate B's is smaller with wider, lower intervals."
+report.fig_robustness()
+```
+
+The nomination effect is **rock-solid** — it sits in the same place across every cut, and no single
+year or pair of superstars drives it. The placement effect is stable but smaller, and leans partly on
+Messi and Ronaldo: drop them and its interval grazes zero. So the honest headline is the *nomination*
+result; the placement nudge is real but should be stated softly.
+
+Three further checks pile on. **Capping the calendar window at the ceremony date** (so not even a
+single post-ceremony match can sneak in) leaves both gates essentially unchanged (Gate A
+`{python} f"{RX['strict_a']['est']:+.2f}"`, Gate B `{python} f"{RX['strict_b']['est']:+.2f}"`). Because
+H⊥ is itself an *estimated* residual, I **bootstrapped the whole pipeline** — re-estimating H⊥ on
+resampled data and refitting both gates each time, so the intervals carry that first-stage uncertainty
+too — and Gate A stays far from zero (95% CI
+`{python} f"[{RX['bootstrap_a']['lo']:.2f}, {RX['bootstrap_a']['hi']:.2f}]"`) while Gate B stays positive
+(`{python} f"[{RX['bootstrap_b']['lo']:.2f}, {RX['bootstrap_b']['hi']:.2f}]"`). Finally, a **Heckman
+selection control** — modelling who gets nominated, then correcting the placement fit for it — keeps the
+placement effect the same sign (`{python} f"{RX['heckman_b']['est']:+.2f}"`), albeit with a wide interval
+that crosses zero. In honesty: with no clean exclusion restriction and this N, that last one is a
+sign check, not a clean correction (the two-gate design is the real answer to selection — the bias
+turned out to live at the gate we model head-on).
+
+One more check doubles as a demonstration of why the windowing matters. The attention window is
+deliberately cut *before* the ceremony. If you instead let it run *past* the ceremony — catching the
+winner-announcement pageview spike — the placement effect inflates, exactly as a leak should, while
+nomination (decided weeks earlier) doesn't budge. Attention is violently event-driven, which is
+exactly why the cut has to be disciplined:
+
+```{python}
+# | label: fig-spike
+# | fig-cap: "All-language daily pageviews for the 2024 winner (Rodri). The window ends at the shortlist cut — the big winner-announcement spike lands after it, and is excluded."
+# | fig-alt: "Daily pageview line for Rodri (2024) with window markers: a large spike sits at the ceremony, to the right of (after) the shortlist-cut line that ends the measurement window."
+report.fig_spike()
+```
+
+## What this is, and isn't
+
+A few honest limits:
+
+- **Small N.** Seven award years; this is an *interpretation*, not a prediction engine. The intervals
+  are wide on purpose.
+- **Merit by role, unevenly.** Attackers get the fullest merit (Understat production); midfielders a
+  ball-winning score, keepers a shot-stopping one, center-backs a tackle/aerial/passing one. So the
+  nomination test (Gate A) is attackers-only, while placement (Gate B) now includes defenders and
+  keepers. The honest gap: purely-positional center-backs (a Rúben Dias) still read low — great
+  positioning leaves *fewer* actions to count, and no public stat captures it — so part of their H⊥ may
+  be unmeasured value, not narrative.
+- **One attention proxy.** Wikipedia pageviews, all languages. A news-volume proxy (GDELT) is a
+  natural second opinion and is future work. Pageviews can also track a player's national-market size
+  or diaspora; baseline fame absorbs the steady part, but some residual market effect may survive.
+- **Selection at Gate B.** The placement model only sees players who were nominated; the principled
+  fix is a Heckman correction, named here rather than over-engineered.
+
+## So — goals or stories?
+
+Both, and you can mostly tell them apart — but not where the arguments usually happen. By the time the
+votes are counted, production and trophies are doing most of the work; the winner is rarely a pure
+confection. The bias lives one step earlier, in the quiet, invisible decision about **who even gets to
+be on the list**. Narrative's real power isn't making you win the Ballon d'Or. It's getting you into
+the room.
+
+::: {.callout-note collapse="true"}
+## Methods & reproducibility
+Spine: 2018, 2019, 2021–2025 (2020 cancelled; 2017 pre-xG). Performance from Understat; outcomes from
+the Wikipedia results tables; attention from the Wikimedia pageviews API summed across all language
+editions. Merit = within-position-season standardized production (PCA), built from **match-level data
+summed over each award year's official performance window** so calendar-regime years (2018/2019/2021)
+don't credit matches played after the ceremony; the season-aggregate defensive/keeper signals, which
+have no match logs, fall back to the most recent *completed* season. H⊥ = residual of
+log-window-attention on log-baseline + merit + club team-success, fit pool-wide. Outcome models are
+Bayesian (a Beta regression for vote share, a logistic for nomination, year partial-pooling, fit with
+nutpie); the robustness panel uses fast frequentist anchors that track the posteriors. Everything is
+cache-first and reproducible via `python run.py <stage>`.
+:::

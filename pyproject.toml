@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bdor"
+version = "0.1.0"
+description = "Ballon d'Or — Hype vs. Merit: does attention predict the award beyond on-pitch merit?"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "Valter Antonio" }]
+
+# Core = the data layer. Installs clean on 3.12 with no heavy/lagging deps.
+dependencies = [
+    "pandas>=2.2",
+    "pyarrow>=16",        # parquet cache
+    "requests>=2.31",     # pageviews API, GDELT DOC API, Wikidata SPARQL
+    "lxml>=5.2",          # pandas.read_html (awards scrape)
+    "soccerdata>=1.9",    # Understat pull: season + match-level stats, shot events, schedule
+    "tqdm>=4.66",         # pull progress bars
+    "unidecode>=1.3",     # accent-folding player names for join keys
+    "python-dateutil>=2.9",
+]
+
+[project.optional-dependencies]
+# Heavy Bayesian/ML stack — installed only when we reach the modeling stage.
+# Kept separate because PyMC/pytensor lag new Python releases (the reason we pin 3.12).
+model = [
+    "scikit-learn>=1.5",
+    "statsmodels>=0.14",
+    "shap>=0.46",
+    "pymc>=5.16",
+    "bambi>=0.14",
+    "arviz>=0.18",
+    "h5netcdf>=1.3",      # cache fitted InferenceData to NetCDF (Stage-B model objects)
+    "h5py>=3.11",         # h5netcdf backend
+    "nutpie>=0.13",       # numba-backed NUTS sampler (no C compiler needed on Windows)
+    "plotly>=5.22",
+    "altair>=5.3",
+]
+# Publish layer — the Quarto writeup. Quarto's python (.qmd) engine + static plotly export.
+# The Quarto CLI itself is a separate (non-pip) install.
+report = [
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "nbformat>=5.10",
+    "nbclient>=0.10",
+    "kaleido>=0.2",       # plotly -> static PNG export
+]
+# StatsBomb open data (free, no auth) — tournament squads for the Tier-2 pool's 3rd source.
+statsbomb = [
+    "statsbombpy>=1.11",
+]
+# Cross-league defensive stats (defensive merit). Only `pyreadr` is needed to rebuild — it reads
+# the free worldfootballR `.rds` (2017/18-2022/23); the two recent seasons are committed reference
+# CSVs. `kaggle` was a one-time tool to snapshot 2024/25 (and is NOT a rebuild dependency).
+fbref = [
+    "pyreadr>=0.5",
+]
+dev = [
+    "ruff>=0.5",
+    "pytest>=8.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,9 @@
+# Normalize line endings to LF in the repo (consistent diffs across OSes).
+* text=auto eol=lf
+
+# Binary assets — never normalize.
+*.woff2 binary
+*.png binary
+*.parquet binary
+*.nc binary
+*.rds binary

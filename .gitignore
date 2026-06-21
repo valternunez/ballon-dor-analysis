@@ -1,0 +1,32 @@
+# Cached / pulled data — reproducible from the pull modules, never committed.
+# (data/reference/ IS committed — see the negation below.)
+data/raw/*
+data/cache/*
+data/processed/*
+!data/raw/.gitkeep
+!data/cache/.gitkeep
+!data/processed/.gitkeep
+!data/reference/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Quarto / rendered HTML — regenerate via `quarto render` (the 26 MB self-contained report is not
+# committed). The public site's own source IS committed, and a stray FBref raw-data dump is not.
+.quarto/
+/_site/
+*.html
+!site/index.html
+
+# OS / editor
+.DS_Store
+Thumbs.db
