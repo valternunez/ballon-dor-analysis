@@ -7,6 +7,9 @@
   const D = window.BDOR;
   if (!D) { console.error("data.js missing"); return; }
 
+  // On phones/touch, drop chart tooltips entirely (they fight with scrolling); desktop keeps hover.
+  const MOBILE = window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
+
   const GOLD = "#c9a44c", HOT = "#d8693c", COOL = "#5f93c9", INK = "#ece6da",
         MUTED = "#a79d8b", FAINT = "#6f6757", NEUTRAL = "#6f6757", BG = "#0c0b09";
   const fmtN = n => Math.round(n).toLocaleString("en-US");
@@ -28,7 +31,14 @@
     tip.style.top = (y + 14) + "px";
   };
   const hideTip = () => { tip.style.opacity = 0; };
-  document.addEventListener("touchstart", hideTip, { passive: true });
+  if (!MOBILE) document.addEventListener("touchstart", hideTip, { passive: true });
+  // attach hover (always) + tap (desktop/non-touch only) tooltip to a DOM node
+  function bindTip(node, html) {
+    node.addEventListener("mousemove", e => showTip(html, e.clientX, e.clientY));
+    node.addEventListener("mouseleave", hideTip);
+    if (!MOBILE) node.addEventListener("touchstart",
+      e => { e.stopPropagation(); showTip(html, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  }
 
   // ---- curated editorial copy (matches the design) ----
   const DESC = {
@@ -48,7 +58,7 @@
   };
   const YEARS = [
     { year: "2018", best: "Lionel Messi", hype: "Luka Modrić", winner: "Luka Modrić", verdict: "The highest-narrative winner in the data — far more attention than his merit (20th in the field) explained — while Messi quietly had the best season. The complaint, confirmed." },
-    { year: "2019", best: "Robert Lewandowski", hype: "— (no inflation)", winner: "Lionel Messi", verdict: "Messi won among the very best by production, with only modest buzz. A clean one — no narrative needed." },
+    { year: "2019", best: "Robert Lewandowski", hype: "Virgil van Dijk", winner: "Lionel Messi", verdict: "No real inflation this year: even the loudest extra buzz — Van Dijk's, at a modest +0.92 — sat well behind the field's best seasons. Messi won among the very best by production. A clean one." },
     { year: "2021", best: "Robert Lewandowski", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "The textbook case. Lewandowski had the best season in the field — a record-breaking scorer — with almost no buzz, and finished second. The story edged the goals." },
     { year: "2022", best: "Kylian Mbappé", hype: "Karim Benzema", winner: "Karim Benzema", verdict: "Benzema took the vote on a Champions League run, while Mbappé out-produced everyone again. Earned, with a tailwind." },
     { year: "2023", best: "Lionel Messi", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "Best season, most votes, and plenty of buzz on the back of a World Cup. Hard to call this one a robbery." },
@@ -155,12 +165,7 @@
         INK, "background:rgba(232,222,202,0.16)", "width:15px;height:15px;background:var(--ink)") +
       `<div class="gate-axis"><span style="left:0">0</span><span style="left:47.6%;transform:translateX(-50%)">+0.5</span>` +
       `<span style="left:95.2%;transform:translateX(-50%)">+1.0</span><span style="right:0;color:var(--faint)">log-odds, per SD</span></div>`;
-    host.querySelectorAll(".gate-row").forEach(r => {
-      const t = r.getAttribute("data-tip");
-      r.addEventListener("mousemove", e => showTip(t, e.clientX, e.clientY));
-      r.addEventListener("mouseleave", hideTip);
-      r.addEventListener("touchstart", e => { e.stopPropagation(); showTip(t, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    });
+    host.querySelectorAll(".gate-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
   }
 
   // ---- leaderboard rows ----
@@ -183,12 +188,7 @@
             <div class="lb-val" style="${lab}">${sgn(r.h_perp)}</div></div>
         </div>`);
     }).join("");
-    host.querySelectorAll(".lb-row").forEach(r => {
-      const t = r.getAttribute("data-tip");
-      r.addEventListener("mousemove", e => showTip(t, e.clientX, e.clientY));
-      r.addEventListener("mouseleave", hideTip);
-      r.addEventListener("touchstart", e => { e.stopPropagation(); showTip(t, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    });
+    host.querySelectorAll(".lb-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
   }
 
   // ---- per-year rows (curated editorial) ----
@@ -232,13 +232,9 @@
       `<div class="rb-head">Re-estimated across specifications</div>` +
       strip("A_nomination", GOLD, ["GATE A — noticed", "clusters tight, far from 0"]) +
       strip("B_placement", INK, ["GATE B — placed", "small, grazes 0"]) +
-      `<div class="rb-axis"><span style="left:0">0</span><span style="left:47.6%;transform:translateX(-50%)">+0.5</span><span style="left:95.2%;transform:translateX(-50%)">+1.0</span></div>`;
-    host.querySelectorAll(".rb-dot").forEach(d => {
-      const t = d.getAttribute("data-tip");
-      d.addEventListener("mousemove", e => { e.stopPropagation(); showTip(t, e.clientX, e.clientY); });
-      d.addEventListener("mouseleave", hideTip);
-      d.addEventListener("touchstart", e => { e.stopPropagation(); showTip(t, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    });
+      `<div class="rb-axis"><span style="left:0">0</span><span style="left:47.6%;transform:translateX(-50%)">+0.5</span><span style="left:95.2%;transform:translateX(-50%)">+1.0</span></div>` +
+      `<p class="rb-note">Each dot is the Hype-Score effect from one re-run of the model — dropping Messi &amp; Ronaldo, dropping newcomers, leaving a year out, shifting the window. When the dots stay <strong>bunched and far from zero</strong> (Gate A), the result doesn't hinge on any single choice. Gate B's sit low and near zero — real, but slight.</p>`;
+    host.querySelectorAll(".rb-dot").forEach(d => bindTip(d, d.getAttribute("data-tip")));
   }
 
   // ---- scatter (D3 SVG, distortion-free; redraws on resize) ----
@@ -262,15 +258,17 @@
     const ptTip = (d, cx, cy) => showTip(
       `<b>${esc(d.player)}</b> · ${d.year}<br>Hype Score ${sgn(d.h_perp)} · finished #${d.rank}`, cx, cy);
 
-    s.selectAll("circle").data(pts).join("circle")
+    const circ = s.selectAll("circle").data(pts).join("circle")
       .attr("cx", d => x(d.merit)).attr("cy", d => y(d.attention))
       .attr("r", d => isMk(d) ? 7 : 4)
       .attr("fill", d => hcol(d.h_perp))
-      .attr("stroke", d => isMk(d) ? BG : "none").attr("stroke-width", d => isMk(d) ? 2 : 0)
-      .style("cursor", "pointer")
-      .on("mousemove", (e, d) => ptTip(d, e.clientX, e.clientY))
-      .on("mouseleave", hideTip)
-      .on("touchstart", (e, d) => { e.stopPropagation(); ptTip(d, e.touches[0].clientX, e.touches[0].clientY); });
+      .attr("stroke", d => isMk(d) ? BG : "none").attr("stroke-width", d => isMk(d) ? 2 : 0);
+    if (!MOBILE) {
+      circ.style("cursor", "pointer")
+        .on("mousemove", (e, d) => ptTip(d, e.clientX, e.clientY))
+        .on("mouseleave", hideTip)
+        .on("touchstart", (e, d) => { e.stopPropagation(); ptTip(d, e.touches[0].clientX, e.touches[0].clientY); });
+    }
 
     MARKERS.forEach(([n, yr]) => {
       const p = pts.find(d => d.year === yr && d.player.includes(n));
