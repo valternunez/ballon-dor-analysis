@@ -432,3 +432,18 @@ and disabled scroll-snap on mobile. **Report:** robustness caterpillar facets no
 (`.show(config={displayModeBar:False})` per chunk — verified it embeds + still renders); suppressed
 plotly's bundled-MathJax "MathZoom.js failed to load" banner via an `include-in-header` script/style.
 Re-screenshotted to confirm; deployed (Pages run green, live URLs 200). ruff + 93 tests green.
+
+### Public site rebuilt to a new editorial design + fully interactive charts (2026-06-21)
+The user supplied a new design (`design.zip` → a Claude design-canvas prototype: React "dc-runtime"
+`support.js`, `<sc-for>` placeholder loops, `{{vars}}`) — better for web + mobile — and asked to adopt
+it and make the graphs interactive. Productionized it as a clean static site: dropped the runtime,
+ported the editorial layout/copy/inline-styles verbatim (Bodoni Moda / Newsreader / IBM Plex Mono, warm
+dark palette, plain-scroll — no sticky scrollytelling), and wired **real interactive charts** from the
+existing `data.js`: de-faming example **tabs** (animated actual-vs-expected bars + readout), two-gate
+bars (+0.73 / +0.15 with CI tooltips), a **188-point D3 scatter** coloured by Hype Score with 7 labelled
+markers, the diverging leaderboard (descriptors curated from the design), the per-year breakdown
+(curated verdicts), and the robustness strips — all hover + tap tooltips + on-scroll reveal. Curated
+copy (leaderboard descriptors, de-faming notes, per-year verdicts) lives in `app.js` over the real data.
+Vendored the 3 new fonts (24 woff2; zero external requests); removed scrollama. Validated headless:
+0 JS errors, no horizontal overflow, every chart rendered, desktop + mobile screenshot-checked against
+the design. Report + `src/` pipeline untouched. ruff + 93 tests green; deployed (Pages run green, live).

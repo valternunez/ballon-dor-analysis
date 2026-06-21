@@ -110,6 +110,7 @@ ballon-dor-analysis/** via `.github/workflows/pages.yml` (publishes `site/` on p
 rendered report is bundled at `site/report/ballon-dor.html` (the site's "full report" link). Pages
 source = GitHub Actions; `.nojekyll` added. Re-render flow: `quarto render` → `cp report/ballon-dor.html
 site/report/` → push.
+**SITE REDESIGNED (2026-06-21)** — public site rebuilt to the user's new editorial design (Bodoni/Newsreader/Mono, warm dark, plain-scroll) as a clean static site; dropped the design's React runtime; all charts now real + interactive from `data.js` (defame tabs, gate bars, 188-pt D3 scatter, leaderboard, per-year, robustness). Fonts vendored; live on Pages. Report unchanged.
 **Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd`; club-importance v3.
 
 ## Where the canon lives
