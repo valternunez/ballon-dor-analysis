@@ -182,15 +182,18 @@ def fig_robustness(panel: pd.DataFrame | None = None):
     p = p[p["spec"].isin(_CATERPILLAR_SPECS)]
     p["err_hi"] = p["ci_high"] - p["estimate"]
     p["err_lo"] = p["estimate"] - p["ci_low"]
+    # Facets STACKED (facet_row), not side-by-side: each gate gets the full width — readable on a
+    # phone and still clean on desktop. Clean up the "gate=…" facet labels.
     fig = px.scatter(
-        p, x="estimate", y="spec", facet_col="gate", error_x="err_hi", error_x_minus="err_lo",
+        p, x="estimate", y="spec", facet_row="gate", error_x="err_hi", error_x_minus="err_lo",
         color="gate", template=_TEMPLATE,
         title="Robustness: H⊥ across specifications (frequentist anchors)",
     )
     fig.add_vline(x=0, line_dash="dot", line_color="grey")
+    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1].replace("_", " ")))
     fig.update_xaxes(matches=None, title="H⊥ estimate (95% CI / spread)")
     fig.update_yaxes(title="")
-    fig.update_layout(showlegend=False, height=380, margin={"t": 60})
+    fig.update_layout(showlegend=False, height=560, margin={"t": 60})
     return fig
 
 

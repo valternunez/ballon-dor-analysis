@@ -186,20 +186,42 @@
     const data = D.per_year;
     if (!data || !data.length) return;
     const yr = data[Math.max(0, Math.min(data.length - 1, perYearState.step))];
-    const { W, H } = PY;
     const cols = [
       { key: "best_season", role: "BEST SEASON", sub: "top on-pitch merit", col: C.cool, stat: "merit_z", pre: "merit " },
       { key: "winner", role: "THE WINNER", sub: "took the trophy", col: C.accent, stat: null, pre: "" },
       { key: "most_hyped", role: "MOST OVER-HYPED", sub: "top Hype Score (buzz beyond merit)", col: C.hot, stat: "h_perp", pre: "Hype " },
     ];
-    const cxs = cols.map((_, i) => W * (i * 2 + 1) / 6);
 
     if (!peryear) {
+      // Phone: stack the three faces vertically (3 columns squeeze illegibly at ~340px). Desktop:
+      // keep the side-by-side row. Font sizes use .style so the .lab class can't shrink them.
+      const vert = window.innerWidth < 760;
+      const W = vert ? 430 : PY.W, H = vert ? 730 : PY.H;
       const s = svg("#peryear-chart", W, H);
-      const title = s.append("text").attr("x", W / 2).attr("y", 26).attr("text-anchor", "middle")
-        .attr("class", "lab title").attr("fill", C.ink).attr("font-size", 22);
+      const title = s.append("text").attr("x", W / 2).attr("y", vert ? 30 : 26).attr("text-anchor", "middle")
+        .attr("class", "lab title").attr("fill", C.ink).style("font-size", vert ? "26px" : "22px");
       const groups = cols.map((c, i) => {
-        const g = s.append("g").attr("transform", `translate(${cxs[i]},0)`);
+        if (vert) {
+          const top = 60 + i * 220;
+          const g = s.append("g").attr("transform", `translate(${W / 2},${top})`);
+          g.append("text").attr("y", 22).attr("text-anchor", "middle").attr("class", "lab")
+            .style("fill", c.col).attr("letter-spacing", "1.5px").style("font-size", "18px").text(c.role);
+          g.append("text").attr("y", 46).attr("text-anchor", "middle").attr("class", "lab sm")
+            .style("fill", C.faint).style("font-size", "15px").text(c.sub);
+          return {
+            card: g.append("rect").attr("x", -185).attr("y", 60).attr("width", 370).attr("height", 132)
+              .attr("rx", 12).attr("fill", "rgba(255,255,255,0.02)").attr("stroke", c.col)
+              .attr("stroke-opacity", 0.4),
+            name: g.append("text").attr("y", 104).attr("text-anchor", "middle").attr("class", "lab")
+              .attr("fill", C.ink).style("font-size", "27px"),
+            finish: g.append("text").attr("y", 138).attr("text-anchor", "middle").attr("class", "lab")
+              .attr("fill", C.muted).style("font-size", "20px"),
+            stat: g.append("text").attr("y", 172).attr("text-anchor", "middle").attr("class", "lab")
+              .style("fill", c.col).style("font-size", "21px"),
+          };
+        }
+        const cx = W * (i * 2 + 1) / 6;
+        const g = s.append("g").attr("transform", `translate(${cx},0)`);
         g.append("text").attr("y", 92).attr("text-anchor", "middle").attr("class", "lab")
           .style("fill", c.col).attr("letter-spacing", "1.5px").attr("font-size", 12).text(c.role);
         g.append("text").attr("y", 110).attr("text-anchor", "middle").attr("class", "lab sm")
@@ -217,7 +239,7 @@
         };
       });
       const verdict = s.append("text").attr("x", W / 2).attr("y", H - 14).attr("text-anchor", "middle")
-        .attr("class", "lab sm").attr("fill", C.muted);
+        .attr("class", "lab sm").attr("fill", C.muted).style("font-size", vert ? "16px" : null);
       peryear = { s, title, groups, verdict };
     }
 
@@ -256,13 +278,20 @@
     s.append("text").attr("transform", `translate(14,${H / 2}) rotate(-90)`)
       .attr("text-anchor", "middle").attr("class", "lab sm").text("attention (log) →");
 
+    const ptTip = (d, e) => showTip(
+      `<b>${d.player}</b> · ${d.year}<br>Hype Score ${fmtS(d.h_perp)} · finished #${d.rank}`, e);
     s.selectAll("circle").data(pts).join("circle")
       .attr("cx", d => x(d.merit)).attr("cy", d => y(d.attention)).attr("r", 0)
       .attr("fill", d => colorH(d.h_perp)).attr("stroke", "#0c0c10").attr("stroke-width", 0.5)
-      .on("mousemove", (e, d) => showTip(
-        `<b>${d.player}</b> · ${d.year}<br>Hype Score ${fmtS(d.h_perp)} · finished #${d.rank}`, e))
+      .on("mousemove", (e, d) => ptTip(d, e))
       .on("mouseleave", hideTip)
+      // touch: tap a dot to reveal its name (no hover on phones); tap elsewhere dismisses.
+      .on("touchstart", (e, d) => { e.stopPropagation(); ptTip(d, e.touches[0]); }, { passive: true })
       .transition().duration(DUR).delay((d, i) => i * 4).attr("r", 5);
+    if (!drawScatter._tapHide) {
+      document.addEventListener("touchstart", hideTip, { passive: true });
+      drawScatter._tapHide = true;
+    }
 
     [["Messi", 2023], ["Lewandowski", 2019]].forEach(([nm, yr]) => {
       const p = pts.find(d => d.year === yr && d.player.includes(nm));

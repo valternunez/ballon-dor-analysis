@@ -11,6 +11,13 @@ format:
     embed-resources: true
     fig-align: center
     code-tools: false
+    html-math-method: plain   # no real math here; drops Quarto's own MathJax
+    include-in-header:
+      # Plotly bundles its own MathJax v2, which prints a visible "MathZoom.js failed to load"
+      # banner on init. There's no LaTeX in any figure, so suppress the message + extension load.
+      text: |
+        <script>window.MathJax={messageStyle:"none",showProcessingMessages:false,showMathMenu:false};</script>
+        <style>#MathJax_Message{display:none !important;}</style>
 jupyter: bdor
 execute:
   echo: false
@@ -74,7 +81,7 @@ everything.
 # | label: fig-leaderboard
 # | fig-cap: "H⊥ among Ballon d'Or finishers. Red = more attention than merit explains; blue = elite production that flew under the radar."
 # | fig-alt: "Diverging horizontal bar chart ranking finishers by H⊥: wonderkids and breakout stories at the positive end, under-the-radar elite producers (Lewandowski, De Bruyne, Jorginho) at the negative end."
-report.fig_leaderboard()
+report.fig_leaderboard().show(config={"displayModeBar": False, "responsive": True})
 ```
 
 The leaderboard passes the smell test immediately. The over-attended end is **wonderkids and
@@ -93,7 +100,7 @@ a vote that ranks them (**Gate B — given you're in, do you finish higher?**). 
 # | label: fig-two-gate
 # | fig-cap: "The H⊥ coefficient at each gate (94% credible interval). Both controlled for merit + team success."
 # | fig-alt: "Forest plot: H⊥'s coefficient is large and clearly positive at the nomination gate and small (interval near zero) at the placement gate."
-report.fig_two_gate()
+report.fig_two_gate().show(config={"displayModeBar": False, "responsive": True})
 ```
 
 This is the whole project in one chart.
@@ -150,7 +157,7 @@ production, opposite narrative. That contrast is the entire thesis in two dots:
 # | label: fig-scatter
 # | fig-cap: "Merit vs. attention among finishers (colour = H⊥). Two players, near-identical production, opposite buzz."
 # | fig-alt: "Scatter of finishers, merit on x and log attention on y, coloured by H⊥; Messi 2023 and Lewandowski 2019 are annotated at near-identical merit with opposite H⊥."
-report.fig_merit_vs_attention()
+report.fig_merit_vs_attention().show(config={"displayModeBar": False, "responsive": True})
 ```
 
 ## Is it real, or an artifact?
@@ -163,7 +170,7 @@ out each year in turn.
 # | label: fig-robustness
 # | fig-cap: "The H⊥ coefficient across specifications. Gate A barely moves; Gate B is smaller and leans partly on the duopoly."
 # | fig-alt: "Caterpillar plot faceted by gate: Gate A's H⊥ estimate clusters tightly away from zero across every specification; Gate B's is smaller with wider, lower intervals."
-report.fig_robustness()
+report.fig_robustness().show(config={"displayModeBar": False, "responsive": True})
 ```
 
 The nomination effect is **rock-solid** — it sits in the same place across every cut, and no single
@@ -195,7 +202,7 @@ exactly why the cut has to be disciplined:
 # | label: fig-spike
 # | fig-cap: "All-language daily pageviews for the 2024 winner (Rodri). The window ends at the shortlist cut — the big winner-announcement spike lands after it, and is excluded."
 # | fig-alt: "Daily pageview line for Rodri (2024) with window markers: a large spike sits at the ceremony, to the right of (after) the shortlist-cut line that ends the measurement window."
-report.fig_spike()
+report.fig_spike().show(config={"displayModeBar": False, "responsive": True})
 ```
 
 ## What this is, and isn't

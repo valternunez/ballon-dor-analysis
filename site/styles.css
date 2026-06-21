@@ -168,10 +168,29 @@ footer .wrap { max-width: var(--maxw); }
 footer a { color: var(--ink); }
 
 @media (max-width: 760px) {
-  .scrolly { grid-template-columns: 1fr; }
-  .scrolly-graphic { position: sticky; height: 56vh; }
-  .scrolly-steps { padding: 8vh 0; }
-  .step { min-height: 60vh; }
+  /* S-5: don't force every panel to a full screen — let text sections hug their content
+     (the hero keeps its full-screen treatment). */
+  section[data-panel], .rpanel, footer[data-panel], .section-head[data-panel] { min-height: auto; }
+  section[data-panel], .rpanel { padding: 8vh 0; }
+  .section-head[data-panel] { padding-top: 6vh; }
+  /* S-6: native scrolling feels better than snap-points on a phone */
+  html { scroll-snap-type: none; }
+
+  /* S-1: shorter sticky graphic + OPAQUE step boxes so a step never collides with the chart */
+  .scrolly { grid-template-columns: 1fr; gap: 0; }
+  .scrolly-graphic { position: sticky; top: 0; height: 50vh; z-index: 0; }
+  .scrolly-graphic .card { width: 100%; }
+  .scrolly-steps { padding: 6vh 0 10vh; position: relative; z-index: 1; }
+  .step { min-height: 82vh; }
+  .step .box { background: var(--panel); opacity: 0.55; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); }
+  .step.is-active .box { opacity: 1; }
+
+  /* S-2: enlarge in-chart text so it stays legible once the SVG scales down to phone width.
+     Scoped by chart id (beats the .axis/.lab class rules); per-year is redrawn vertically in JS. */
+  #leaderboard-chart text, #gates-chart text, #scatter-chart text,
+  #robust-chart text, #spike-chart text, #defame-chart text { font-size: 22px; }
+  /* S-4: larger scatter dots = tappable touch targets (and more visible once scaled down) */
+  #scatter-chart circle { r: 8; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
