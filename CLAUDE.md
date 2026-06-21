@@ -111,7 +111,16 @@ rendered report is bundled at `site/report/ballon-dor.html` (the site's "full re
 source = GitHub Actions; `.nojekyll` added. Re-render flow: `quarto render` → `cp report/ballon-dor.html
 site/report/` → push.
 **SITE REDESIGNED (2026-06-21)** — public site rebuilt to the user's new editorial design (Bodoni/Newsreader/Mono, warm dark, plain-scroll) as a clean static site; dropped the design's React runtime; all charts now real + interactive from `data.js` (defame tabs, gate bars, 188-pt D3 scatter, leaderboard, per-year, robustness). Fonts vendored; live on Pages. Report unchanged.
-**Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd`; club-importance v3.
+**PUBLISH-READINESS ROUND 2 (2026-06-21)** — post-redesign polish + share meta. Scatter labels →
+**soft-white + thin outline** (after halo/pill misfires); "Is it real?" → **labelled caterpillar** (specs
+as rows w/ values); per-year shows **each face's real numbers** again (`data.per_year` + curated
+verdicts); leaderboard value **flips inside the bar** near the edge (Yamal +3.77 no longer clips on
+mobile); **explicit scatter axis key** (↑ attention / → merit); **cache-busting `?v=`** on css/js.
+Share: **OG + Twitter + canonical + JSON-LD**, **favicon.svg**, generated **1200×630 `og-image.png`**
+card; **GoatCounter** snippet added commented-out (user pastes free site code to enable). Copyedit
+(2018–2025, ~190 finisher-seasons, centre-backs/30-player). Live on Pages.
+**Next/optional:** enable GoatCounter (paste site code); finish GDELT (rested IP) + wire `h_perp_gd`;
+club-importance v3.
 
 ## Where the canon lives
 - `PROJECT_NOTES.md` — the locked methodology (thesis, funnel, merit index, H⊥, GDELT, modeling spec).

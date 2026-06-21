@@ -447,3 +447,28 @@ copy (leaderboard descriptors, de-faming notes, per-year verdicts) lives in `app
 Vendored the 3 new fonts (24 woff2; zero external requests); removed scrollama. Validated headless:
 0 JS errors, no horizontal overflow, every chart rendered, desktop + mobile screenshot-checked against
 the design. Report + `src/` pipeline untouched. ruff + 93 tests green; deployed (Pages run green, live).
+
+### 2026-06-21 — Publish-readiness round 2 (share meta, og:image, favicon, copyedit) + post-redesign chart fixes
+After the redesign, a round of user-driven polish + a pre-publish sweep:
+- **Scatter labels** went through three iterations on real mobile screenshots: thick stroke-halo
+  (ate the glyphs) → dark pills (getBBox-positioned, still dim) → **soft-white text + a thin 1.7px
+  outline** (`paint-order: stroke`), which is the legible one. Also: dropped Rodri '24's label (sits on
+  Kvaratskhelia '23) and, on phones, show only the 4 well-separated anchors.
+- **"Is it real?"** restored to a **labelled caterpillar** (one row per spec: main model, drop
+  Messi&Ronaldo, drop low-fame, window past/before ceremony, leave-a-year-out) with estimate dot + 94%
+  bar + inline value, per gate — the pre-redesign "show the options" view, restyled to the new vibe.
+- **Per-year** now shows each face's real numbers again (`finished Nth · merit/Hype`) driven by
+  `data.per_year`, keeping the curated verdicts (verdicts are about best-vs-winner, which still match;
+  the "biggest story" column is the literal max-Hype player).
+- **Leaderboard mobile overflow**: the value sat just past the bar end, so the top bar (Yamal +3.77)
+  pushed its number off-screen. Now the label **flips inside the fill** (dark text) near the edge.
+- **Scatter axis key**: added an explicit "↑ Vertical = attention · → Horizontal = merit" line above
+  the chart (the y-label was hidden on mobile, leaving no axis context there).
+- **Cache-busting**: version-tagged `styles.css/data.js/app.js` (`?v=`) — a cached `app.js` was why a
+  fix that was live still looked broken on the user's phone.
+- **Share readiness**: Open Graph + Twitter card + canonical + JSON-LD Article; **favicon.svg** (the
+  scatter story in miniature — warm dot high, cool dot low); a generated **1200×630 og:image** card
+  (Bodoni "Goals, or stories?" + the one-line finding, rendered via headless Chrome from a throwaway
+  `og-card.html`). Privacy-friendly **GoatCounter** snippet added commented-out (needs the user's free
+  site code to enable). Copyedit: `2018–2025` en-dash, `~210→~190` finisher-seasons (matches the
+  188-point "every finisher" scatter), `centre-backs`/`30-player` consistency.

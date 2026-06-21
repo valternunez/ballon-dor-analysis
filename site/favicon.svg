@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Ballon d'Or analysis">
+  <rect width="32" height="32" rx="7" fill="#0c0b09"/>
+  <!-- the scatter story in miniature: a warm over-attended dot high-left, a cool under-attended dot low-right -->
+  <circle cx="11.5" cy="11" r="4.4" fill="#d8693c"/>
+  <circle cx="20.5" cy="21" r="4.4" fill="#5f93c9"/>
+  <circle cx="22" cy="10" r="2" fill="#c9a44c"/>
+</svg>

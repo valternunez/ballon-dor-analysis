@@ -5,6 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Goals or Stories? — The Ballon d'Or, decoded</title>
 <meta name="description" content="Does the Ballon d'Or reward what players do, or what we say about them? A data investigation into hype, merit, and who really gets considered." />
+<meta name="author" content="Valter Nunez" />
+<meta name="theme-color" content="#0c0b09" />
+<link rel="canonical" href="https://valternunez.github.io/ballon-dor-analysis/" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+<!-- Open Graph (Facebook, LinkedIn, WhatsApp, iMessage, Slack, …) -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Goals or Stories?" />
+<meta property="og:title" content="Goals or Stories? The Ballon d'Or, decoded" />
+<meta property="og:description" content="Hype roughly doubles your odds of a Ballon d'Or nomination — but barely moves who wins. A data investigation into hype, merit, and who really gets considered." />
+<meta property="og:url" content="https://valternunez.github.io/ballon-dor-analysis/" />
+<meta property="og:image" content="https://valternunez.github.io/ballon-dor-analysis/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Goals, or stories? A data investigation into the Ballon d'Or." />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Goals or Stories? The Ballon d'Or, decoded" />
+<meta name="twitter:description" content="Hype roughly doubles your odds of a Ballon d'Or nomination — but barely moves who wins. A data investigation." />
+<meta name="twitter:image" content="https://valternunez.github.io/ballon-dor-analysis/og-image.png" />
+<meta name="twitter:image:alt" content="Goals, or stories? A data investigation into the Ballon d'Or." />
+
+<!-- Structured data (Google rich results) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Goals or Stories? The Ballon d'Or, decoded",
+  "description": "Does the Ballon d'Or reward what players do, or what we say about them? A data investigation into hype, merit, and who really gets considered.",
+  "image": "https://valternunez.github.io/ballon-dor-analysis/og-image.png",
+  "author": { "@type": "Person", "name": "Valter Nunez" },
+  "datePublished": "2026-06-21",
+  "mainEntityOfPage": "https://valternunez.github.io/ballon-dor-analysis/",
+  "keywords": "Ballon d'Or, football, data analysis, hype, merit, narrative, statistics"
+}
+</script>
+
+<!-- Privacy-friendly analytics (cookieless). To enable: register a free site at https://www.goatcounter.com/,
+     replace YOURCODE with your subdomain, and uncomment the line below.
+<script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+-->
+
 <link rel="stylesheet" href="fonts/fonts.css" />
 <link rel="stylesheet" href="styles.css?v=20260621b" />
 </head>
@@ -25,13 +69,13 @@
 
   <!-- ░ HERO ░ -->
   <section class="hero">
-    <p class="mono kicker gold">The Ballon d'Or · 2018 — 2025</p>
+    <p class="mono kicker gold">The Ballon d'Or · 2018–2025</p>
     <h1 class="display">It rewards goals.<br />It also rewards <em class="gold">stories</em>.</h1>
     <p class="hero-sub">Every year, football insists the winner was a narrative, not a season. We measured the narrative — and found exactly where it hides.</p>
 
     <div class="hero-stats">
       <div><div class="stat-num display">7</div><div class="mono stat-lab">award years</div></div>
-      <div><div class="stat-num display">~210</div><div class="mono stat-lab">finisher-seasons</div></div>
+      <div><div class="stat-num display">~190</div><div class="mono stat-lab">finisher-seasons</div></div>
       <div><div class="stat-num display">H⊥</div><div class="mono stat-lab">the hype score</div></div>
     </div>
 
@@ -182,7 +226,7 @@
       <h2 class="display h2" style="max-width:18ch;margin-bottom:clamp(36px,5vw,54px)">The honest fine print.</h2>
       <div class="caveat-grid">
         <div class="caveat"><div class="caveat-h">Small sample.</div><p>Seven award years — an interpretation, not a prediction engine. The uncertainty ranges are wide on purpose.</p></div>
-        <div class="caveat"><div class="caveat-h">Every role, not equally well.</div><p>Merit grades attackers, midfielders, keepers and defenders — but purely-positional center-backs still read low, because great positioning leaves fewer actions to count.</p></div>
+        <div class="caveat"><div class="caveat-h">Every role, not equally well.</div><p>Merit grades attackers, midfielders, keepers and defenders — but purely-positional centre-backs still read low, because great positioning leaves fewer actions to count.</p></div>
         <div class="caveat"><div class="caveat-h">One attention signal.</div><p>Wikipedia pageviews, summed across every language. A second, independent read from news volume is a natural cross-check, and is in progress.</p></div>
         <div class="caveat"><div class="caveat-h">We only see the nominees.</div><p>The finishing model studies just the ~30 who made the shortlist. The two-gate design tackles that selection head-on — which is where the bias turned out to live.</p></div>
       </div>
@@ -199,7 +243,7 @@
       <div class="glossary">
         <div><div class="mono gloss-h gold">Hype Score · H⊥</div><p>Attention beyond what a season explains — the buzz left once production, fame and team success are accounted for.</p></div>
         <div><div class="mono gloss-h gold">Merit</div><p>How good the season was, measured per role — production, ball-winning, shot-stopping, duels and ball-playing.</p></div>
-        <div><div class="mono gloss-h gold">The two gates</div><p>The award is two decisions — getting noticed (the 30-man shortlist) then finishing higher in the vote.</p></div>
+        <div><div class="mono gloss-h gold">The two gates</div><p>The award is two decisions — getting noticed (the 30-player shortlist) then finishing higher in the vote.</p></div>
       </div>
 
       <div class="footer-foot mono">
