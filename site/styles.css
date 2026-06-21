@@ -114,11 +114,16 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
 .chip-hot, .chip-cool { width: 22px; height: 8px; border-radius: 3px; }
 .chip-hot { background: var(--hot); } .chip-cool { background: var(--cool); }
 
+/* explicit axis key — names both axes plainly, on every screen size */
+.axis-key { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: -6px 0 clamp(20px, 3vw, 28px);
+  font-size: 0.66rem; letter-spacing: 0.04em; color: var(--muted); }
+.axis-key b { color: var(--gold); font-weight: 500; }
+
 /* scatter */
 .scatter-frame { display: flex; gap: 14px; }
 .y-axis-label { flex: none; display: flex; align-items: center; }
 .y-axis-label > * , .y-axis-label { writing-mode: vertical-rl; }
-.y-axis-label { transform: none; font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+.y-axis-label { transform: none; font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 .scatter-main { flex: 1 1 0; min-width: 0; }
 .scatter-plot { position: relative; width: 100%; height: clamp(380px, 62vw, 560px);
   border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -130,7 +135,7 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
 .quad-bl { position: absolute; left: 8px; bottom: 28px; font-size: 0.6rem; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--faint); max-width: 42%; }
 .x-axis-label { text-align: center; margin-top: 12px; font-size: 0.64rem; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--faint); }
+  text-transform: uppercase; color: var(--muted); }
 .scatter-plot text.mk { font-family: var(--mono); font-size: 12px; font-weight: 600; fill: #f7f3ea;
   paint-order: stroke; stroke: #08070500; stroke: rgba(6, 5, 4, 0.92); stroke-width: 1.7px;
   stroke-linejoin: round; }
