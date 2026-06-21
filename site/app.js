@@ -277,7 +277,7 @@
     const fewMarks = W < 520;
     const MK_MOBILE = new Set(["Messi", "Yamal", "Lewandowski", "Jorginho"]);
     const useMarkers = fewMarks ? MARKERS.filter(m => MK_MOBILE.has(m[0])) : MARKERS;
-    const lighten = c => mix(c, INK, 0.5);   // keep the hue cue but lift it for legibility
+    const lighten = c => mix(c, INK, 0.62);  // keep the hue cue but lift it bright for legibility
     const mk = useMarkers.map(([n, yr]) => {
       const p = pts.find(d => d.year === yr && d.player.includes(n));
       if (!p) return null;
@@ -315,6 +315,16 @@
       }
       if (!moved) break;
     }
+    // dark pill behind each label (inserted before the text so it sits underneath) for contrast
+    const NS = "http://www.w3.org/2000/svg";
+    drawn.forEach(o => {
+      const b = o.t.node().getBBox();
+      const r = document.createElementNS(NS, "rect");
+      r.setAttribute("class", "mk-bg"); r.setAttribute("rx", "2");
+      r.setAttribute("x", b.x - 4); r.setAttribute("y", b.y - 1.5);
+      r.setAttribute("width", b.width + 8); r.setAttribute("height", b.height + 3);
+      o.t.node().parentNode.insertBefore(r, o.t.node());
+    });
   }
 
   // ---- on-scroll reveal ----

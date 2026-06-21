@@ -131,8 +131,8 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
   text-transform: uppercase; color: var(--faint); max-width: 42%; }
 .x-axis-label { text-align: center; margin-top: 12px; font-size: 0.64rem; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--faint); }
-.scatter-plot text.mk { font-family: var(--mono); font-size: 11.5px; font-weight: 500;
-  paint-order: stroke; stroke: #0c0b09; stroke-width: 3.5px; stroke-linejoin: round; }
+.scatter-plot text.mk { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.scatter-plot rect.mk-bg { fill: rgba(12, 11, 9, 0.86); }
 .scatter-plot line.mk-leader { stroke-width: 0.8px; }
 
 /* leaderboard rows (rendered by JS) */
