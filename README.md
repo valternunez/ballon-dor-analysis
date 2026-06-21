@@ -76,7 +76,10 @@ is ~15k pages). Render the report with the Quarto CLI (a separate install):
 
 ```bash
 QUARTO_PYTHON=.venv/Scripts/python.exe quarto render report/ballon-dor.qmd
+cp report/ballon-dor.html site/report/ballon-dor.html   # refresh the copy the live site links to
 ```
+
+The public site auto-deploys to GitHub Pages on push (`.github/workflows/pages.yml` publishes `site/`).
 
 Before calling anything done: `pytest -q` green + `ruff check src tests run.py` clean.
 

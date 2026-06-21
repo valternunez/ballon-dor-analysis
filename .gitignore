@@ -26,6 +26,7 @@ __pycache__/
 /_site/
 *.html
 !site/index.html
+!site/report/ballon-dor.html
 
 # OS / editor
 .DS_Store
