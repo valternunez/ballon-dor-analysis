@@ -191,50 +191,63 @@
     host.querySelectorAll(".lb-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
   }
 
-  // ---- per-year rows (curated editorial) ----
+  // ---- per-year rows: the three faces with their real numbers + a curated verdict ----
   function renderPerYear() {
     const host = el("peryear-rows"); if (!host) return;
-    host.innerHTML = YEARS.map(y => {
-      const hypeCol = y.hype.startsWith("—") ? "var(--faint)" : "var(--hot)";
+    const VERDICT = {}; YEARS.forEach(y => { VERDICT[y.year] = y.verdict; });
+    const ord = r => (["1st", "2nd", "3rd"][r - 1] || r + "th");
+    const cell = (lab, f, col, stat) =>
+      `<div><div class="py-flab">${lab}</div>
+        <div class="py-fname" style="color:${col}">${esc(f.player)}</div>
+        <div class="py-fstat">finished ${ord(f.rank)} · ${stat}</div></div>`;
+    host.innerHTML = (D.per_year || []).map(p => {
+      const b = p.best_season, h = p.most_hyped, w = p.winner;
       return (
         `<div class="py-row">
-          <div class="py-year">${y.year}</div>
+          <div class="py-year">${p.year}</div>
           <div class="py-body">
             <div class="py-faces">
-              <div><div class="py-flab">Best season</div><div class="py-fname">${esc(y.best)}</div></div>
-              <div><div class="py-flab">Biggest story</div><div class="py-fname" style="color:${hypeCol}">${esc(y.hype)}</div></div>
-              <div><div class="py-flab">Winner ●</div><div class="py-fname gold">${esc(y.winner)}</div></div>
+              ${cell("Best season", b, "var(--ink)", "merit " + sgn(b.merit_z))}
+              ${cell("Biggest story", h, "var(--hot)", "Hype " + sgn(h.h_perp))}
+              ${cell("Winner ●", w, "var(--gold)", "merit " + sgn(w.merit_z) + " · Hype " + sgn(w.h_perp))}
             </div>
-            <p class="py-verdict">${esc(y.verdict)}</p>
+            <p class="py-verdict">${esc(VERDICT[String(p.year)] || "")}</p>
           </div>
         </div>`);
     }).join("");
   }
 
-  // ---- robustness strips ----
+  // ---- robustness caterpillar: each spec a labelled row (estimate dot + CI bar + value) ----
   function renderRobust() {
     const host = el("robust-card"); if (!host) return;
-    const SPECS = ["baseline", "no_duopoly", "drop_low_baseline", "window_leaky", "window_strict", "jackknife_year"];
-    const LAB = { baseline: "main model", no_duopoly: "drop Messi & Ronaldo", drop_low_baseline: "drop low-fame",
-      window_leaky: "window past ceremony", window_strict: "window before ceremony", jackknife_year: "leave a year out" };
-    const byGate = g => (D.robustness || []).filter(r => r.gate === g && SPECS.includes(r.spec));
-    const strip = (g, col, slab) => {
-      const dots = byGate(g).map(r =>
-        `<div class="rb-dot" style="left:${(r.estimate * POSX).toFixed(1)}%;background:${col};opacity:.8"
-           data-tip="${LAB[r.spec] || r.spec}: ${sgn(r.estimate)}"></div>`).join("");
-      return (
-        `<div class="rb-strip">
-          <div class="rb-slab" style="color:${col === GOLD ? "var(--gold)" : "var(--muted)"}"><span>${slab[0]}</span><span>${slab[1]}</span></div>
-          <div class="rb-track"${col === GOLD ? ' style="background:linear-gradient(90deg,rgba(201,164,76,0) 60%,rgba(201,164,76,0.06))"' : ""}>${dots}</div>
-        </div>`);
-    };
+    const SPECS = [["baseline", "main model"], ["no_duopoly", "drop Messi & Ronaldo"],
+      ["drop_low_baseline", "drop low-fame players"], ["window_leaky", "window past ceremony"],
+      ["window_strict", "window before ceremony"], ["jackknife_year", "leave a year out"]];
+    const by = {}; (D.robustness || []).forEach(r => { by[`${r.gate}|${r.spec}`] = r; });
+    const pos = v => Math.max(0, v) * POSX;   // clamp tiny negatives to the zero edge
+    const rows = (gate, col) => SPECS.map(([spec, lab]) => {
+      const r = by[`${gate}|${spec}`]; if (!r) return "";
+      const l = pos(r.ci_low), w = Math.max(1.5, pos(r.ci_high) - l), e = r.estimate * POSX;
+      return `<div class="cat-row" data-tip="<b>${lab}</b><br>${sgn(r.estimate)} · 94% CI [${sgn(r.ci_low)}, ${sgn(r.ci_high)}]">
+          <div class="cat-lab">${lab}</div>
+          <div class="cat-track"><div class="cat-zero"></div>
+            <div class="cat-ci" style="left:${l}%;width:${w}%;background:${col}"></div>
+            <div class="cat-dot" style="left:${e}%;background:${col}"></div></div>
+          <div class="cat-val" style="color:${col}">${sgn(r.estimate)}</div>
+        </div>`;
+    }).join("");
+    const axis = `<div class="cat-axis"><div></div>
+        <div class="cat-track"><span style="left:0">0</span>
+          <span style="left:47.6%;transform:translateX(-50%)">+0.5</span>
+          <span style="left:95.2%;transform:translateX(-50%)">+1.0</span></div>
+        <div class="cat-axu">log-odds<br>per SD</div></div>`;
     host.innerHTML =
-      `<div class="rb-head">Re-estimated across specifications</div>` +
-      strip("A_nomination", GOLD, ["GATE A — noticed", "clusters tight, far from 0"]) +
-      strip("B_placement", INK, ["GATE B — placed", "small, grazes 0"]) +
-      `<div class="rb-axis"><span style="left:0">0</span><span style="left:47.6%;transform:translateX(-50%)">+0.5</span><span style="left:95.2%;transform:translateX(-50%)">+1.0</span></div>` +
-      `<p class="rb-note">Each dot is the Hype-Score effect from one re-run of the model — dropping Messi &amp; Ronaldo, dropping newcomers, leaving a year out, shifting the window. When the dots stay <strong>bunched and far from zero</strong> (Gate A), the result doesn't hinge on any single choice. Gate B's sit low and near zero — real, but slight.</p>`;
-    host.querySelectorAll(".rb-dot").forEach(d => bindTip(d, d.getAttribute("data-tip")));
+      `<div class="rb-head">Re-estimated across specifications · dot = estimate, bar = 94% range</div>` +
+      `<div class="cat-gate gold">Gate A — getting noticed</div>` + rows("A_nomination", GOLD) +
+      `<div class="cat-gate ink-h">Gate B — finishing higher</div>` + rows("B_placement", INK) +
+      axis +
+      `<p class="rb-note">Same effect, re-estimated every way we could — dropping the two superstars, dropping newcomers, leaving each year out, shifting the window. Gate A stays <strong>bunched and far from zero</strong>; Gate B is small and grazes it.</p>`;
+    host.querySelectorAll(".cat-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
   }
 
   // ---- scatter (D3 SVG, distortion-free; redraws on resize) ----
@@ -289,7 +302,7 @@
     const drawn = mk.map(m => {
       const leader = s.append("line").attr("class", "mk-leader").attr("stroke", m.col).attr("opacity", 0.55);
       const t = s.append("text").attr("class", "mk").attr("text-anchor", m.anchor)
-        .attr("fill", m.col).style("pointer-events", "none").text(m.txt);
+        .style("pointer-events", "none").text(m.txt);   // fill = soft white via CSS, with a thin outline
       return { m, leader, t };
     });
     const place = () => drawn.forEach(o => {
@@ -315,16 +328,6 @@
       }
       if (!moved) break;
     }
-    // dark pill behind each label (inserted before the text so it sits underneath) for contrast
-    const NS = "http://www.w3.org/2000/svg";
-    drawn.forEach(o => {
-      const b = o.t.node().getBBox();
-      const r = document.createElementNS(NS, "rect");
-      r.setAttribute("class", "mk-bg"); r.setAttribute("rx", "2");
-      r.setAttribute("x", b.x - 4); r.setAttribute("y", b.y - 1.5);
-      r.setAttribute("width", b.width + 8); r.setAttribute("height", b.height + 3);
-      o.t.node().parentNode.insertBefore(r, o.t.node());
-    });
   }
 
   // ---- on-scroll reveal ----

@@ -131,8 +131,9 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
   text-transform: uppercase; color: var(--faint); max-width: 42%; }
 .x-axis-label { text-align: center; margin-top: 12px; font-size: 0.64rem; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--faint); }
-.scatter-plot text.mk { font-family: var(--mono); font-size: 12px; font-weight: 500; }
-.scatter-plot rect.mk-bg { fill: rgba(12, 11, 9, 0.86); }
+.scatter-plot text.mk { font-family: var(--mono); font-size: 12px; font-weight: 600; fill: #f7f3ea;
+  paint-order: stroke; stroke: #08070500; stroke: rgba(6, 5, 4, 0.92); stroke-width: 1.7px;
+  stroke-linejoin: round; }
 .scatter-plot line.mk-leader { stroke-width: 0.8px; }
 
 /* leaderboard rows (rendered by JS) */
@@ -191,6 +192,25 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
 .rb-note { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--line2); font-size: 0.9rem;
   line-height: 1.6; color: var(--muted); }
 .rb-note strong { color: var(--ink); font-weight: 500; }
+
+/* robustness caterpillar (labelled spec rows) */
+.cat-gate { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 10px; }
+.cat-gate.ink-h { color: var(--ink); margin-top: 24px; }
+.cat-row, .cat-axis { display: grid; grid-template-columns: minmax(92px, 150px) 1fr 44px; align-items: center; gap: 12px; }
+.cat-row { padding: 6px 0; border-radius: 3px; }
+.cat-row:hover { background: rgba(232, 222, 202, 0.03); }
+.cat-lab { font-family: var(--mono); font-size: 0.64rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cat-track { position: relative; height: 16px; }
+.cat-zero { position: absolute; left: 0; top: -3px; bottom: -3px; width: 1px; background: var(--line); }
+.cat-ci { position: absolute; top: 50%; transform: translateY(-50%); height: 4px; border-radius: 2px; opacity: 0.45; }
+.cat-dot { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; }
+.cat-val { font-family: var(--mono); font-size: 0.7rem; text-align: right; }
+.cat-axis { height: 28px; margin-top: 8px; }
+.cat-axis .cat-track span { position: absolute; top: 4px; font-family: var(--mono); font-size: 0.6rem; color: var(--faint); }
+.cat-axu { font-family: var(--mono); font-size: 0.52rem; color: var(--faint); line-height: 1.15; text-align: right; }
+
+/* per-year per-face stat line */
+.py-fstat { font-family: var(--mono); font-size: 0.62rem; color: var(--faint); margin-top: 3px; letter-spacing: 0.02em; }
 
 /* de-faming card (rendered by JS) */
 .df-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(30px, 4vw, 44px); }
