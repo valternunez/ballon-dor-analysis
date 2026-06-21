@@ -31,3 +31,6 @@ __pycache__/
 # OS / editor
 .DS_Store
 Thumbs.db
+
+# Design source artifact (Claude design-canvas export) — not needed at runtime
+design.zip

@@ -9,358 +9,205 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<div class="page">
 
-<!-- ░░ HERO ░░ -->
-<header class="hero" data-panel>
-  <div class="wrap">
-    <p class="kicker">A data investigation · 2018–2025</p>
-    <h1>The Ballon&nbsp;d'Or rewards goals.<br />It also rewards <span class="glow">stories</span>.</h1>
-    <p class="sub">Every year, football argues the winner was a narrative, not a season. We measured
-      the narrative — and found where it actually hides.</p>
-  </div>
-  <div class="cue">scroll ↓</div>
-</header>
+  <!-- subtle top vignette glow -->
+  <div class="vignette" aria-hidden="true"></div>
 
-<!-- ░░ THE ACCUSATION ░░ -->
-<section id="intro" data-panel>
-  <div class="wrap prose">
-    <p class="kicker">The accusation</p>
-    <p class="lead">The complaint is always some version of the same thing: <em>that was a story, not a
-      season.</em> The winner had a World Cup, a transfer saga, a fairy-tale rise — and the voters fell
-      for it.</p>
-    <p>It's satisfying. It's also almost impossible to test, because hype and merit are hopelessly
-      tangled: players get talked about <em>because</em> they produce. So we don't ask "hype vs. merit."
-      We ask something sharper:</p>
-    <p class="lead">Does attention predict the Ballon d'Or <strong>after</strong> you account for what a
-      player actually did and how their team performed?</p>
-    <p>If it does, that's the bias. If it doesn't, "they're inseparable" is itself the answer. Here's
-      what seven years of data say.</p>
-  </div>
-</section>
-
-<!-- ░░ HOW WE SCORE IT (static explainer) ░░ -->
-<section id="howto" data-panel>
-  <div class="section-head">
-    <p class="kicker">How we score it</p>
-    <h2>Two numbers do all the work.</h2>
-  </div>
-  <figure class="figure">
-    <div class="card">
-      <div class="howto-grid">
-        <div>
-          <h3>Merit — how good the season was</h3>
-          <p>We line each player up against others in <em>their own position and season</em> and grade
-            the stats that actually matter for their job: goals, assists and chance-creation for
-            attackers; tackles and interceptions for midfielders; goals prevented (versus what an average
-            keeper would concede) for goalkeepers; duels won and ball-progression for defenders. All of
-            that collapses into one number — how far above or below the pack a player was.</p>
-        </div>
-        <div>
-          <h3>Hype Score — attention they didn't earn on the pitch</h3>
-          <p>We measure how much the world actually watched a player — their Wikipedia traffic that
-            season — then let a model predict how much attention their <em>performance, existing fame and
-            team's success</em> should have drawn. The Hype Score is the gap left over: the buzz the
-            numbers can't explain.</p>
-        </div>
-      </div>
-      <p class="howto-foot">In one line: <strong>merit</strong> is what a player <em>did</em>;
-        <strong>Hype Score</strong> is the attention that arrived <em>beyond</em> what they did.</p>
+  <!-- ░ TOP BAR ░ -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="mono brand-txt">Goals or Stories — a data investigation</span>
     </div>
-    <figcaption>Both are built from public data, the same way for every player, every year. The charts
-      below put them side by side.</figcaption>
-  </figure>
-</section>
+    <a href="report/ballon-dor.html" class="mono btn">Full report →</a>
+  </header>
 
-<!-- ░░ DE-FAMING (scrolly) ░░ -->
-<section id="defame">
-  <div class="section-head" data-panel>
-    <p class="kicker">Measuring the story</p>
-    <h2>Strip out the fame. What's left is the story.</h2>
-  </div>
-  <div class="scrolly">
-    <div class="scrolly-graphic">
-      <div class="card">
-        <div id="defame-chart" role="img" aria-label="Bar chart comparing a player's actual Wikipedia attention with the level their merit and fame predict; the leftover gap is the Hype Score."></div>
-        <div class="legend">
-          <span class="chip"><i style="background:var(--ink)"></i>actual attention</span>
-          <span class="chip"><i style="background:var(--faint)"></i>expected from merit + fame</span>
-          <span class="chip"><i style="background:var(--accent)"></i>Hype Score — narrative excess</span>
+  <!-- ░ HERO ░ -->
+  <section class="hero">
+    <p class="mono kicker gold">The Ballon d'Or · 2018 — 2025</p>
+    <h1 class="display">It rewards goals.<br />It also rewards <em class="gold">stories</em>.</h1>
+    <p class="hero-sub">Every year, football insists the winner was a narrative, not a season. We measured the narrative — and found exactly where it hides.</p>
+
+    <div class="hero-stats">
+      <div><div class="stat-num display">7</div><div class="mono stat-lab">award years</div></div>
+      <div><div class="stat-num display">~210</div><div class="mono stat-lab">finisher-seasons</div></div>
+      <div><div class="stat-num display">H⊥</div><div class="mono stat-lab">the hype score</div></div>
+    </div>
+
+    <div class="mono scroll-cue"><span class="bob" aria-hidden="true">↓</span> scroll</div>
+  </section>
+
+  <!-- ░ THE ACCUSATION ░ -->
+  <section class="band">
+    <div class="wrap two-col">
+      <div>
+        <p class="mono kicker gold">The accusation</p>
+        <h2 class="display h2">That was a story, not a&nbsp;season.</h2>
+      </div>
+      <div class="prose">
+        <p>The complaint is always a version of the same thing: the winner had a World Cup, a transfer saga, a fairy-tale rise — and the voters fell for it. Satisfying, and almost impossible to test, because hype and merit are hopelessly tangled. Players get talked about <em class="ink">because</em> they produce.</p>
+        <p class="lead-ink">So we don't ask “hype versus merit.” We ask the sharper, conditional question: does attention predict the award <strong class="gold">after</strong> accounting for what a player did and how their team performed?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░ HOW WE SCORE IT ░ -->
+  <section class="band bg2">
+    <div class="wrap">
+      <p class="mono kicker gold">How we score it</p>
+      <h2 class="display h2" style="max-width:18ch;margin-bottom:clamp(36px,5vw,56px)">Two numbers do all the work.</h2>
+      <div class="score-grid">
+        <div class="score-card">
+          <div class="mono card-tag">01 / Merit</div>
+          <h3 class="card-h3">How good the season was.</h3>
+          <p class="card-p">Each player is graded against others in <em class="ink">their own position and season</em>, on the stats that matter for the job — goals and chance-creation for attackers, tackles and interceptions for midfielders, goals prevented for keepers, duels and ball-progression for defenders. It collapses into one number: how far above the pack they were.</p>
+        </div>
+        <div class="score-card gold-card">
+          <div class="mono card-tag gold">02 / Hype Score &nbsp;H⊥</div>
+          <h3 class="card-h3">Attention they didn't earn on the pitch.</h3>
+          <p class="card-p">We measure how much the world actually watched a player — all-language Wikipedia traffic — then model how much their <em class="ink">performance, existing fame and team success</em> should have drawn. The Hype Score is the gap left over: the buzz the numbers can't explain.</p>
         </div>
       </div>
+      <p class="score-foot">In one line: <strong>merit</strong> is what a player <em>did</em>; the <strong class="gold">Hype Score</strong> is the attention that arrived <em>beyond</em> it.</p>
     </div>
-    <div class="scrolly-steps">
-      <div class="step" data-step="0"><div class="box">
-        <h3>Start with raw attention</h3>
-        <p>We take a player's all-language Wikipedia traffic over their qualifying season — a clean,
-          global measure of how much the world was watching.</p></div></div>
-      <div class="step" data-step="1"><div class="box">
-        <h3>Subtract what merit & fame explain</h3>
-        <p>Stars draw traffic every day; great seasons draw more. We model the attention a player's
-          production, baseline fame, and team success <em>should</em> generate.</p></div></div>
-      <div class="step" data-step="2"><div class="box">
-        <h3>What's left is the <strong>Hype Score</strong></h3>
-        <p>The attention left over — beyond what merit and fame explain — is the story. We call it the
-          <em>Hype Score</em>: <strong>attention beyond what a player's season explains</strong>. For a
-          16-year-old Lamine Yamal, almost all of it. The model expected a whisper; he got a roar.</p></div></div>
-      <div class="step" data-step="3"><div class="box">
-        <h3>It cuts both ways</h3>
-        <p>Kevin De Bruyne in 2019 is the mirror image: an elite season that drew <em>less</em>
-          attention than his numbers deserved. A negative Hype Score — robbed of the buzz.</p></div></div>
+  </section>
+
+  <!-- ░ HYPE SCORE EXPLAINER (de-faming) ░ -->
+  <section class="band reveal">
+    <div class="wrap">
+      <p class="mono kicker gold">See it on one player</p>
+      <h2 class="display h2" style="max-width:20ch;margin-bottom:16px">Actual attention, minus what the season earned.</h2>
+      <p class="section-sub">Daily Wikipedia views, summed across every language, against what a player's production, fame and team success predict. What's left over — the gap — is the Hype Score.</p>
+      <div class="card2" id="defame-card" role="img" aria-label="Bar comparison of a player's actual Wikipedia attention versus what merit and fame predict; the gap is the Hype Score. Switch examples with the tabs."></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ░░ LEADERBOARD ░░ -->
-<section id="leaderboard" data-panel>
-  <div class="section-head">
-    <p class="kicker">Who's over-talked-about</p>
-    <h2>The narrative leaderboard</h2>
-  </div>
-  <div class="wrap prose">
-    <p>Rank every Ballon d'Or finisher by Hype Score and the result passes the smell test instantly. The
-      over-attended end is <strong style="color:var(--hot)">wonderkids and breakout stories</strong>;
-      the under-the-radar end is <strong style="color:var(--cool)">elite producers who never got their
-      due</strong> — Lewandowski, a peak De Bruyne, a quietly trophy-laden Jorginho.</p>
-  </div>
-  <figure class="figure"><div class="card"><div id="leaderboard-chart" role="img" aria-label="Diverging bar chart ranking Ballon d'Or finishers by Hype Score: over-attended wonderkids and breakout stories on the orange end, under-the-radar elite producers on the blue end."></div></div>
-    <figcaption>Red = more attention than merit explains · Blue = production that flew under the radar.
-      Hover for detail.</figcaption></figure>
-</section>
+  <!-- ░ THE FINDING — TWO GATES ░ -->
+  <section class="band reveal">
+    <div class="wrap">
+      <p class="mono kicker gold">The finding</p>
+      <h2 class="display h2-xl">The bias isn't in who wins. It's in who gets <em class="gold">considered</em>.</h2>
+      <p class="section-sub wide">The award is two decisions. A 30-player shortlist — <em class="ink">do you get noticed?</em> Then a vote that ranks them — <em class="ink">do you finish higher?</em> We test the narrative at each gate, holding merit and team success fixed.</p>
+      <div class="card2" id="gates-card" role="img" aria-label="Per-gate effect of a one-standard-deviation rise in Hype Score: large and positive at the nomination gate (about +0.73), small at the placement gate (about +0.15)."></div>
+      <p class="punch">Narrative's pull on getting <em class="gold">noticed</em> is roughly <strong>five times</strong> its pull on who actually places.</p>
+    </div>
+  </section>
 
-<!-- ░░ THE TWO GATES (scrolly, the headline) ░░ -->
-<section id="gates">
-  <div class="section-head" data-panel>
-    <p class="kicker">The finding</p>
-    <h2>The bias isn't in who wins. It's in who gets <em>considered</em>.</h2>
-    <p class="dek" id="gates-plain"></p>
-  </div>
-  <div class="scrolly">
-    <div class="scrolly-graphic">
-      <div class="card">
-        <div id="gates-chart" role="img" aria-label="Forest plot of the Hype Score's effect at each gate with uncertainty ranges: large and clearly positive at the nomination gate, small at the placement gate."></div>
-        <p class="lab sm" style="text-align:center;margin:10px 0 2px">How much the Hype Score moves each gate · bars show the uncertainty range</p>
+  <!-- ░ IN HUMAN TERMS ░ -->
+  <section class="band bg3">
+    <div class="wrap">
+      <p class="mono kicker muted" style="margin-bottom:clamp(32px,5vw,48px)">In plain numbers — at equal merit &amp; team success</p>
+      <div class="human-grid" id="human-grid">
+        <div class="human-cell"><div class="human-num display gold" id="hm-or-a">2.1×</div><div class="human-txt">the odds of making the shortlist — one extra standard deviation of buzz <strong class="ink">≈ doubles</strong> your chance of being on the list.</div></div>
+        <div class="human-cell"><div class="human-num display gold" id="hm-ame">+9<span class="pts"> pts</span></div><div class="human-txt">of probability — a typical candidate moves from <strong class="ink" id="hm-range">~19% to ~28%</strong> likely to be shortlisted.</div></div>
+        <div class="human-cell"><div class="human-num display ink" id="hm-or-b">1.16×</div><div class="human-txt">the odds of placing higher once you're in the room. Real, but <strong class="ink">modest</strong> — production and trophies do most of the work.</div></div>
       </div>
     </div>
-    <div class="scrolly-steps">
-      <div class="step" data-step="0"><div class="box">
-        <h3>The award is two decisions</h3>
-        <p>First a 30-player shortlist — <strong>do you get noticed?</strong> Then a vote that ranks
-          them — <strong>do you finish higher?</strong> We ask the narrative question at each gate,
-          holding merit and team success fixed.</p></div></div>
-      <div class="step" data-step="1"><div class="box">
-        <h3>Gate&nbsp;A — getting noticed</h3>
-        <p>Here narrative matters <strong>a lot</strong>. Being talked about beyond what you did makes
-          you far likelier to make the 30 — even with merit in the model.</p></div></div>
-      <div class="step" data-step="2"><div class="box">
-        <h3>Gate&nbsp;B — finishing higher</h3>
-        <p>Here it matters <strong>far less</strong>. Once you're in the room, the vote is driven by
-          production and trophies; narrative adds only a modest nudge.</p></div></div>
-      <div class="step" data-step="3"><div class="box">
-        <h3>So the bias hides early</h3>
-        <p>Narrative's real power isn't winning the Ballon d'Or. It's getting you <em>onto the list</em>
-          — the quiet decision nobody watches.</p></div></div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ░░ PER-YEAR SCOREBOARD (scrolly) ░░ -->
-<section id="per-year">
-  <div class="section-head" data-panel>
-    <p class="kicker">The finding, year by year</p>
-    <h2>Best season. Biggest Hype Score. Actual winner.</h2>
-    <p class="dek">"Biggest Hype Score" means the most attention <em>beyond</em> what a player's season
-      explains — not simply the most-viewed player (that's almost always Messi or Ronaldo). Because the
-      Hype Score subtracts merit by design, the best player is rarely the most over-hyped one; the point
-      is where the actual <em>winner</em> falls between them.</p>
-  </div>
-  <div class="scrolly">
-    <div class="scrolly-graphic">
-      <div class="card"><div id="peryear-chart" role="img" aria-label="Per-year scoreboard comparing, for each award year, the best player by merit, the most over-hyped player by Hype Score, and the actual Ballon d'Or winner."></div></div>
-    </div>
-    <div class="scrolly-steps">
-      <div class="step" data-step="0"><div class="box"><h3>2018</h3>
-        <p>Modrić won with the <em>highest Hype Score of any winner</em> here — far more attention than
-          his merit (20th in the field) explained — while Messi quietly had the best season. The
-          complaint, confirmed.</p></div></div>
-      <div class="step" data-step="1"><div class="box"><h3>2019</h3>
-        <p>Messi won on merit, not noise — among the very best by production and with only modest buzz.
-          No narrative inflation here; a clean one.</p></div></div>
-      <div class="step" data-step="2"><div class="box"><h3>2021</h3>
-        <p>The famous one. Lewandowski had the best season in the field by the numbers — a
-          record-breaking goalscorer — with almost no buzz beyond it, and finished second. Messi won
-          on the narrative of a first Copa América and a move to PSG. The story edging the goals.</p></div></div>
-      <div class="step" data-step="3"><div class="box"><h3>2022</h3>
-        <p>Benzema took the vote on a Champions League run — while Mbappé out-produced everyone
-          again.</p></div></div>
-      <div class="step" data-step="4"><div class="box"><h3>2023</h3>
-        <p>Messi: best season, most votes, and plenty of buzz. Hard to call this one a robbery.</p></div></div>
-      <div class="step" data-step="5"><div class="box"><h3>2024</h3>
-        <p>Rodri won ranked 14th on raw production — the holding midfielder whose value the numbers can
-          barely see.</p></div></div>
-      <div class="step" data-step="6"><div class="box"><h3>2025</h3>
-        <p>Dembélé won with almost no extra buzz; Salah had the best season of anyone and finished
-          4th.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ░░ CASES ░░ -->
-<section id="cases" data-panel>
-  <div class="section-head">
-    <p class="kicker">The cases everyone argues about</p>
-    <h2>Same production, opposite narrative</h2>
-  </div>
-  <div class="wrap prose">
-    <p><strong>Modrić, 2018</strong> — a fine season, a World Cup final, and the highest narrative
-      residual of any winner here. The data agrees with the complaint — with one caveat: Modrić is a
-      deep-lying playmaker, the role our merit reads <em>least</em> well, so part of that residual may be
-      value the stats can't see rather than pure story. <strong>Lewandowski, 2019</strong> — one of the
-      best <em>merit</em> scores in seven years, a negative Hype Score, 8th place. The underrated profile,
-      quantified.</p>
-    <p>Plot merit against attention and the thesis lives in two dots: Messi 2023 and Lewandowski 2019,
-      near-identical elite production — and opposite buzz.</p>
-    <p class="aside">A word on what <em>merit</em> means here. For attackers it's production — goals,
-      assists, the expected-goals build-up. But a holding midfielder like Jorginho — a Champions League
-      and Euro winner in 2021 — does his best work where the box score can't see it. So merit grades
-      each player on the role he actually plays: a <em>ball-winning</em> score (tackles, interceptions,
-      blocks, clearances) for midfielders, a shot-stopping score for keepers, and a
-      tackle/aerial/ball-playing score for center-backs. By that fuller measure Jorginho's 2021 is
-      clearly positive, and his Hype Score is <em>negative</em> — not over-hyped, but quietly
-      under-rated. One honest limit: the purely-positional center-backs (a Rúben Dias) still read low —
-      great positioning means <em>fewer</em> actions to count, and no public stat captures it.</p>
-  </div>
-  <figure class="figure"><div class="card"><div id="scatter-chart" role="img" aria-label="Scatter plot of finishers: role-adjusted merit on the horizontal axis, windowed attention on the vertical axis, each point coloured by Hype Score. Messi 2023 and Lewandowski 2019 sit at near-identical merit with opposite buzz."></div>
-    <div class="legend"><span class="chip"><i style="background:var(--hot)"></i>high Hype Score</span>
-      <span class="chip"><i style="background:var(--cool)"></i>low Hype Score</span></div></div>
-    <figcaption>Each dot is a finisher: merit (horizontal) vs. windowed attention (vertical), coloured
-      by Hype Score. Hover for names.</figcaption></figure>
-</section>
-
-<!-- ░░ ROBUSTNESS ░░ -->
-<section id="robust">
-  <div class="rpanel" data-panel>
-    <div class="section-head">
-      <p class="kicker">Is it real?</p>
-      <h2>The finding survives the stress tests</h2>
-    </div>
-    <div class="wrap prose">
-      <p>With only seven years of data, one model proves nothing. So we re-ran the result dozens of
-        ways — dropping Messi and Ronaldo, dropping breakout newcomers, leaving out each year one at a
-        time. The <strong>getting-noticed</strong> effect barely budges. The
-        <strong>finishing-higher</strong> effect is smaller and leans partly on the two superstars — so
-        we say it quietly.</p>
-    </div>
-    <figure class="figure"><div class="card"><div id="robust-chart" role="img" aria-label="Caterpillar plot of the Hype Score's effect across many model specifications at both gates: getting-noticed clusters tightly away from zero; finishing-higher is smaller."></div></div>
-      <figcaption>The Hype Score's effect, re-estimated many ways, at both gates. Tight clusters mean a
-        stable finding.</figcaption></figure>
-    <details class="note">
-      <summary>What each stress test means — and whether it changes the answer</summary>
-      <div class="glossary" style="padding:0">
-        <dl>
-          <dt>main model</dt><dd>The headline result — all the data, with the attention window cut
-            before the shortlist. Everything else is measured against this.</dd>
-          <dt>drop Messi &amp; Ronaldo</dt><dd>Refit with the two superstars removed. Getting-noticed
-            barely moves; finishing-higher weakens and its range touches zero — which is why we state
-            that second effect quietly.</dd>
-          <dt>drop low-fame players</dt><dd>Remove players with too little prior attention to gauge a
-            fair baseline. No change — the effect isn't an artefact of thin-data players.</dd>
-          <dt>window past the ceremony</dt><dd>Deliberately let attention run past the winner
-            announcement, catching the result-day spike. Finishing-higher inflates exactly as a leak
-            should, while getting-noticed is unmoved (the shortlist is decided before the ceremony) —
-            proof the window discipline matters.</dd>
-          <dt>window before the ceremony</dt><dd>The opposite guardrail: cut a player's season at the
-            ceremony date so not even one post-ceremony match counts. Both gates barely move — the
-            measurement isn't riding on a few late games.</dd>
-          <dt>leave each year out</dt><dd>Refit seven times, dropping one award year each time. Both
-            gates stay stable across all years — no single season is driving the result.</dd>
-        </dl>
-        <p style="color:var(--muted);font-size:0.95rem;margin:14px 0 0">Two more, reported in the
-          <a href="report/ballon-dor.html" style="color:var(--accent)">full report</a>: a
-          <strong>bootstrap</strong> that re-estimates the Hype Score on resampled data (so the
-          uncertainty of <em>measuring</em> it is included) keeps getting-noticed far from zero and
-          finishing-higher positive; and a <strong>Heckman selection control</strong> (modelling who
-          gets nominated first) leaves finishing-higher the same sign. In short:
-          <strong>getting-noticed</strong> is rock-solid across every test;
-          <strong>finishing-higher</strong> is real but smaller and leans on the two superstars.</p>
+  <!-- ░ THE MATRIX (merit × attention) ░ -->
+  <section class="band reveal">
+    <div class="wrap">
+      <p class="mono kicker gold">The whole field</p>
+      <h2 class="display h2" style="max-width:20ch;margin-bottom:18px">Every finisher, plotted against the one thing voters can't measure.</h2>
+      <p class="section-sub wide">Each dot is one player's season — how good it was, against how much the world watched. Colour is the Hype Score: the warmer the dot, the more attention the season alone can't explain.</p>
+      <div class="legend mono">
+        <span class="legend-item"><span class="legend-grad"></span>under-attended → over-attended</span>
       </div>
-    </details>
-  </div>
-  <div class="rpanel" data-panel>
-    <div class="wrap prose">
-      <p class="kicker">The leakage test</p>
-      <p>One last check doubles as proof the method is honest. Attention is violently event-driven — a
-        single moment can dwarf a season. So the window is cut <em>before</em> the shortlist. Let it
-        run past the ceremony instead, catching the winner-announcement spike, and the placement
-        effect inflates exactly like a leak should. Discipline matters:</p>
+      <div class="card2">
+        <div class="scatter-frame">
+          <div class="y-axis-label mono">Attention (log) →</div>
+          <div class="scatter-main">
+            <div class="scatter-plot" id="scatter-plot" role="img" aria-label="Scatter of every finisher: role-adjusted merit on the horizontal axis, attention on the vertical, each dot coloured by Hype Score. Warm dots high-left are over-attended; cool dots bottom-right are elite seasons few watched.">
+              <span class="quad-h" aria-hidden="true"></span>
+              <span class="quad-v" aria-hidden="true"></span>
+              <span class="mono quad-tr">great season · much watched</span>
+              <span class="mono quad-bl">modest season · barely watched</span>
+            </div>
+            <div class="x-axis-label mono">Merit — role-adjusted season quality →</div>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Read the warm dots high on the chart with merit still middling — <span class="hot">Yamal</span>, <span class="hot">Kvaratskhelia</span>, <span class="hot">Modrić</span> — and the cool ones marooned bottom-right: elite seasons, like <span class="cool">Lewandowski's</span>, that nobody talked about.</p>
     </div>
-    <figure class="figure"><div class="card"><div id="spike-chart" role="img" aria-label="Line chart of the 2024 winner's daily Wikipedia views: the measurement window ends at the shortlist cut, before the much larger winner-announcement spike."></div></div>
-      <figcaption>One finisher's daily pageviews. The measurement window ends at the shortlist cut —
-        before the announcement spike.</figcaption></figure>
-  </div>
-</section>
+  </section>
 
-<!-- ░░ CAVEATS ░░ -->
-<section id="caveats" data-panel>
-  <div class="section-head"><p class="kicker">What this is, and isn't</p><h2>The honest fine print</h2></div>
-  <ul class="caveats">
-    <li><strong>Small sample.</strong> Seven award years — this is an interpretation, not a prediction
-      engine. The uncertainty ranges are wide on purpose.</li>
-    <li><strong>Merit covers every role, but not equally well.</strong> It grades attackers on
-      production, midfielders on ball-winning, keepers on shot-stopping, and center-backs on
-      tackle/aerial/ball-playing — so defenders and keepers are measured, not ignored. The honest gap:
-      purely-positional center-backs (a Rúben Dias) still read low, because great positioning leaves
-      fewer actions to count and no public stat captures it. So the Hype Score is "attention beyond the
-      merit we can <em>measure</em>" — for those hard-to-measure roles, part of it may be real value the
-      box score misses rather than narrative.</li>
-    <li><strong>One attention signal.</strong> Wikipedia pageviews, summed across every language. A
-      second, independent read from news-article volume (GDELT) is a natural cross-check, and is in
-      progress. Pageviews can also reflect a player's national-market size or diaspora; baseline fame
-      absorbs the steady part, but some residual market effect may remain.</li>
-    <li><strong>We only see the nominees.</strong> The finishing-higher model studies just the ~30
-      players who made the shortlist — a hand-picked group, which can bias the result. The textbook fix
-      is a <em>Heckman correction</em>: model <em>who gets nominated</em> first, then adjust the
-      finishing model for it. We name it as the principled next step — and note that our two-gate design
-      already studies that nomination step head-on, which is where the bias turned out to live.</li>
-  </ul>
-</section>
-
-<!-- ░░ CONCLUSION ░░ -->
-<footer data-panel>
-  <div class="wrap prose">
-    <p class="kicker">So — goals or stories?</p>
-    <p class="lead">Both, and you can mostly tell them apart — but not where the arguments happen. By
-      the time votes are counted, production and trophies do most of the work. The bias lives one step
-      earlier, in the invisible decision about <strong>who even gets to be on the list</strong>.</p>
-    <p>Narrative's real power isn't making you win the Ballon d'Or. It's getting you into the room.</p>
-    <div class="glossary">
-      <p class="kicker">What we mean</p>
-      <dl>
-        <dt>Hype Score</dt><dd>Attention beyond what a player's season explains — the buzz left over once
-          production, fame and team success are accounted for.</dd>
-        <dt>Merit</dt><dd>How good the season actually was, measured per role: production for attackers,
-          ball-winning for midfielders, shot-stopping for keepers, duels + ball-playing for defenders.</dd>
-        <dt>The two gates</dt><dd>The award is two decisions — <em>getting noticed</em> (making the
-          30-player shortlist) then <em>finishing higher</em> in the vote. We test the buzz at each.</dd>
-      </dl>
+  <!-- ░ LEADERBOARD ░ -->
+  <section class="band reveal">
+    <div class="wrap">
+      <p class="mono kicker gold">The narrative leaderboard</p>
+      <h2 class="display h2" style="max-width:20ch;margin-bottom:18px">Who the story carried — and who it forgot.</h2>
+      <p class="section-sub wide" style="margin-bottom:clamp(40px,6vw,60px)">Rank every finisher by Hype Score. The over-attended end is wonderkids and breakout stories; the quiet end is elite producers who never got their due.</p>
+      <div class="legend mono">
+        <span class="legend-item"><span class="chip-hot"></span>more buzz than merit explains</span>
+        <span class="legend-item"><span class="chip-cool"></span>flew under the radar</span>
+      </div>
+      <div id="leaderboard-rows"></div>
+      <p class="caption">A note: deep-lying roles read low because their value lives where the box score can't see it — part of a high residual there may be merit the stats miss, not story. The honest version is in the caveats.</p>
     </div>
-    <details class="note" style="padding-left:0;padding-right:0">
-      <summary>Methods &amp; reproducibility</summary>
-      <p style="color:var(--muted);font-size:0.92rem">In plain terms: we measure each player's season
-        (per position), their fame and team success, and their attention (Wikipedia pageviews across
-        every language). The Hype Score is the attention a statistical model <em>can't</em> explain from
-        those. Two models then ask whether that leftover buzz predicts making the shortlist and finishing
-        higher, and the result is re-checked dozens of ways. Years covered: 2018, 2019, 2021–2025 (2020
-        cancelled; 2017 predates the underlying data). Everything is cache-first and reproducible via
-        <code>python run.py &lt;stage&gt;</code>.</p>
-    </details>
-    <p style="color:var(--faint);font-size:0.85rem">Want the real equations — the Beta regression, the
-      pool-wide residual, the credible intervals? <a href="report/ballon-dor.html"
-      style="color:var(--accent)">Read the full technical report →</a></p>
-  </div>
-</footer>
+  </section>
+
+  <!-- ░ YEAR BY YEAR ░ -->
+  <section class="band bg2">
+    <div class="wrap">
+      <p class="mono kicker gold">The finding, year by year</p>
+      <h2 class="display h2" style="max-width:22ch;margin-bottom:clamp(8px,2vw,14px)">Best season. Biggest story. Actual winner.</h2>
+      <p class="section-sub wide" style="margin-bottom:clamp(36px,5vw,52px)">“Biggest story” is the most attention <em class="ink">beyond</em> what a season explains — not the most-viewed player. The point is where the <em class="ink">winner</em> falls between the two.</p>
+      <div id="peryear-rows" class="peryear-list"></div>
+    </div>
+  </section>
+
+  <!-- ░ ROBUSTNESS ░ -->
+  <section class="band">
+    <div class="wrap two-col robust-col">
+      <div>
+        <p class="mono kicker gold">Is it real?</p>
+        <h2 class="display h2-sm" style="margin-bottom:22px">It survives the stress tests.</h2>
+        <p class="prose-p">With seven years of data, one model proves nothing. So we re-ran the result dozens of ways — dropping Messi and Ronaldo, dropping breakout newcomers, leaving out each year in turn.</p>
+        <p class="prose-p">The <strong class="gold">getting-noticed</strong> effect barely moves. The <strong class="ink">finishing-higher</strong> effect is smaller and leans partly on the two superstars — so we say it quietly.</p>
+      </div>
+      <div class="card2" id="robust-card" role="img" aria-label="The Hype Score effect re-estimated across many specifications: at the nomination gate the estimates cluster tightly, far from zero; at the placement gate they sit low and graze zero."></div>
+    </div>
+  </section>
+
+  <!-- ░ CAVEATS ░ -->
+  <section class="band bg2">
+    <div class="wrap">
+      <p class="mono kicker gold">What this is, and isn't</p>
+      <h2 class="display h2" style="max-width:18ch;margin-bottom:clamp(36px,5vw,54px)">The honest fine print.</h2>
+      <div class="caveat-grid">
+        <div class="caveat"><div class="caveat-h">Small sample.</div><p>Seven award years — an interpretation, not a prediction engine. The uncertainty ranges are wide on purpose.</p></div>
+        <div class="caveat"><div class="caveat-h">Every role, not equally well.</div><p>Merit grades attackers, midfielders, keepers and defenders — but purely-positional center-backs still read low, because great positioning leaves fewer actions to count.</p></div>
+        <div class="caveat"><div class="caveat-h">One attention signal.</div><p>Wikipedia pageviews, summed across every language. A second, independent read from news volume is a natural cross-check, and is in progress.</p></div>
+        <div class="caveat"><div class="caveat-h">We only see the nominees.</div><p>The finishing model studies just the ~30 who made the shortlist. The two-gate design tackles that selection head-on — which is where the bias turned out to live.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░ CONCLUSION ░ -->
+  <footer class="band">
+    <div class="wrap">
+      <p class="mono kicker gold" style="margin-bottom:clamp(28px,4vw,40px)">So — goals or stories?</p>
+      <p class="display closer">Narrative's real power isn't making you win.<br />It's getting you <em class="gold">into the room</em>.</p>
+      <p class="section-sub" style="max-width:52ch;margin-bottom:clamp(48px,7vw,72px)">By the time votes are counted, production and trophies do most of the work. The bias lives one step earlier — in the invisible decision about who even gets to be on the list.</p>
+
+      <div class="glossary">
+        <div><div class="mono gloss-h gold">Hype Score · H⊥</div><p>Attention beyond what a season explains — the buzz left once production, fame and team success are accounted for.</p></div>
+        <div><div class="mono gloss-h gold">Merit</div><p>How good the season was, measured per role — production, ball-winning, shot-stopping, duels and ball-playing.</p></div>
+        <div><div class="mono gloss-h gold">The two gates</div><p>The award is two decisions — getting noticed (the 30-man shortlist) then finishing higher in the vote.</p></div>
+      </div>
+
+      <div class="footer-foot mono">
+        <span class="faint">Years covered 2018, 2019, 2021–2025 · 2020 cancelled</span>
+        <a href="report/ballon-dor.html" class="gold report-link">Read the full technical report →</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
 
 <script src="vendor/d3.v7.min.js"></script>
-<script src="vendor/scrollama.min.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
