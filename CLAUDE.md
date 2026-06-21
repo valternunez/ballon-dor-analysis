@@ -104,8 +104,13 @@ contrast bump, `role=img`+aria-labels on 7 site charts, `#| fig-alt` on 5 report
 CVD-safe). (P3) **site vendored** (`site/vendor/` d3+scrollama, `site/fonts/` woff2 — zero external
 requests). (P2) **MIT LICENSE** + data-attribution, README rewritten, `.gitignore` fixed
 (`!site/index.html`). ruff + **93 tests** green; report re-rendered; site offline-clean.
-**Next/optional:** **`git init` + first commit** (pending user OK on license/commit-scope); finish GDELT
-(rested IP) + wire `h_perp_gd`; club-importance v3.
+**PUBLISHED (2026-06-21)** — `git init` + commits done; pushed to **public GitHub
+`valternunez/ballon-dor-analysis`**. Site live on **GitHub Pages → https://valternunez.github.io/
+ballon-dor-analysis/** via `.github/workflows/pages.yml` (publishes `site/` on push to `site/**`); the
+rendered report is bundled at `site/report/ballon-dor.html` (the site's "full report" link). Pages
+source = GitHub Actions; `.nojekyll` added. Re-render flow: `quarto render` → `cp report/ballon-dor.html
+site/report/` → push.
+**Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd`; club-importance v3.
 
 ## Where the canon lives
 - `PROJECT_NOTES.md` — the locked methodology (thesis, funnel, merit index, H⊥, GDELT, modeling spec).
