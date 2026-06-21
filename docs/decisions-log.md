@@ -472,3 +472,18 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
   `og-card.html`). Privacy-friendly **GoatCounter** snippet added commented-out (needs the user's free
   site code to enable). Copyedit: `2018–2025` en-dash, `~210→~190` finisher-seasons (matches the
   188-point "every finisher" scatter), `centre-backs`/`30-player` consistency.
+
+### 2026-06-21 — Leaderboard label restyle, Figure-5 label collision, LinkedIn launch kit
+- **Leaderboard value label** (site): dropped the "flip the number inside the bar" trick (looked odd) —
+  values are inline-right like every row again; only the longest bars (`lb-row-stack`, fill end >80%)
+  move the number onto its own line just above the bar tip **on narrow screens** (Yamal +3.77 fits at
+  370<390, 0 overflow). Cache-bust `?v=20260621c`.
+- **Quarto Figure 5** (`report.py fig_spike`): the three window markers shared `annotation_position=
+  "top"`; shortlist-cut & ceremony are days apart so the labels overprinted ("shoetlistcuteremony").
+  Switched to explicit `add_annotation` with splayed `xanchor` (window-start & cut → left, ceremony →
+  right) at `yref=paper y=1.0`; all three legible now. Re-ran `run.py report` + `quarto render` + copied
+  to `site/report/` (data.js regenerated identical). ruff clean, 93 tests green.
+- **LinkedIn launch kit** (`docs/linkedin-post.md`): researched 2026 best practice — post Tue–Thu
+  ~15:00 UTC (EU-afternoon/US-morning overlap, global audience), strong 2-line hook, ~1,700 chars,
+  link in the FIRST COMMENT (body links cut reach ~60%), 4 hashtags, work the first 60 min. Balanced
+  finding-led copy + first-comment text + alt hooks + a PDF-carousel fallback if it underperforms.

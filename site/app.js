@@ -179,21 +179,19 @@
       const pos = r.h_perp >= 0, w = Math.abs(r.h_perp) * F;
       const tag = DESC[`${r.player}|${r.year}`] || (pos ? "narrative excess" : "under the radar");
       const fill = `left:${pos ? 50 : 50 - w}%;width:${w}%;background:${pos ? HOT : COOL}`;
-      // place the value just past the bar end — but flip it *inside* near the edge so it never
-      // overflows the screen (the longest bars otherwise push the number off the right).
+      // value sits just past the bar end (same as every row). For the longest bars the number can't
+      // fit to the right on a narrow screen, so those rows get `lb-row-stack`: on mobile the value
+      // moves onto its own line just above the bar end (handled in CSS) instead of being clipped.
       const end = pos ? 50 + w : 50 - w;          // fill's outer edge, % of bar
-      let lab, inside = false;
-      if (pos) {
-        if (end > 86) { inside = true; lab = `right:${(100 - end).toFixed(1)}%;text-align:right`; }
-        else lab = `left:${end.toFixed(1)}%;text-align:left`;
-      } else if (end < 14) { inside = true; lab = `left:${end.toFixed(1)}%;text-align:left`; }
-      else lab = `right:${(100 - end).toFixed(1)}%;text-align:right`;
+      const lab = pos ? `left:${end.toFixed(1)}%;text-align:left`
+        : `right:${(100 - end).toFixed(1)}%;text-align:right`;
+      const stack = pos ? end > 80 : end < 20;    // near the edge → won't fit inline on phones
       return (
-        `<div class="lb-row" data-tip="<b>${esc(r.player)}</b> · ${r.year}<br>Hype Score ${sgn(r.h_perp)} · finished #${r.rank}">
+        `<div class="lb-row${stack ? " lb-row-stack" : ""}" data-tip="<b>${esc(r.player)}</b> · ${r.year}<br>Hype Score ${sgn(r.h_perp)} · finished #${r.rank}">
           <div class="lb-name"><div class="nm">${esc(r.player)}</div><div class="tag">${r.year} · ${esc(tag)}</div></div>
           <div class="lb-bar"><div class="lb-zero"></div>
             <div class="lb-fill" style="${fill}"></div>
-            <div class="lb-val${inside ? " lb-val-in" : ""}" style="${lab}">${sgn(r.h_perp)}</div></div>
+            <div class="lb-val" style="${lab}">${sgn(r.h_perp)}</div></div>
         </div>`);
     }).join("");
     host.querySelectorAll(".lb-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));

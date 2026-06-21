@@ -253,11 +253,17 @@ def fig_spike(player: str = "Rodri", year: int = 2024):
     w = load_windows().loc[year]
     # datetimes -> numpy / ISO strings: kaleido (PNG export) can't JSON-serialize pandas Timestamps.
     fig = go.Figure(go.Scatter(x=s["date"].to_numpy(), y=s["views"], mode="lines", name="views"))
-    for when, label, color in [(w["perf_start"], "window start", "green"),
-                               (w["hype_cut"], "shortlist cut", "orange"),
-                               (w["ceremony_date"], "ceremony", "red")]:
-        fig.add_vline(x=when.isoformat(), line_dash="dash", line_color=color,
-                      annotation_text=label, annotation_position="top")
+    # shortlist-cut and ceremony are only days apart, so a shared "top" anchor collides the labels.
+    # Draw the lines, then splay the labels to opposite sides so they never overlap, however close
+    # the dates are (window-start & cut extend left, ceremony extends right).
+    markers = [(w["perf_start"], "window start", "green", "right"),
+               (w["hype_cut"], "shortlist cut", "orange", "right"),
+               (w["ceremony_date"], "ceremony", "red", "left")]
+    for when, label, color, xanchor in markers:
+        fig.add_vline(x=when.isoformat(), line_dash="dash", line_color=color)
+        fig.add_annotation(x=when.isoformat(), y=1.0, yref="paper", yanchor="bottom",
+                           xanchor=xanchor, text=label, showarrow=False,
+                           font={"color": color, "size": 11})
     fig.update_layout(template=_TEMPLATE, height=360, margin={"t": 50},
                       title=f"Attention is event-driven — {player} daily pageviews ({year} award)",
                       xaxis_title="", yaxis_title="all-language daily views")

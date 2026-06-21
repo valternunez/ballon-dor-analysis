@@ -156,7 +156,6 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
   transition: width .6s cubic-bezier(.4, 0, .2, 1); }
 .lb-val { position: absolute; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 0.66rem;
   color: var(--muted); padding: 0 7px; white-space: nowrap; }
-.lb-val-in { color: #14110b; padding: 0 6px; }   /* flipped inside the fill near the edge */
 
 /* per-year rows */
 .peryear-list { border-top: 1px solid var(--line); }
@@ -279,6 +278,11 @@ h2.h2, h2.h2-xl, h2.h2-sm { margin: 0; text-wrap: balance; line-height: 1.06; }
   .quad-tr, .quad-bl { display: none; }       /* corner notes collide with markers on small screens */
   .lb-name { width: clamp(110px, 38vw, 180px); }
   .lb-val { font-size: 0.6rem; padding: 0 5px; }   /* keep values on-screen on phones */
+  /* longest bars: the value can't fit to the right, so stack it on its own line just above the bar
+     end (right-aligned to the bar tip) instead of clipping off-screen. */
+  .lb-row-stack { padding-top: 22px; }
+  .lb-row-stack .lb-val { left: auto !important; right: 0; top: auto; bottom: 100%;
+    transform: none; text-align: right; padding: 0 0 3px; color: var(--ink); }
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
