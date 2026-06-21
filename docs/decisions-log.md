@@ -418,3 +418,17 @@ Post-leak-fix upgrades to take the piece from correct → publication-bulletproo
   README (was "scaffold, pulls stubbed"); fixed `.gitignore` (`*.html` was about to swallow the site's
   own `site/index.html` — added `!site/index.html`; the 26 MB report HTML stays gitignored/regenerated).
 - Verified: ruff + **93 tests** green; report re-rendered; site offline-clean.
+
+### Mobile polish — audited at iPhone width with headless Chrome (2026-06-21)
+Drove a Selenium mobile audit (390×844, real device emulation, screenshots + overflow probe) of the
+site and the Quarto report; neither had horizontal overflow, but found legibility/layout issues and fixed
+all of them. **Site:** scrolly sticky-graphic was overlapping the step boxes (shortened graphic to 50vh +
+opaque boxes); per-year scoreboard's 3 columns were cramped → **stack vertically** on phones in
+`drawPerYear` (font sizes via `.style` so the `.lab` class can't shrink them); bumped in-chart fonts via a
+`@media(max-width:760px)` block (scoped by chart id so it beats the class rules; per-year excluded);
+scatter got tap-to-reveal tooltips + larger dots (no hover on touch); relaxed full-screen `min-height`
+and disabled scroll-snap on mobile. **Report:** robustness caterpillar facets now stack vertically
+(`facet_row`, cleaned `gate=` labels) instead of cramped side-by-side; disabled the plotly modebar
+(`.show(config={displayModeBar:False})` per chunk — verified it embeds + still renders); suppressed
+plotly's bundled-MathJax "MathZoom.js failed to load" banner via an `include-in-header` script/style.
+Re-screenshotted to confirm; deployed (Pages run green, live URLs 200). ruff + 93 tests green.
