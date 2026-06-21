@@ -238,8 +238,10 @@
   }
 
   // ---- scatter (D3 SVG, distortion-free; redraws on resize) ----
+  // Labelled markers — kept well-separated for legibility. (Rodri '24 sits almost exactly on
+  // Kvaratskhelia '23, so it stays an unlabelled dot to avoid a collision.)
   const MARKERS = [["Modrić", 2018], ["Lewandowski", 2019], ["Messi", 2023],
-    ["Kvaratskhelia", 2023], ["Rodri", 2024], ["Yamal", 2024], ["Jorginho", 2021]];
+    ["Kvaratskhelia", 2023], ["Yamal", 2024], ["Jorginho", 2021]];
   function drawScatter() {
     const host = el("scatter-plot"); if (!host) return;
     const pts = (D.scatter || []).filter(p => p.merit != null && p.attention != null);
@@ -270,16 +272,49 @@
         .on("touchstart", (e, d) => { e.stopPropagation(); ptTip(d, e.touches[0].clientX, e.touches[0].clientY); });
     }
 
-    MARKERS.forEach(([n, yr]) => {
+    // labelled markers: brighter (lightened) haloed text + leader line, with collision-avoidance.
+    // On a narrow (phone) plot, only the 4 well-separated anchors are labelled to avoid crowding.
+    const fewMarks = W < 520;
+    const MK_MOBILE = new Set(["Messi", "Yamal", "Lewandowski", "Jorginho"]);
+    const useMarkers = fewMarks ? MARKERS.filter(m => MK_MOBILE.has(m[0])) : MARKERS;
+    const lighten = c => mix(c, INK, 0.5);   // keep the hue cue but lift it for legibility
+    const mk = useMarkers.map(([n, yr]) => {
       const p = pts.find(d => d.year === yr && d.player.includes(n));
-      if (!p) return;
-      const right = x(p.merit) > W * 0.6;
-      s.append("text").attr("class", "mk")
-        .attr("x", x(p.merit) + (right ? -13 : 13)).attr("y", y(p.attention) + 4)
-        .attr("text-anchor", right ? "end" : "start")
-        .attr("fill", hcol(p.h_perp)).style("pointer-events", "none")
-        .text(`${n} '${String(yr).slice(2)}`);
+      if (!p) return null;
+      const right = x(p.merit) > W * 0.62;
+      return { p, px: x(p.merit), py: y(p.attention), right, col: lighten(hcol(p.h_perp)),
+        lx: x(p.merit) + (right ? -14 : 14), ly: y(p.attention) + 4,
+        txt: `${n} '${String(yr).slice(2)}`, anchor: right ? "end" : "start" };
+    }).filter(Boolean);
+    const drawn = mk.map(m => {
+      const leader = s.append("line").attr("class", "mk-leader").attr("stroke", m.col).attr("opacity", 0.55);
+      const t = s.append("text").attr("class", "mk").attr("text-anchor", m.anchor)
+        .attr("fill", m.col).style("pointer-events", "none").text(m.txt);
+      return { m, leader, t };
     });
+    const place = () => drawn.forEach(o => {
+      o.t.attr("x", o.m.lx).attr("y", o.m.ly);
+      o.leader.attr("x1", o.m.px).attr("y1", o.m.py).attr("x2", o.m.lx).attr("y2", o.m.ly - 4)
+        .style("opacity", Math.abs(o.m.ly - 4 - o.m.py) > 8 || Math.abs(o.m.lx - o.m.px) > 18 ? 0.55 : 0);
+    });
+    place();
+    // nudge overlapping labels apart vertically using measured boxes
+    const hit = (a, b) => a.x < b.x + b.width + 2 && b.x < a.x + a.width + 2 && a.y < b.y + b.height + 1 && b.y < a.y + a.height + 1;
+    for (let it = 0; it < 8; it++) {
+      let moved = false;
+      for (let i = 0; i < drawn.length; i++) for (let j = i + 1; j < drawn.length; j++) {
+        const a = drawn[i].t.node().getBBox(), b = drawn[j].t.node().getBBox();
+        if (hit(a, b)) {
+          const lo = a.y <= b.y ? drawn[j] : drawn[i];
+          lo.m.ly = Math.min(H - 6, lo.m.ly + 9);
+          lo.t.attr("y", lo.m.ly);
+          lo.leader.attr("y2", lo.m.ly - 4)
+            .style("opacity", Math.abs(lo.m.ly - 4 - lo.m.py) > 8 || Math.abs(lo.m.lx - lo.m.px) > 18 ? 0.55 : 0);
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
   }
 
   // ---- on-scroll reveal ----
