@@ -18,6 +18,7 @@ format:
       text: |
         <script>window.MathJax={messageStyle:"none",showProcessingMessages:false,showMathMenu:false};</script>
         <style>#MathJax_Message{display:none !important;}</style>
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJCYWxsb24gZCdPciBhbmFseXNpcyI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzBjMGIwOSIvPgogIDwhLS0gdGhlIHNjYXR0ZXIgc3RvcnkgaW4gbWluaWF0dXJlOiBhIHdhcm0gb3Zlci1hdHRlbmRlZCBkb3QgaGlnaC1sZWZ0LCBhIGNvb2wgdW5kZXItYXR0ZW5kZWQgZG90IGxvdy1yaWdodCAtLT4KICA8Y2lyY2xlIGN4PSIxMS41IiBjeT0iMTEiIHI9IjQuNCIgZmlsbD0iI2Q4NjkzYyIvPgogIDxjaXJjbGUgY3g9IjIwLjUiIGN5PSIyMSIgcj0iNC40IiBmaWxsPSIjNWY5M2M5Ii8+CiAgPGNpcmNsZSBjeD0iMjIiIGN5PSIxMCIgcj0iMiIgZmlsbD0iI2M5YTQ0YyIvPgo8L3N2Zz4K">
 jupyter: bdor
 execute:
   echo: false

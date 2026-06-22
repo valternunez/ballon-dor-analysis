@@ -502,3 +502,6 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
   `bdor/__init__.py` — level bump for arviz/matplotlib/pytensor (g++ warning → ERROR), and a
   root-logger Filter for soccerdata (it logs via root with `basicConfig(force=True)`, so a level
   pre-set doesn't hold). Our own loggers and real errors untouched. `run.py` now starts clean.
+- GoatCounter analytics removed from `site/index.html` (user preference — no tracking). Added the site
+  favicon to the report page too (inlined as a base64 data URI in the qmd `include-in-header`, so it
+  stays self-contained).

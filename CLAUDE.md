@@ -119,8 +119,10 @@ mobile); **explicit scatter axis key** (↑ attention / → merit); **cache-bust
 Share: **OG + Twitter + canonical + JSON-LD**, **favicon.svg**, generated **1200×630 `og-image.png`**
 card; **GoatCounter** snippet added commented-out (user pastes free site code to enable). Copyedit
 (2018–2025, ~190 finisher-seasons, centre-backs/30-player). Live on Pages.
-**Next/optional:** enable GoatCounter (paste site code); finish GDELT (rested IP) + wire `h_perp_gd`;
-club-importance v3.
+**ANALYTICS REMOVED (2026-06-21)** — GoatCounter snippet deleted from `site/index.html` at the user's
+request (no tracking on the site). Report page got the site favicon (inlined data-URI in the qmd
+`include-in-header`).
+**Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd`; club-importance v3.
 
 ## Where the canon lives
 - `PROJECT_NOTES.md` — the locked methodology (thesis, funnel, merit index, H⊥, GDELT, modeling spec).
