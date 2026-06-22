@@ -498,3 +498,7 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
 - Report render leaked library import logging (soccerdata/arviz/pytensor "g++ not available") into the
   HTML — `echo`/`warning` options don't catch stderr logging. Fixed: `logging.disable(WARNING)` +
   `warnings.filterwarnings("ignore")` + `#| output: false` in the setup cell. Author → "Valter Nunez".
+- Terminal log spam (cosmetic): third-party libs log INFO at import. Quieted centrally in
+  `bdor/__init__.py` — level bump for arviz/matplotlib/pytensor (g++ warning → ERROR), and a
+  root-logger Filter for soccerdata (it logs via root with `basicConfig(force=True)`, so a level
+  pre-set doesn't hold). Our own loggers and real errors untouched. `run.py` now starts clean.
