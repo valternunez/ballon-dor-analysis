@@ -510,3 +510,32 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
   profile, quantified."), and casual flourishes ("rock-solid", "passes the smell test", "and it
   landed"). All numbers/claims/caveats and the report's inline `{python}` spans unchanged; brand title
   "Goals or Stories?" kept. Re-rendered report; bumped site `?v=20260623a`.
+
+### Multi-perspective pre-promotion audit → confidence/polish pass (2026-06-23)
+**What:** ran a five-lens read-only audit (data science, statistics, football domain,
+journalism/editorial, frontend/a11y) over the site, the Quarto report, the methodology in
+`src/bdor/`, and the living logs. **Verdict: no blockers, nothing factually wrong in reader-visible
+text** — every lens rated the work sound and honestly hedged. Two "blocker"-flagged items were
+verified down on inspection: (1) the football lens caught a `best:"Mohamed Salah"` for 2024, but the
+`best/hype/winner` keys in `app.js` `YEARS` are **dead** (only `verdict` is read; the per-year
+scoreboard's numbers come from `data.js`, which correctly shows Harry Kane) — never reader-visible;
+(2) the stats lens caught `P>0=1.00`, which lived only in the report + findings.md, not the site.
+**Fixes applied (copy/caveat/cleanup only — no data, model, layout or number changes):**
+- **Honesty:** report `ballon-dor.qmd` "large and certain … 100%" → "large and effectively certain …
+  >99%" (inline span now `">99%" if p_pos>=0.995 else f"{p_pos:.0%}"`); mirrored the two
+  figure-of-record Gate-A rows + headline prose in `findings.md` to `P>0>0.99` (historical interim
+  log rows left as-is — append-only journal). AME "typical candidate" → "average candidate".
+- **Caveat parity:** added the market-size/diaspora caveat to the **site** caveat grid (it was in the
+  report but not the site — asymmetric disclosure); added a Gate-A "attackers-only" clause to the
+  two-gate section sub (site previously implied "every role").
+- **Fairness:** Modrić 2018 verdict now carries the deep-lying-playmaker caveat the project already
+  makes internally (the merit index reads that role least well, so part of the residual may be value
+  the box score misses).
+- **Cleanup/polish:** stripped the dead `best/hype/winner` keys from `YEARS` (kept `year`+`verdict`,
+  added a comment that the scoreboard's numbers come from `data.js`); hardened the `DEFAME_NOTE`
+  lookup from `.includes()` (substring) to whole-token match; de-faming tabs got
+  `aria-controls`/`role=tabpanel`/tablist label; labelled the 26 MB report links as a large
+  interactive page. `datePublished 2026-06-24` left as-is (intentional — ships on the 24th).
+**Verify:** ruff clean, 93 tests green, report re-rendered (`>99%` + diaspora caveat + "average
+candidate" confirmed in HTML) and copied to `site/report/`; headless site load = 0 console errors,
+188 scatter dots, 7 per-year cards, 3 defame tabs, new caveats present. Bumped site `?v=20260623b`.

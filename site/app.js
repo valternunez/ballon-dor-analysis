@@ -56,14 +56,16 @@
     "Bruyne": "One of the best midfield seasons of the period, and it drew comparatively little attention.",
     "Yamal": "A 16-year-old breakout, and the single largest unexplained gap anywhere in the data.",
   };
+  // Only `year` and `verdict` are read (see VERDICT build below); the scoreboard's numbers
+  // come from data.js (per_year). Keep these two keys in sync with that payload.
   const YEARS = [
-    { year: "2018", best: "Lionel Messi", hype: "Luka Modrić", winner: "Luka Modrić", verdict: "The highest narrative residual of any winner in the sample — far more attention than his merit (20th in the field) explained — while Messi had the best season. This is the case the usual complaint describes." },
-    { year: "2019", best: "Robert Lewandowski", hype: "Virgil van Dijk", winner: "Lionel Messi", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest +0.92, sat well behind the field's best seasons, and Messi won among the very best on production." },
-    { year: "2021", best: "Robert Lewandowski", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "Lewandowski had the best season in the field, a record-breaking scorer with almost no extra buzz, and finished second. The narrative outweighed the goals." },
-    { year: "2022", best: "Kylian Mbappé", hype: "Karim Benzema", winner: "Karim Benzema", verdict: "Benzema took the vote on a Champions League run, while Mbappé again out-produced everyone. A deserved win, helped by the European campaign." },
-    { year: "2023", best: "Lionel Messi", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "The best season, the most votes, and considerable attention after the World Cup. Little here to dispute." },
-    { year: "2024", best: "Mohamed Salah", hype: "Lamine Yamal", winner: "Rodri", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, helped by a treble narrative." },
-    { year: "2025", best: "Mohamed Salah", hype: "Ousmane Dembélé", winner: "Ousmane Dembélé", verdict: "Dembélé won with little extra buzz, while Salah had the best season of anyone and finished fourth." },
+    { year: "2018", verdict: "The highest narrative residual of any winner in the sample — far more attention than his measured merit (20th in the field) explained, while Messi had the best season. Modrić played the deep-lying role the merit index reads least well, so part of that gap may be value the box score misses; even so, it is the case the usual complaint describes." },
+    { year: "2019", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest +0.92, sat well behind the field's best seasons, and Messi won among the very best on production." },
+    { year: "2021", verdict: "Lewandowski had the best season in the field, a record-breaking scorer with almost no extra buzz, and finished second. The narrative outweighed the goals." },
+    { year: "2022", verdict: "Benzema took the vote on a Champions League run, while Mbappé again out-produced everyone. A deserved win, helped by the European campaign." },
+    { year: "2023", verdict: "The best season, the most votes, and considerable attention after the World Cup. Little here to dispute." },
+    { year: "2024", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, helped by a treble narrative." },
+    { year: "2025", verdict: "Dembélé won with little extra buzz, while Salah had the best season of anyone and finished fourth." },
   ];
 
   const el = id => document.getElementById(id);
@@ -85,16 +87,17 @@
     const host = el("defame-card"); if (!host) return;
     const ex = (D.defame || []).map(d => {
       const last = /Bruyne/.test(d.player) ? "De Bruyne" : d.player.split(" ").slice(-1)[0];
-      const noteKey = Object.keys(DEFAME_NOTE).find(k => d.player.includes(k));
+      const nameTokens = d.player.split(/\s+/);
+      const noteKey = Object.keys(DEFAME_NOTE).find(k => nameTokens.includes(k));
       return { ...d, last, pos: d.h_perp >= 0, note: noteKey ? DEFAME_NOTE[noteKey] : "" };
     });
     if (!ex.length) return;
     let cur = 0;
     host.innerHTML =
-      '<div class="df-tabs" role="tablist">' +
-      ex.map((d, i) => `<button class="df-tab" role="tab" data-i="${i}">${esc(d.last)} '${String(d.year).slice(2)}</button>`).join("") +
+      '<div class="df-tabs" role="tablist" aria-label="Player examples">' +
+      ex.map((d, i) => `<button class="df-tab" role="tab" aria-controls="df-panel" data-i="${i}">${esc(d.last)} '${String(d.year).slice(2)}</button>`).join("") +
       '</div>' +
-      '<div class="df-body">' +
+      '<div class="df-body" id="df-panel" role="tabpanel">' +
       '  <div class="df-plot">' +
       '    <div class="df-bars">' +
       '      <div class="df-col"><div class="df-cap gold" id="df-acap"></div><div class="df-bar actual" id="df-abar" style="height:0"></div></div>' +

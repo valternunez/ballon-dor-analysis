@@ -114,9 +114,9 @@ report.fig_two_gate().show(config={"displayModeBar": False, "responsive": True})
 
 One chart carries the result.
 
-- **At the nomination gate, narrative matters a lot.** H⊥'s effect is large and certain
+- **At the nomination gate, narrative matters a lot.** H⊥'s effect is large and effectively certain
   (`{python} f"{A['mean']:+.2f}"`, 94% interval `{python} f"[{A['lo']:.2f}, {A['hi']:.2f}]"`,
-  probability positive `{python} f"{A['p_pos']:.0%}"`). Being talked about *beyond what you did* makes
+  probability positive `{python} (">99%" if A['p_pos'] >= 0.995 else f"{A['p_pos']:.0%}")`). Being talked about *beyond what you did* makes
   you meaningfully more likely to make the 30 — even after merit and team success are in the model.
 - **At the placement gate, it matters much less** (`{python} f"{B['mean']:+.2f}"`,
   `{python} f"[{B['lo']:.2f}, {B['hi']:.2f}]"`). Once you're in the room, the vote is driven far more
@@ -125,7 +125,7 @@ One chart carries the result.
 **In plain terms** (log-odds are not intuitive): at equal merit and team success, a
 one-standard-deviation rise in Hype Score **roughly `{python} f"{E['gate_a_or']['or']:.1f}"`× the odds
 of being shortlisted** — about **+`{python} f"{E['gate_a_ame']['mean']:.0f}"` percentage points**,
-lifting a typical candidate from ~`{python} f"{E['gate_a_ame']['base_pct']:.0f}"`% to
+lifting the average candidate from ~`{python} f"{E['gate_a_ame']['base_pct']:.0f}"`% to
 ~`{python} f"{E['gate_a_ame']['base_pct'] + E['gate_a_ame']['mean']:.0f}"`%. For placement the same jump
 moves the odds only ~`{python} f"{E['gate_b_or']['or']:.2f}"`× (about
 `{python} f"+{(E['gate_b_or']['or'] - 1) * 100:.0f}"`%). On the shared per-SD log-odds scale that's the

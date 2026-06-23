@@ -108,14 +108,14 @@ added H⊥ to Stage A. The two gates can now be compared on the same orthogonali
 
 | Gate | what it asks | H⊥ (std, logit) | 94% HDI | P(H⊥>0) |
 |---|---|---|---|---|
-| **A — nomination** | do you get *noticed* (make the 30)? | **+0.72** | [+0.50, +0.95] | **1.00** |
+| **A — nomination** | do you get *noticed* (make the 30)? | **+0.72** | [+0.50, +0.95] | **>0.99** |
 | **B — placement** | given noticed, do you finish *higher*? | **+0.19** | [+0.04, +0.34] | 0.99 |
 
 - **The working hypothesis lands.** PROJECT_NOTES predicted narrative does most of its work at
   **Gate A** (getting an unglamorous-but-productive player onto voters' radar) and that Gate B is more
   merit/team-driven once the field is curated. Exactly so: **H⊥'s pull on *nomination* is ~4× its pull
   on *placement*** (+0.72 vs +0.19). At Gate A, narrative-beyond-merit is ~45% the size of merit
-  itself (`merit_z`≈+1.59) — a big, decisive effect (P>0=1.00). **The Ballon d'Or's attention bias is
+  itself (`merit_z`≈+1.59) — a big, decisive effect (P>0>0.99). **The Ballon d'Or's attention bias is
   mostly in *who gets considered*, not in who wins among those considered.**
 - **Merit still rules nomination** (`merit_z`≈+1.59) and H⊥ is *added on top* without denting it
   (H⊥ is orthogonal to merit by construction) — so this is genuine narrative lift, not merit in
@@ -234,7 +234,7 @@ performance window, killing the calendar-year look-ahead that had let post-cerem
 merit (decisions log). The headline survives the most invasive change yet:
 | Gate | before (full-season blend) | after (leakage-safe windows) |
 |---|---|---|
-| A — nomination H⊥ | +0.779 | **+0.733** (HDI [0.53, 0.95], P>0=1.00) |
+| A — nomination H⊥ | +0.779 | **+0.733** (HDI [0.53, 0.95], P>0>0.99) |
 | B — placement H⊥  | +0.186 | **+0.147** (HDI [0.02, 0.28], P>0=0.98; no-duo grazes 0) |
 
 - **The payoff is *stronger*.** A/B ratio went ~4× → **~5×**: narrative's pull on getting *noticed* is
