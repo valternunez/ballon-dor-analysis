@@ -539,3 +539,15 @@ scoreboard's numbers come from `data.js`, which correctly shows Harry Kane) — 
 **Verify:** ruff clean, 93 tests green, report re-rendered (`>99%` + diaspora caveat + "average
 candidate" confirmed in HTML) and copied to `site/report/`; headless site load = 0 console errors,
 188 scatter dots, 7 per-year cards, 3 defame tabs, new caveats present. Bumped site `?v=20260623b`.
+
+### Audit follow-up: P3 documentation items (2026-06-23)
+Closed the deferred P3 docs. Found most were **already documented in code** — `hperp.py` already
+names the tournament-result asymmetry (player→nation is finisher-only, so it's a Stage-B-only
+control, excluded from the pool-wide de-fame), and `merit.py`/`config.completed_season` already
+document the calendar-year window for FBref-routed defensive/keeper merit. The README already had a
+full Reproduce section. So the net work was **surfacing** these in the report's Methods callout (the
+tournament-result asymmetry was not named there; also made the attacking=date-window vs
+defensive=completed-season asymmetry explicit as the public-data ceiling) and **consistency fixes**
+to the README to match the honesty + voice passes (`P>0=1.00`→`>0.99`; dropped "rock-solid"; H1
+antithesis "rewards goals. It also rewards stories." → "rewards goals — and stories."). Re-rendered
+report + copied to `site/report/`.

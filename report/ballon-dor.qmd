@@ -245,8 +245,12 @@ the Wikipedia results tables; attention from the Wikimedia pageviews API summed 
 editions. Merit = within-position-season standardized production (PCA), built from **match-level data
 summed over each award year's official performance window** so calendar-regime years (2018/2019/2021)
 don't credit matches played after the ceremony; the season-aggregate defensive/keeper signals, which
-have no match logs, fall back to the most recent *completed* season. H⊥ = residual of
-log-window-attention on log-baseline + merit + club team-success, fit pool-wide. Outcome models are
+have no match logs, fall back to the most recent *completed* season (decided before the ceremony, but
+a coarser window than the match-level attacking merit — the public-data ceiling). H⊥ = residual of
+log-window-attention on log-baseline + merit + club team-success, fit pool-wide. International
+tournament success is **not** a de-fame regressor — a player→nation mapping exists only for finishers,
+so including it would residualize inconsistently across the full candidate pool — and so enters only
+the placement model (Gate B), where every row is a finisher. Outcome models are
 Bayesian (a Beta regression for vote share, a logistic for nomination, year partial-pooling, fit with
 nutpie); the robustness panel uses fast frequentist anchors that track the posteriors. Everything is
 cache-first and reproducible via `python run.py <stage>`.

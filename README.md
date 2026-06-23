@@ -1,4 +1,4 @@
-# The Ballon d'Or rewards goals. It also rewards stories.
+# The Ballon d'Or rewards goals — and stories.
 
 Does the Ballon d'Or reward on-pitch production, or narrative? This project asks the honest,
 **conditional** version of that question:
@@ -16,11 +16,11 @@ The award is two decisions, so we test the Hype-Score question at each gate:
 
 | Gate | question | H⊥ effect (per SD, 94% interval) | in plain terms |
 |---|---|---|---|
-| **A — nomination** | do you make the 30-man shortlist? | **+0.73** [0.53, 0.95], P>0 = 1.00 | ≈ **doubles** the odds of being shortlisted (~+9 pts of probability) |
+| **A — nomination** | do you make the 30-man shortlist? | **+0.73** [0.53, 0.95], P>0 > 0.99 | ≈ **doubles** the odds of being shortlisted (~+9 pts of probability) |
 | **B — placement** | given you're in, do you finish higher? | **+0.15** [0.02, 0.28], P>0 = 0.98 | adds only ~16% to the odds |
 
 **The bias is in who gets *considered*, not who wins** — narrative's pull on nomination is ~5× its
-pull on placement. Gate A is rock-solid across every robustness check; Gate B is real but modest and
+pull on placement. Gate A holds across every robustness check; Gate B is real but modest and
 duopoly-sensitive. See [`docs/findings.md`](docs/findings.md) for the full results log and
 [`docs/decisions-log.md`](docs/decisions-log.md) for the war stories (including the merit-window
 leakage fix). The locked methodology lives in [`PROJECT_NOTES.md`](PROJECT_NOTES.md); the per-year
