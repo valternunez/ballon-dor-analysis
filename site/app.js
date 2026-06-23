@@ -52,18 +52,18 @@
     "Robert Lewandowski|2019": "robbed of his due", "Jorginho|2021": "trophy-laden, quiet",
   };
   const DEFAME_NOTE = {
-    "Modrić": "A World Cup run, not a club season — the attention ran far ahead of the year itself.",
-    "Bruyne": "One of the best midfield seasons going — and the conversation barely registered it.",
-    "Yamal": "A 16-year-old phenomenon: the single largest unexplained gap anywhere in the data.",
+    "Modrić": "Driven by a World Cup run rather than his club season; attention ran well ahead of the year itself.",
+    "Bruyne": "One of the best midfield seasons of the period, and it drew comparatively little attention.",
+    "Yamal": "A 16-year-old breakout, and the single largest unexplained gap anywhere in the data.",
   };
   const YEARS = [
-    { year: "2018", best: "Lionel Messi", hype: "Luka Modrić", winner: "Luka Modrić", verdict: "The highest-narrative winner in the data — far more attention than his merit (20th in the field) explained — while Messi quietly had the best season. The complaint, confirmed." },
-    { year: "2019", best: "Robert Lewandowski", hype: "Virgil van Dijk", winner: "Lionel Messi", verdict: "No real inflation this year: even the loudest extra buzz — Van Dijk's, at a modest +0.92 — sat well behind the field's best seasons. Messi won among the very best by production. A clean one." },
-    { year: "2021", best: "Robert Lewandowski", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "The textbook case. Lewandowski had the best season in the field — a record-breaking scorer — with almost no buzz, and finished second. The story edged the goals." },
-    { year: "2022", best: "Kylian Mbappé", hype: "Karim Benzema", winner: "Karim Benzema", verdict: "Benzema took the vote on a Champions League run, while Mbappé out-produced everyone again. Earned, with a tailwind." },
-    { year: "2023", best: "Lionel Messi", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "Best season, most votes, and plenty of buzz on the back of a World Cup. Hard to call this one a robbery." },
-    { year: "2024", best: "Mohamed Salah", hype: "Lamine Yamal", winner: "Rodri", verdict: "Rodri won ranked 14th on raw production — the holding midfielder whose value the box score can barely see, lifted by a treble narrative." },
-    { year: "2025", best: "Mohamed Salah", hype: "Ousmane Dembélé", winner: "Ousmane Dembélé", verdict: "Dembélé won with little extra buzz; Salah had the best season of anyone and finished fourth." },
+    { year: "2018", best: "Lionel Messi", hype: "Luka Modrić", winner: "Luka Modrić", verdict: "The highest narrative residual of any winner in the sample — far more attention than his merit (20th in the field) explained — while Messi had the best season. This is the case the usual complaint describes." },
+    { year: "2019", best: "Robert Lewandowski", hype: "Virgil van Dijk", winner: "Lionel Messi", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest +0.92, sat well behind the field's best seasons, and Messi won among the very best on production." },
+    { year: "2021", best: "Robert Lewandowski", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "Lewandowski had the best season in the field, a record-breaking scorer with almost no extra buzz, and finished second. The narrative outweighed the goals." },
+    { year: "2022", best: "Kylian Mbappé", hype: "Karim Benzema", winner: "Karim Benzema", verdict: "Benzema took the vote on a Champions League run, while Mbappé again out-produced everyone. A deserved win, helped by the European campaign." },
+    { year: "2023", best: "Lionel Messi", hype: "Lionel Messi", winner: "Lionel Messi", verdict: "The best season, the most votes, and considerable attention after the World Cup. Little here to dispute." },
+    { year: "2024", best: "Mohamed Salah", hype: "Lamine Yamal", winner: "Rodri", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, helped by a treble narrative." },
+    { year: "2025", best: "Mohamed Salah", hype: "Ousmane Dembélé", winner: "Ousmane Dembélé", verdict: "Dembélé won with little extra buzz, while Salah had the best season of anyone and finished fourth." },
   ];
 
   const el = id => document.getElementById(id);

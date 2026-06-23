@@ -505,3 +505,8 @@ After the redesign, a round of user-driven polish + a pre-publish sweep:
 - GoatCounter analytics removed from `site/index.html` (user preference — no tracking). Added the site
   favicon to the report page too (inlined as a base64 data URI in the qmd `include-in-header`, so it
   stays self-contained).
+- Editorial voice pass (user: copy read "AI"). Heavier/sober register across site + report: removed the
+  repeated "X isn't Y. It's Z." antithesis, fragment-as-emphasis ("A clean one.", "the underrated
+  profile, quantified."), and casual flourishes ("rock-solid", "passes the smell test", "and it
+  landed"). All numbers/claims/caveats and the report's inline `{python}` spans unchanged; brand title
+  "Goals or Stories?" kept. Re-rendered report; bumped site `?v=20260623a`.
