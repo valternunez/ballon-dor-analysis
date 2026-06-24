@@ -20,6 +20,7 @@ from bdor.data import (
     awards,
     fbref_defense,
     gdelt,
+    gdelt_bq,
     pageviews,
     statsbomb,
     understat,
@@ -38,7 +39,9 @@ STAGES = [
      understat.pull_matches),
     ("wikidata", "Language sitelinks + name aliases per player", wikidata.pull),
     ("pageviews", "All-language daily Wikipedia pageviews", pageviews.pull),
-    ("gdelt", "Disambiguated global news volume", gdelt.pull),
+    ("gdelt", "Disambiguated global news volume (DOC 2.0 API)", gdelt.pull),
+    ("gdelt_bq", "Global news volume via BigQuery GKG (free sandbox; DOC-API alternative)",
+     gdelt_bq.build),
     ("statsbomb", "Semifinalist tournament squads (Tier-2 pool 3rd source)", statsbomb.pull),
     ("fbref_defense", "Cross-league defensive actions (def. merit)", fbref_defense.pull),
     ("features", "Build merit index + H-perp (residualised hype)", features.build),
@@ -51,8 +54,8 @@ STAGES = [
 # Stages with a working implementation. Listed explicitly so `--list` never has to *call*
 # a stage to learn its status (calling a pull() would hit the network).
 IMPLEMENTED = {
-    "awards", "understat", "understat_match", "wikidata", "pageviews", "gdelt", "statsbomb",
-    "fbref_defense", "features", "pool", "models", "robustness", "report",
+    "awards", "understat", "understat_match", "wikidata", "pageviews", "gdelt", "gdelt_bq",
+    "statsbomb", "fbref_defense", "features", "pool", "models", "robustness", "report",
 }
 
 

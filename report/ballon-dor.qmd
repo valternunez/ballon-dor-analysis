@@ -205,6 +205,16 @@ that crosses zero. With no clean exclusion restriction and a sample this size, t
 sign test rather than a clean correction; the two-gate design is the real response to selection, since
 the bias falls at the gate modelled directly.
 
+The strongest check uses a **different attention signal entirely**. Everything above measures attention
+as Wikipedia traffic; rebuilding H⊥ on **GDELT global news volume** — a separate corpus, the count of
+news documents naming each player — the nomination effect survives and stays clearly positive
+(`{python} f"{RX['gdelt_a']['est']:+.2f}"`, 95% CI
+`{python} f"[{RX['gdelt_a']['lo']:.2f}, {RX['gdelt_a']['hi']:.2f}]"`). The placement effect stays the
+same sign but, on this smaller finisher-only sample and noisier signal, is no longer distinguishable
+from zero (`{python} f"{RX['gdelt_b']['est']:+.2f}"`). So the firm result — narrative gets you
+*noticed* — is not an artifact of one attention measure; it reproduces on independent news data. (GDELT
+covers only the finalists' news footprint, so this is a replication check, not the pool-wide fit.)
+
 A final check shows why the windowing matters. The attention window is cut *before* the ceremony. If it
 is allowed to run *past* the ceremony — catching the winner-announcement pageview spike — the placement
 effect inflates, exactly as a leak should, while nomination (decided weeks earlier) does not move.

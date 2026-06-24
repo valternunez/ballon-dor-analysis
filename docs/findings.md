@@ -296,3 +296,19 @@ xg_share 0.34.
 crediting how central a player was to his side, narrative-beyond-merit keeps essentially all its pull
 at nomination and its modest pull at placement. Added as the `drop_club_importance` row on the
 robustness caterpillar (site + report).
+
+### Second attention proxy lands: the nomination effect replicates on GDELT news (2026-06-24)
+**What:** rebuilt H⊥ on a **completely independent** attention signal — GDELT global news volume
+(count of news documents naming each player, 2017–2025) instead of Wikipedia pageviews — via the
+BigQuery public GKG table. 245k player-days over 114 of the 128 finishers; validated event-driven
+(Messi peaks 2022-12-18, the World Cup final). De-famed the same way (`prefix="gd"` → `h_perp_gd`),
+**finisher-fit** (GDELT covers only the award universe, not the pool).
+**Result — the firm gate replicates, the modest gate stays modest:**
+- **Gate A (nomination): +0.45** (95% CI [0.14, 0.76]) — clearly positive, **same sign/direction** as
+  the pageviews headline (+0.74). Smaller, as expected on a finisher-only (n≈311) and noisier signal,
+  but the *getting-noticed* effect is not an artifact of one data source.
+- **Gate B (placement): +0.06** (95% CI [−0.07, 0.19]) — same sign, but no longer distinguishable from
+  zero under the noisier finisher-fit proxy. Consistent with placement being the fragile gate.
+**Reading:** the headline — narrative gets you **considered** — survives swapping the entire attention
+measure for a different corpus. Reported as prose (not on the caterpillar — it's a different signal,
+not the same H⊥ re-estimated under a spec choice, same treatment as the bootstrap/Heckman rows).

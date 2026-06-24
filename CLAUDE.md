@@ -76,12 +76,16 @@ groupby-sum (the v3 note's "candidate-only" worry was wrong). Anchors land (Rodr
 0.82 / xg_share 0.05). **Headline held: Gate A +0.733→+0.696, Gate B +0.147→+0.145** (ratio ~4.8×);
 new `drop_club_importance` row on the robustness caterpillar (+0.78 A / +0.14 B without it). Refit chain
 + regenerated report/site. See findings + decisions log.
-**GDELT second proxy CODED, pull still IP-blocked → shipped pageviews-only (2026-06-24)** — full
-`h_perp_gd` path wired (`hperp_frame(prefix=)`, `features/gdelt_attention.py`, `hperp.build_gdelt`,
-**guarded** `proxy_gdelt` robustness spec that skips unless the volume cache exists — never triggers a
-live pull). Resume (48/128, rested IP) stayed soft-banned; per the locked fallback we ship on pageviews
-and the panel auto-adds `proxy_gdelt` once the pull finishes on a different network. GDELT covers only
-the ~128 award universe, so `h_perp_gd` is a finisher-fit replication check, not a pool-wide refit.
+**GDELT second proxy DONE — via BigQuery, free (2026-06-24)** — the DOC 2.0 API stayed IP-banned, so
+we switched paths to the **BigQuery public GKG table** (`data/gdelt_bq.py`, `[gdelt-bq]` extra,
+`gdelt_bq` stage). Counts per-player daily `V2Persons` mentions (accent-folded join to wikidata
+names), writing the SAME `gdelt_volume_daily` cache → `gdelt_attention`/`build_gdelt`/`proxy_gdelt`
+lit up unchanged. Kept free via a no-billing **sandbox** project + a `dry_run()` gate; the scan is only
+**0.066 TB** (read just DATE+V2Persons), well within the 1 TB free tier. 245k player-days, Messi WC
+spike validates disambiguation. **The nomination effect replicates: Gate A +0.45 (CI [0.14, 0.76])**;
+Gate B +0.06 (same sign, not significant on the noisier finisher-fit sample). Surfaced as prose in the
+report + site robustness sections (not the caterpillar — a different signal, like bootstrap/Heckman).
+Auth = a user-created service-account key (in Downloads, never committed).
 **Robustness chart polished** (2026-06-20) — fixed a systemic SVG label-colour bug (`.attr`→`.style`
 fill; was muted by `.lab` CSS), regrouped the caterpillar into Gate A/Gate B blocks (one clean row each,
 plain-language Y labels), and added a "what each stress test means" dropdown. Site-only, no model change.

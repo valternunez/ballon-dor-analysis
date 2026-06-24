@@ -58,6 +58,13 @@ statsbomb = [
 fbref = [
     "pyreadr>=0.5",
 ]
+# GDELT news-volume proxy via the BigQuery public GKG table (the DOC 2.0 API IP-bans; BigQuery
+# doesn't). Free in a no-billing "sandbox" project (1 TB/month, hard cap). db-dtypes lets the
+# BigQuery client return a pandas frame. See data/gdelt_bq.py + docs/gdelt-resume.md.
+gdelt-bq = [
+    "google-cloud-bigquery>=3.25",
+    "db-dtypes>=1.2",
+]
 dev = [
     "ruff>=0.5",
     "pytest>=8.2",

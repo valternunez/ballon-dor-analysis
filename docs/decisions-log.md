@@ -583,3 +583,20 @@ de-fame team-context control, which also keeps the with/without robustness clean
 **Outcome: the thesis held** (Gate A +0.733→+0.696, Gate B +0.147→+0.145; see findings). Refit the
 whole chain, rebuilt the panel + report figures + site data, re-rendered the report; ruff + tests
 green. Bumped site `?v=20260624a`.
+
+### GDELT, finally — via BigQuery, not the DOC API (2026-06-24)
+The DOC 2.0 API IP-ban was never going to clear from this network, so we switched **data source path**:
+the same GDELT data lives in the **BigQuery public GKG table** (`gdelt-bq.gdeltv2.gkg_partitioned`),
+which doesn't rate-ban. New `data/gdelt_bq.py` counts per-player daily mentions in `V2Persons`
+(accent-folded join to the wikidata names+aliases), writing the SAME `gdelt_volume_daily` cache the
+DOC path used — so `gdelt_attention`/`build_gdelt`/`proxy_gdelt` lit up with zero further wiring.
+**Kept strictly free:** a BigQuery **sandbox** project (no billing account → cannot be charged; hard
+1 TB/mo cap), gated by a free `dry_run()`. Pleasant surprise — the scan is only **0.066 TB** (we read
+just `DATE` + the short `V2Persons` column over the partitions; the full table is 19.65 TB), so it ran
+**well within the free tier**. 245k player-days, 114/128 players, Messi spike on the WC final
+validates disambiguation. Auth = a service-account JSON key the user created (kept in Downloads, never
+in the repo). The earlier DOC-API module/cooldown machinery stays as-is (unused now, but harmless).
+**Outcome:** the nomination effect **replicates** on this independent corpus (Gate A +0.45, CI clears
+0); placement stays same-sign but not significant on the noisier finisher-fit sample (see findings).
+Surfaced as prose in the report + site robustness sections (not the caterpillar — different signal,
+like bootstrap/Heckman). `proxy_gdelt` is now a live row in the cached robustness panel.

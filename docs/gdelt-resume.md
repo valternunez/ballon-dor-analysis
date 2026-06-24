@@ -1,5 +1,10 @@
 # GDELT pull — paused, how/when to resume
 
+> **SUPERSEDED (2026-06-24): use BigQuery, not this DOC-API pull.** The DOC 2.0 API IP-ban never
+> cleared, so the second proxy now comes from the **BigQuery public GKG table** (`data/gdelt_bq.py`,
+> `python run.py gdelt_bq`) — free in a no-billing sandbox project, ~0.066 TB scan. It writes the same
+> `gdelt_volume_daily` cache. The notes below are kept only as the record of the DOC-API dead end.
+
 **Paused at: 2026-06-19 16:38, resumed 2026-06-20 ~21:25 (got to 48), hard-banned again.**
 
 ## State

@@ -138,6 +138,9 @@ def robustness_extras() -> dict:
         # drop_club_importance = H⊥ refit WITHOUT the v3 team-centrality control (baseline has it).
         "noclub_a": _get("A_nomination", "drop_club_importance"),
         "noclub_b": _get("B_placement", "drop_club_importance"),
+        # proxy_gdelt = H⊥ rebuilt on GDELT news volume (independent of pageviews); finisher-fit.
+        "gdelt_a": _get("A_nomination", "proxy_gdelt"),
+        "gdelt_b": _get("B_placement", "proxy_gdelt"),
     }
 
 
