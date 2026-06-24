@@ -231,7 +231,8 @@
     const host = el("robust-card"); if (!host) return;
     const SPECS = [["baseline", "main model"], ["no_duopoly", "drop Messi & Ronaldo"],
       ["drop_low_baseline", "drop low-fame players"], ["window_leaky", "window past ceremony"],
-      ["window_strict", "window before ceremony"], ["jackknife_year", "leave a year out"]];
+      ["window_strict", "window before ceremony"],
+      ["drop_club_importance", "ignore club importance"], ["jackknife_year", "leave a year out"]];
     const by = {}; (D.robustness || []).forEach(r => { by[`${r.gate}|${r.spec}`] = r; });
     const pos = v => Math.max(0, v) * POSX;   // clamp tiny negatives to the zero edge
     const rows = (gate, col) => SPECS.map(([spec, lab]) => {

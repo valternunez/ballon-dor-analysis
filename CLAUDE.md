@@ -68,14 +68,20 @@ all four dims (0-filled per role) → **defenders & keepers get an H⊥ for the 
 (Donnarumma/Oblak/Courtois/Alisson); Van Dijk H⊥ +0.54, Donnarumma +1.52. Site + logs updated.
 **"How we score it" explainer DONE** — static `#howto` section in `site/index.html` (+ `.howto-grid`
 in styles.css), inserted after the intro: two plain cards (Merit / Hype Score), no JS/data change.
-**Club-importance scoped as v3 (next batch)** — `docs/club-importance-v3.md`: we capture individual
-stats + binary trophies but NOT how central a player was to his club (Rodri 2024). Candidate signals:
-share-of-team-output (needs a new Understat team-totals pull), minutes-share, season-avg match ratings
-(cross-check only — black-box + gated). Open: enter merit vs Hype-Score team block (leaning latter).
-**GDELT pull at 48/128, hard-banned again** (2026-06-20) — resume cleared 43→48 then the IP soft-banned
-(HTTP 200 empty body); `_request` **hardened** to treat non-JSON bodies as a throttle (no more
-`JSONDecodeError` crash — decisions log). Next attempt needs a different network or a 12–24h rest; not
-retrying immediately. `h_perp_gd` second proxy still gated on the pull completing.
+**Club-importance v3 DONE (option b) — thesis survives (2026-06-24)** — added graded team-centrality
+(`features/club_importance.py`: `minutes_share`, `xg_share`) as a **de-fame control** in
+`hperp._REGRESSORS` (NOT a merit dim, NOT a placement predictor). **No new pull needed** — the cached
+`understat_player_seasons` already holds full league squads (7124 players), so team totals are a
+groupby-sum (the v3 note's "candidate-only" worry was wrong). Anchors land (Rodri 23-24 minutes_share
+0.82 / xg_share 0.05). **Headline held: Gate A +0.733→+0.696, Gate B +0.147→+0.145** (ratio ~4.8×);
+new `drop_club_importance` row on the robustness caterpillar (+0.78 A / +0.14 B without it). Refit chain
++ regenerated report/site. See findings + decisions log.
+**GDELT second proxy CODED, pull still IP-blocked → shipped pageviews-only (2026-06-24)** — full
+`h_perp_gd` path wired (`hperp_frame(prefix=)`, `features/gdelt_attention.py`, `hperp.build_gdelt`,
+**guarded** `proxy_gdelt` robustness spec that skips unless the volume cache exists — never triggers a
+live pull). Resume (48/128, rested IP) stayed soft-banned; per the locked fallback we ship on pageviews
+and the panel auto-adds `proxy_gdelt` once the pull finishes on a different network. GDELT covers only
+the ~128 award universe, so `h_perp_gd` is a finisher-fit replication check, not a pool-wide refit.
 **Robustness chart polished** (2026-06-20) — fixed a systemic SVG label-colour bug (`.attr`→`.style`
 fill; was muted by `.lab` CSS), regrouped the caterpillar into Gate A/Gate B blocks (one clean row each,
 plain-language Y labels), and added a "what each stress test means" dropdown. Site-only, no model change.

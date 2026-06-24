@@ -9,9 +9,13 @@ Engine = the **frequentist anchors** (statsmodels Beta for Stage B, Logit for St
 cell, and already shown to track the Bayesian posteriors (Stage B +0.192 Bayes vs +0.195 freq). The
 posteriors stay the headline; this shows the point estimate is stable.
 
-Specs (per gate): baseline · no_duopoly · drop_low_baseline · window_leaky · jackknife_year.
+Specs (per gate): baseline · no_duopoly · drop_low_baseline · window_leaky · window_strict ·
+drop_club_importance · jackknife_year · (proxy_gdelt, when the GDELT pull has completed).
 `window_leaky` recomputes H⊥ with the hype window stretched to the ceremony date (the leakage we
 designed against) — H⊥ should INFLATE, demonstrating that the shortlist cut matters.
+`drop_club_importance` refits H⊥ without the v3 team-centrality control, showing the effect is
+stable with or without it. `proxy_gdelt` re-fits H⊥ on an independent news-volume proxy
+(finisher-fit, since GDELT covers only the award universe) — a replication check.
 """
 
 from __future__ import annotations
@@ -19,8 +23,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from ..cache import cached_frame
-from ..data import awards, pageviews
+from ..cache import cache_path, cached_frame
+from ..data import awards, gdelt, pageviews
 from ..features import _outcome as build_outcome
 from ..features import build as build_features
 from ..features import hperp, hype, pool
@@ -83,6 +87,21 @@ def _strict_hperp() -> pd.DataFrame:
 
     strict_merit = merit._build_merit(windows=_strict_windows())
     return hperp.hperp_frame(merit_df=strict_merit)
+
+
+# --- club-importance (v3) sensitivity: H⊥ with vs without the centrality control ----
+
+_PRE_V3_REGRESSORS = [r for r in hperp._REGRESSORS if r not in ("minutes_share", "xg_share")]
+
+
+def _drop_club_importance_hperp() -> pd.DataFrame:
+    """Refit H⊥ on the pre-v3 regressor set (no minutes_share/xg_share).
+
+    The published baseline now de-fames against club-importance (option (b)); this spec drops it to
+    show the H⊥ effect is stable with or without the team-centrality control — i.e. the control
+    neither manufactures nor erases the result.
+    """
+    return hperp.hperp_frame(regressors=_PRE_V3_REGRESSORS)
 
 
 # --- one cell = the H⊥ coefficient from a frequentist fit -------------------
@@ -182,6 +201,30 @@ def _bootstrap_rows() -> list[dict]:
     return [_boot_row("A_nomination", a_est), _boot_row("B_placement", b_est)]
 
 
+# --- GDELT second-proxy H⊥ (finisher-fit replication check) -----------------
+
+def _gdelt_available() -> bool:
+    """True only if the assembled GDELT volume cache exists (i.e. the pull has completed).
+
+    Guards the panel from triggering a live GDELT pull when the data isn't ready: the pull is
+    rate-limited and best-effort (see docs/gdelt-resume.md), so a missing cache simply drops the
+    proxy row rather than re-escalating the IP ban.
+    """
+    return cache_path(gdelt.VOLUME_CACHE).exists()
+
+
+def _gdelt_hperp() -> pd.DataFrame:
+    """Finisher-fit GDELT-proxy H⊥, renamed to flow through the standard `h_perp_pv` prep/anchors.
+
+    `hperp.build_gdelt()` de-fames GDELT news volume (prefix `gd`) instead of pageviews; renaming
+    `h_perp_gd`/`gd_low_baseline` → `h_perp_pv`/`pv_low_baseline` lets the existing gate prep and
+    frequentist anchors treat it as the H⊥ predictor with zero further plumbing.
+    """
+    return hperp.build_gdelt().rename(
+        columns={"h_perp_gd": "h_perp_pv", "gd_low_baseline": "pv_low_baseline"}
+    )
+
+
 # --- Heckman selection sensitivity (Stage B) --------------------------------
 
 def _heckman_row() -> dict:
@@ -208,6 +251,7 @@ def _build_panel() -> pd.DataFrame:
     ap = nomination._prep_hperp()
     leaky = _leaky_hperp()
     strict = _strict_hperp()
+    no_ci = _drop_club_importance_hperp()
 
     b_specs = {
         "baseline": bp,
@@ -215,6 +259,7 @@ def _build_panel() -> pd.DataFrame:
         "drop_low_baseline": bp[~bp["pv_low_baseline"].fillna(False)],
         "window_leaky": placement._prep(_model_features_from_hp(leaky)),
         "window_strict": placement._prep(_model_features_from_hp(strict)),
+        "drop_club_importance": placement._prep(_model_features_from_hp(no_ci)),
     }
     a_specs = {
         "baseline": ap,
@@ -222,7 +267,15 @@ def _build_panel() -> pd.DataFrame:
         "drop_low_baseline": ap[~ap["pv_low_baseline"]],
         "window_leaky": nomination._prep_hperp(hperp_df=leaky),
         "window_strict": nomination._prep_hperp(hperp_df=strict),
+        "drop_club_importance": nomination._prep_hperp(hperp_df=no_ci),
     }
+
+    # Second attention proxy (GDELT news volume) — only if the pull has completed (else skipped,
+    # never triggered live). Finisher-fit, so it's a replication check, not a pool-wide refit.
+    if _gdelt_available():
+        gd = _gdelt_hperp()
+        b_specs["proxy_gdelt"] = placement._prep(_model_features_from_hp(gd))
+        a_specs["proxy_gdelt"] = nomination._prep_hperp(hperp_df=gd)
 
     rows = [_row("B_placement", s, _b_cell(df)) for s, df in b_specs.items()]
     rows += [_row("A_nomination", s, _a_cell(df)) for s, df in a_specs.items()]

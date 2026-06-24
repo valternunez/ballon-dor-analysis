@@ -551,3 +551,35 @@ defensive=completed-season asymmetry explicit as the public-data ceiling) and **
 to the README to match the honesty + voice passes (`P>0=1.00`→`>0.99`; dropped "rock-solid"; H1
 antithesis "rewards goals. It also rewards stories." → "rewards goals — and stories."). Re-rendered
 report + copied to `site/report/`.
+
+### Runway batch: GDELT second proxy (best-effort) + club-importance v3 (2026-06-24)
+Two pre-delivery robustness enrichments. Framed adversarially: the headline must *survive* them, not
+depend on them.
+
+**GDELT second attention proxy — coded, pull still IP-blocked (fallback engaged).** Wired the whole
+second-proxy path: `hperp_frame` gained a `prefix` arg (`pv`→`h_perp_pv`, `gd`→`h_perp_gd`; default
+byte-identical), new `features/gdelt_attention.py` (reuses the generic `hype._aggregate`), and
+`hperp.build_gdelt()`; the robustness panel adds a **guarded** `proxy_gdelt` spec
+(`_gdelt_available()` checks the assembled volume cache exists, so a missing/incomplete pull is
+**skipped, never triggered live** — avoids re-escalating the ban). Resumed the pull (48/128 cached,
+>3 days rested) but the IP is still escalated — it sat in the soft-ban cooldown with no new shards. Per
+the locked decision, **shipped pageviews-only**; GDELT stays best-effort and the panel will pick up
+`proxy_gdelt` automatically once the pull completes on a different network. Note: GDELT covers only the
+~128 award universe (pageviews is pool-wide ≈558), so `h_perp_gd` was always a *finisher-fit*
+replication check, not a pool-wide refit — documented in the code.
+
+**Club-importance v3 (option b) — and the pull we didn't need.** The v3 note assumed the Understat
+pull was candidate-only and that team totals needed a brand-new team pull (the feared long pole).
+**That was wrong:** `understat_player_seasons` already caches **full league squads** (7124 players,
+20–42 per team-season), so team totals are a plain groupby-sum — no new pull, no `understat_team`
+stage, no soccerdata team endpoint (which doesn't exist: `read_team_season_stats` is absent;
+`read_team_match_stats` exists but was unnecessary). New `features/club_importance.py` derives
+`minutes_share` (11 × player_min / team_min) + `xg_share` from the cached table, mapped to award years
+by `completed_season`. Wired as a **de-fame control** (option b): added to `hperp._REGRESSORS`, merged
+in `_candidate_frame` (0-filled for non-top-5 so the pool fit isn't shrunk). Deliberately **not** a new
+merit dimension (option a) and **not** a placement-formula predictor — option (b) per the note is the
+de-fame team-context control, which also keeps the with/without robustness clean. Added a
+`drop_club_importance` panel spec (refits H⊥ on the pre-v3 regressor set) to show stability.
+**Outcome: the thesis held** (Gate A +0.733→+0.696, Gate B +0.147→+0.145; see findings). Refit the
+whole chain, rebuilt the panel + report figures + site data, re-rendered the report; ruff + tests
+green. Bumped site `?v=20260624a`.

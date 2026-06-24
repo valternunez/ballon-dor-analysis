@@ -135,6 +135,9 @@ def robustness_extras() -> dict:
         "heckman_b": _get("B_placement", "heckman"),
         "strict_a": _get("A_nomination", "window_strict"),
         "strict_b": _get("B_placement", "window_strict"),
+        # drop_club_importance = H⊥ refit WITHOUT the v3 team-centrality control (baseline has it).
+        "noclub_a": _get("A_nomination", "drop_club_importance"),
+        "noclub_b": _get("B_placement", "drop_club_importance"),
     }
 
 
@@ -170,7 +173,7 @@ def fig_two_gate(stats: dict | None = None):
 # reported as prose robustness notes instead (see `robustness_extras`).
 _CATERPILLAR_SPECS = [
     "baseline", "no_duopoly", "drop_low_baseline",
-    "window_leaky", "window_strict", "jackknife_year",
+    "window_leaky", "window_strict", "drop_club_importance", "jackknife_year",
 ]
 
 

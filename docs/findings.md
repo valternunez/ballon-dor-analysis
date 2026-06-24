@@ -272,3 +272,27 @@ Publication-hardening additions (all leave the thesis intact):
 - **Strict window.** Capping the calendar performance window at the ceremony date (no post-ceremony
   match at all) leaves both gates essentially unchanged (A +0.80, B +0.14) — the result isn't riding on
   a few late-December games.
+
+### Club-importance (merit v3) — the thesis survives a team-centrality control (2026-06-24)
+**What:** added graded **club-importance** to the H⊥ de-fame regression (option (b) in
+`docs/club-importance-v3.md`): per-player **minutes_share** (11 × player minutes / team total minutes,
+≈1.0 for an ever-present player) and **xg_share** (player xG / team xG), replacing nothing but
+*augmenting* the blunt binary trophy flags (`won_cl`/`won_league`), which are identical for every
+squad-mate. H⊥ is now "attention beyond merit **and** how central the player was to his club."
+**Data:** no new pull — the cached `understat_player_seasons` already holds **full league squads**
+(7124 players, 20–42 per team-season), so team totals are a groupby-sum (the v3 note's "candidate-only"
+worry was wrong; see decisions-log). Validated anchors: Rodri 23-24 minutes_share **0.82** but xg_share
+**0.05** (the pivot the box score misses); Messi 18-19 xg_share 0.29 / goals_share 0.39; Haaland 23-24
+xg_share 0.34.
+**Result — the headline barely moves (it survives):**
+- **Gate A nomination: +0.733 → +0.696** (HDI [0.49, 0.91], P>0 > 0.99). Drop the control entirely
+  and it's +0.78 — so controlling for centrality *lowers* the estimate by a hair, nowhere near
+  explaining it away.
+- **Gate B placement: +0.147 → +0.145** (HDI [0.005, 0.28], P>0 = 0.97); no-duopoly +0.128 (grazes 0,
+  as before). Frequentist anchors agree (A +0.74 with vs +0.78 without; B +0.141 vs +0.144).
+- **Ratio ≈ 4.8×** (was ~5×) — "the bias is in who gets *considered*" stands.
+**Reading:** the sharpest available attack — "your merit index under-rates holding midfielders, so
+'Rodri hype' is an artifact of that blind spot" — is now tested directly and **rejected**: even after
+crediting how central a player was to his side, narrative-beyond-merit keeps essentially all its pull
+at nomination and its modest pull at placement. Added as the `drop_club_importance` row on the
+robustness caterpillar (site + report).

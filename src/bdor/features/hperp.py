@@ -26,17 +26,23 @@ import pandas as pd
 
 from ..cache import cached_frame
 from ..data import awards
-from . import attention, merit, pool, team_success
+from . import attention, club_importance, merit, pool, team_success
 
 CACHE_NAME = "hperp_pageviews"
+GDELT_CACHE_NAME = "hperp_gdelt"
 
-# De-fame regressors (besides the intercept): fame + merit (all four role dims) + club success.
+# De-fame regressors (besides the intercept): fame + merit (all four role dims) + club success +
+# club-importance (v3).
 #  * merit_pc1/pc2 — attacking merit (orthogonal PCA axes). NO merit_z (collinear with merit_pc1).
 #  * def_merit_z   — MF ball-winning; cb_def_z — CB efficiency+ball-playing; gk_merit_z — GK
 #    shot-stopping. Each is 0 where it doesn't apply. Folding in all four de-fames a destroyer
 #    (Kanté/Jorginho), a CB (Van Dijk), and a keeper against their OWN merit so their attention
 #    isn't misread as narrative excess — and it gives defenders & keepers an H⊥ for the first time.
 #  * NO tournament_result (finisher-only nation → inconsistent across the pool).
+#  * minutes_share/xg_share — club-importance (v3, option (b)): graded per-player team-centrality
+#    the blunt binary trophy flags miss (every City player shares won_league; only Rodri has the
+#    minutes_share). 0 where unmeasured (non-top-5). De-faming against them means H⊥ is "attention
+#    beyond merit AND how central the player was to his club" — a sharper team-context control.
 _REGRESSORS = [
     "log_baseline",
     "merit_pc1",
@@ -47,6 +53,8 @@ _REGRESSORS = [
     "cl_round",
     "won_cl",
     "won_league",
+    "minutes_share",
+    "xg_share",
 ]
 # Real merit dimensions (any one present => H⊥ is defined for the player; the others fill 0).
 _MERIT_DIMS = ["merit_pc1", "merit_pc2", "def_merit_z", "cb_def_z", "gk_merit_z"]
@@ -101,24 +109,44 @@ def _candidate_frame(
              "cb_def_z", "gk_merit_z", "position_family", "minutes"]],
         on=["player_key", "award_year"], how="left",
     )
+    base = base.merge(
+        club_importance.build()[["player_key", "award_year", "minutes_share", "xg_share"]],
+        on=["player_key", "award_year"], how="left",
+    )
+    for c in ("minutes_share", "xg_share"):  # 0 = unmeasured (non-top-5), like the merit dims
+        base[c] = base[c].astype(float).fillna(0.0)
     return base.merge(att.drop(columns=["player"]), on=["player_key", "award_year"], how="inner")
 
 
 def hperp_frame(
-    att: pd.DataFrame | None = None, merit_df: pd.DataFrame | None = None
+    att: pd.DataFrame | None = None,
+    merit_df: pd.DataFrame | None = None,
+    *,
+    prefix: str = "pv",
+    regressors: list[str] | None = None,
 ) -> pd.DataFrame:
     """Compute the H⊥ table (UNCACHED) for a given attention frame. Powers the robustness panel.
 
     `att=None` reproduces the cached default (`build()`); pass an alternate attention (e.g. a leaky
     ceremony-window aggregate) to re-estimate H⊥ under that windowing. `merit_df` injects an
     alternate merit table (e.g. the strict ceremony-capped performance window).
+
+    `prefix` selects which attention signal to de-fame. `"pv"` (the default: Wikipedia pageviews,
+    the primary proxy, fit pool-wide) reads `pv_baseline`/`pv_window_mean` → writes `h_perp_pv`.
+    `"gd"` (GDELT news volume; see `gdelt_attention`) reads `gd_*` → writes `h_perp_gd`. GDELT
+    covers only the ~128-player award universe, so `h_perp_gd` is a finisher-fit second-proxy
+    robustness signal, not a pool-wide refit like `h_perp_pv`.
+
+    `regressors` overrides the de-fame regressor set (default `_REGRESSORS`); the robustness panel
+    passes the pre-v3 set (no club-importance) to show H⊥ is stable with/without that control.
     """
+    regs = list(_REGRESSORS if regressors is None else regressors)
     df = _candidate_frame(att, merit_df)
 
     df["won_cl"] = df["won_cl"].astype(float)
     df["won_league"] = df["won_league"].astype(float)
-    df["log_baseline"] = np.log1p(df["pv_baseline"].astype(float))
-    df["log_window"] = np.log1p(df["pv_window_mean"].astype(float))
+    df["log_baseline"] = np.log1p(df[f"{prefix}_baseline"].astype(float))
+    df["log_window"] = np.log1p(df[f"{prefix}_window_mean"].astype(float))
 
     # Each player is de-famed against the merit dimension(s) they have; a role they don't play fills
     # 0 (= "no signal"), which lets CBs/keepers/mids — NA on the attacking PCA axes — survive the
@@ -130,21 +158,22 @@ def hperp_frame(
     for col in _MERIT_DIMS:
         df[col] = df[col].fillna(0.0)
 
-    df["h_perp_pv"] = np.nan
-    complete = df[has_merit].dropna(subset=["log_window", *_REGRESSORS])
-    if len(complete) > len(_REGRESSORS) + 1:
+    out_col = f"h_perp_{prefix}"
+    df[out_col] = np.nan
+    complete = df[has_merit].dropna(subset=["log_window", *regs])
+    if len(complete) > len(regs) + 1:
         y = complete["log_window"].to_numpy(dtype=float)
         x = np.column_stack(
-            [np.ones(len(complete)), complete[_REGRESSORS].to_numpy(dtype=float)]
+            [np.ones(len(complete)), complete[regs].to_numpy(dtype=float)]
         )
         resid, beta, r2 = _ols_residual(y, x)
-        df.loc[complete.index, "h_perp_pv"] = resid
+        df.loc[complete.index, out_col] = resid
         hperp_frame.last_fit = {
             "n": len(complete),
             "r2": round(r2, 3),
-            "coefs": dict(zip(["const", *_REGRESSORS], beta.round(3), strict=True)),
+            "coefs": dict(zip(["const", *regs], beta.round(3), strict=True)),
         }
-    return df.sort_values(["award_year", "h_perp_pv"], ascending=[True, False]).reset_index(
+    return df.sort_values(["award_year", out_col], ascending=[True, False]).reset_index(
         drop=True
     )
 
@@ -152,3 +181,18 @@ def hperp_frame(
 def build(*, refresh: bool = False) -> pd.DataFrame:
     """Return per-(player, award_year) features + pool-fit H⊥ residual (cached)."""
     return cached_frame(CACHE_NAME, hperp_frame, refresh=refresh)
+
+
+def build_gdelt(*, refresh: bool = False) -> pd.DataFrame:
+    """Return the finisher-fit GDELT second-proxy H⊥ (`h_perp_gd`), cached.
+
+    A robustness sibling of `build()`: same de-fame regression, but de-faming GDELT news volume
+    (`gdelt_attention`) instead of pageviews. GDELT covers only the award universe, so this is a
+    finisher-level replication check — not a pool-wide refit (see `hperp_frame`).
+    """
+    from . import gdelt_attention
+
+    def _producer() -> pd.DataFrame:
+        return hperp_frame(att=gdelt_attention.build(), prefix="gd")
+
+    return cached_frame(GDELT_CACHE_NAME, _producer, refresh=refresh)

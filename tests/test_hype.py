@@ -64,3 +64,18 @@ def test_aggregate_steady_star_low_ratio():
     out = _aggregate(d, _windows(), "views", "pv")
     assert abs(out.iloc[0]["pv_log_ratio"]) < 0.01
     assert bool(out.iloc[0]["pv_low_baseline"]) is False
+
+
+def test_aggregate_reused_for_gdelt_volume_with_gd_prefix():
+    # The GDELT second proxy reuses the same generic aggregator with a different value column
+    # ("volume") and prefix ("gd"); columns must be gd_*, never pv_*.
+    d = pd.DataFrame(
+        {"player": "Spiker", "date": pd.to_datetime(["2017-06-01", "2018-06-01"]),
+         "volume": [5.0, 5000.0]}
+    )
+    out = _aggregate(d, _windows(), "volume", "gd")
+    row = out.iloc[0]
+    assert row["gd_window_mean"] == 5000.0
+    assert row["gd_baseline"] == 5.0
+    assert {"gd_window_mean", "gd_baseline", "gd_low_baseline", "gd_log_ratio"} <= set(out.columns)
+    assert not any(c.startswith("pv_") for c in out.columns)

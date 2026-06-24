@@ -188,7 +188,12 @@ effect; the placement effect is real but should be stated cautiously.
 
 Three further checks point the same way. **Capping the calendar window at the ceremony date** (so not even a
 single post-ceremony match can sneak in) leaves both gates essentially unchanged (Gate A
-`{python} f"{RX['strict_a']['est']:+.2f}"`, Gate B `{python} f"{RX['strict_b']['est']:+.2f}"`). Because
+`{python} f"{RX['strict_a']['est']:+.2f}"`, Gate B `{python} f"{RX['strict_b']['est']:+.2f}"`). **Controlling
+for club importance** — how central a player was to his side, measured by his share of the team's minutes and
+attacking output, since a blunt "won the league" flag is shared by every squad-mate — is built into the
+headline above; remove it and the effect barely changes (Gate A `{python} f"{RX['noclub_a']['est']:+.2f}"`,
+Gate B `{python} f"{RX['noclub_b']['est']:+.2f}"`), so a pivot like Rodri being central to his team is not
+what the narrative term is picking up. Because
 H⊥ is itself an *estimated* residual, I **bootstrapped the whole pipeline** — re-estimating H⊥ on
 resampled data and refitting both gates each time, so the intervals carry that first-stage uncertainty
 too — and Gate A stays far from zero (95% CI

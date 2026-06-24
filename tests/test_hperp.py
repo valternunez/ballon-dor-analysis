@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
+import bdor.features.hperp as hp
 from bdor.features.hperp import _REGRESSORS, _ols_residual
 
 
@@ -36,6 +38,41 @@ def test_ols_residual_orthogonal_to_regressors():
     # OLS residuals are orthogonal to each regressor column.
     assert np.allclose(x.T @ resid, 0, atol=1e-8)
     assert 0.0 <= r2 <= 1.0
+
+
+@pytest.mark.parametrize("prefix", ["pv", "gd"])
+def test_hperp_frame_prefix_selects_attention_and_output_column(monkeypatch, prefix):
+    # hperp_frame(prefix=...) de-fames the matching {prefix}_* attention + writes h_perp_{prefix}.
+    # Monkeypatch _candidate_frame so the test is fully offline (no merit/pool/attention pull).
+    rng = np.random.default_rng(3)
+    n = 15
+    frame = pd.DataFrame(
+        {
+            "player": [f"P{i}" for i in range(n)],
+            "player_key": [f"p{i}" for i in range(n)],
+            "award_year": [2018] * n,
+            f"{prefix}_baseline": rng.uniform(1, 100, n),
+            f"{prefix}_window_mean": rng.uniform(1, 5000, n),
+            "merit_pc1": rng.normal(size=n),
+            "merit_pc2": rng.normal(size=n),
+            "def_merit_z": np.nan,
+            "cb_def_z": np.nan,
+            "gk_merit_z": np.nan,
+            "cl_round": rng.integers(0, 6, n).astype(float),
+            "won_cl": rng.integers(0, 2, n),
+            "won_league": rng.integers(0, 2, n),
+            "minutes_share": rng.uniform(0, 1, n),
+            "xg_share": rng.uniform(0, 0.4, n),
+        }
+    )
+    monkeypatch.setattr(hp, "_candidate_frame", lambda att=None, merit_df=None: frame.copy())
+
+    out = hp.hperp_frame(prefix=prefix)
+    other = "gd" if prefix == "pv" else "pv"
+    assert f"h_perp_{prefix}" in out.columns
+    assert f"h_perp_{other}" not in out.columns
+    assert out[f"h_perp_{prefix}"].notna().sum() == n  # every row has merit_pc1 -> H⊥ defined
+    assert abs(out[f"h_perp_{prefix}"].mean()) < 1e-6  # OLS residuals (with intercept) sum to ~0
 
 
 def test_vote_share_sums_to_one_per_year():
