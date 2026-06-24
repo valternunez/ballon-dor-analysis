@@ -331,3 +331,26 @@ a flaw unique to our index. This upgrades the CB caveat from "our index is a par
 single-number metric, ours or Opta's, confidently ranks positional CBs." **No spine change**: merit_z
 and the H⊥ de-fame are untouched; a ratings-augmented robustness spec was deliberately skipped (a weak,
 compressed defender signal would neither move H⊥ nor be an honest 'merit'). Cross-check only.
+
+### FotMob cross-check, zoomed in: it rescues controlling mids (Rodri, Modrić), not pure CBs (2026-06-24)
+A closer read of the FotMob cross-check, prompted by the Rodri/Modrić question. The aggregate
+"defenders correlate weakly (0.29)" hides a role split:
+- **Rodri 2024** — our production-based merit ranks him ~14th of the field; **FotMob 8.08 ≈ 98th
+  percentile** (top of the 2024 finishers). A huge gap.
+- **Modrić 2018** — our merit ~20th; **FotMob 7.33 ≈ 66th percentile** (above median; his adjacent
+  2018/19 rating is 7.17, so the calendar-year season choice barely moves it).
+**Mechanism:** both sit in the *attacking* merit family and are scored on xG-style production, but the
+Opta rating rewards **on-ball involvement** (passes, progression, volume) — which deep/holding mids
+have in bulk. So the rating *rescues high-involvement midfielders*, the opposite of pure positional
+centre-backs (Dias/Saliba), whom it *also* compresses. The earlier blanket "ratings share our blind
+spot" was too coarse: it's role-specific.
+**Implication (honest, surfaced publicly):** for these two winners specifically, part of their positive
+H⊥ ("attention beyond *our* merit") is plausibly **unmeasured on-pitch value, not pure narrative** —
+concrete evidence for the role-caveat already in the piece. Does NOT change the model (cross-check
+only; `merit_z`/de-fame frozen) or the aggregate result; it sharpens the *interpretation* of the Rodri
+2024 and Modrić 2018 cases. Surfaced in the report case studies + role caveat and the site per-year
+verdicts.
+**Windowing note:** the cross-check joins FotMob *season-average* ratings via `completed_season`, a
+coarse proxy for the 3 calendar-year awards (2018/2019/2021 = half-of-two football seasons). Small
+distortion (Modrić 7.33 vs 7.17 across the two seasons); not worth a per-match re-window for a
+cross-check.

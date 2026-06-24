@@ -59,12 +59,12 @@
   // Only `year` and `verdict` are read (see VERDICT build below); the scoreboard's numbers
   // come from data.js (per_year). Keep these two keys in sync with that payload.
   const YEARS = [
-    { year: "2018", verdict: "The highest narrative residual of any winner in the sample — far more attention than his measured merit (20th in the field) explained, while Messi had the best season. Modrić played the deep-lying role the merit index reads least well, so part of that gap may be value the box score misses; even so, it is the case the usual complaint describes." },
+    { year: "2018", verdict: "The highest narrative residual of any winner in the sample — far more attention than his measured merit (20th in the field) explained, while Messi had the best season. Modrić played the deep-lying role the merit index reads least well, so part of that gap may be value the box score misses — an independent Opta rating places him above the field's median; even so, it is the case the usual complaint describes." },
     { year: "2019", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest +0.92, sat well behind the field's best seasons, and Messi won among the very best on production." },
     { year: "2021", verdict: "Lewandowski had the best season in the field, a record-breaking scorer with almost no extra buzz, and finished second. The narrative outweighed the goals." },
     { year: "2022", verdict: "Benzema took the vote on a Champions League run, while Mbappé again out-produced everyone. A deserved win, helped by the European campaign." },
     { year: "2023", verdict: "The best season, the most votes, and considerable attention after the World Cup. Little here to dispute." },
-    { year: "2024", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, helped by a treble narrative." },
+    { year: "2024", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, helped by a treble narrative. An independent Opta rating, by contrast, ranks him near the top of the field: the box score undersells controlling midfielders, so much of his gap looks like value, not hype." },
     { year: "2025", verdict: "Dembélé won with little extra buzz, while Salah had the best season of anyone and finished fourth." },
   ];
 

@@ -617,3 +617,13 @@ the Opta rating overall (Spearman 0.61) and for attackers (0.66) — solid exter
 barely separate defenders (0.29), so the CB caveat is now framed as a public-data limit, not ours.
 Skipped the optional ratings-augmented robustness spec (a weak/compressed defender signal wouldn't move
 H⊥ and isn't honest 'merit'). Also refreshed the stale "GDELT is future work" caveat (GDELT shipped).
+
+### FotMob cross-check, zoomed to Modrić/Rodri + surfaced publicly (2026-06-24)
+User asked to check Modrić/Rodri specifically (intuition: deep mids the box score under-reads). Did
+the read on the cached FotMob data: the Opta rating ranks **Rodri 2024 ~98th pct (8.08)** vs our ~14th,
+and **Modrić 2018 ~66th pct (7.33)** vs our ~20th — so the rating *rescues high-involvement controlling
+mids* (it rewards on-ball volume), the opposite of pure CBs which it also compresses. Refines the
+earlier coarse "ratings share our blind spot" line. Chose (with the user) to **surface it** in the
+report case studies + role caveat and the site per-year verdicts, framed honestly: part of those two
+winners' H⊥ is plausibly unmeasured merit, not narrative. **No model change** (cross-check only).
+Also recorded the calendar-year season-avg coarseness for 2018/2019/2021 (small; not re-windowed).

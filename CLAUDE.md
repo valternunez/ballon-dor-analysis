@@ -94,6 +94,11 @@ with the Opta rating **overall Spearman 0.61 / attackers 0.66** (solid external 
 **barely separate defenders (0.29)** — so the CB caveat is reframed as a *public-data* limit, not
 ours. No spine/headline change; ratings-augmented robustness spec deliberately skipped. CB caveat
 upgraded on site + report; stale "GDELT future work" caveat refreshed.
+**FotMob zoom — Modrić/Rodri (2026-06-24)** — the Opta rating *rescues high-involvement controlling
+mids* our xG-merit under-reads: **Rodri 2024 ~98th pct (8.08)** vs our ~14th; **Modrić 2018 ~66th pct
+(7.33)** vs ~20th (opposite of pure CBs, which it compresses). Surfaced in report case studies + role
+caveat + site per-year verdicts: part of those two winners' H⊥ is plausibly unmeasured merit, not
+narrative. No model change; calendar-year (2018/19/21) season-avg coarseness noted (small).
 **Robustness chart polished** (2026-06-20) — fixed a systemic SVG label-colour bug (`.attr`→`.style`
 fill; was muted by `.lab` CSS), regrouped the caterpillar into Gate A/Gate B blocks (one clean row each,
 plain-language Y labels), and added a "what each stress test means" dropdown. Site-only, no model change.

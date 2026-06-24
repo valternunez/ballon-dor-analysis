@@ -152,7 +152,11 @@ cases[["Player", "Year", "Finish", "Merit (PC1)", "H⊥", "The story"]].round(2)
 **Modrić, 2018.** A fine season and a World Cup final, paired with the single highest narrative residual
 of any *winner* in the sample. The data agrees with the complaint, with one qualification: Modrić is a
 deep-lying playmaker, the role the merit index reads *least* well, so part of that residual may be value
-the box score cannot see rather than narrative.
+the box score cannot see rather than narrative. An independent Opta rating (FotMob) supports that
+caution — it places Modrić above the field's median, and ranks **Rodri** (the 2024 winner our
+production merit puts ~14th) near the *top* of his field. Both are high-involvement controlling
+midfielders whose passing and progression a goals-and-xG index undercounts; for them, some of the H⊥ is
+likely unmeasured merit rather than narrative.
 
 **Lewandowski, 2019.** The opposite case, and a cleaner one: one of the highest *merit* scores in seven
 years — a relentless goalscorer — paired with a *negative* H⊥. Elite production, little attention, and
@@ -239,9 +243,11 @@ A few limits:
   keepers. The remaining gap: purely-positional center-backs (a Rúben Dias) still read low — great
   positioning leaves *fewer* actions to count, and no public stat captures it — so part of their H⊥ may
   be unmeasured value rather than narrative. As an external check, our merit agrees with an independent
-  Opta-based rating (FotMob) overall (Spearman ≈ 0.6, ≈ 0.66 for attackers); but that rating *also*
-  barely separates defenders, so the centre-back blind spot is a property of public event data, not of
-  our index alone.
+  Opta-based rating (FotMob) overall (Spearman ≈ 0.6, ≈ 0.66 for attackers). That rating cuts two ways
+  by role: it *also* barely separates pure centre-backs (so the CB blind spot is a property of public
+  event data, not our index alone), yet it rates high-involvement deep-lying midfielders (Modrić, Rodri)
+  *above* our production merit — for them the gap runs the other way. The cross-check uses
+  season-average ratings, a coarse proxy for the three calendar-year awards (2018/2019/2021).
 - **One attention proxy.** Wikipedia pageviews, all languages — the pool-wide primary. A news-volume
   proxy (GDELT) is the independent second opinion (the nomination effect reproduces on it; see above).
   Pageviews can also track a player's national-market size
