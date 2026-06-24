@@ -19,6 +19,7 @@ from bdor.config import ensure_dirs
 from bdor.data import (
     awards,
     fbref_defense,
+    fotmob,
     gdelt,
     gdelt_bq,
     pageviews,
@@ -42,6 +43,8 @@ STAGES = [
     ("gdelt", "Disambiguated global news volume (DOC 2.0 API)", gdelt.pull),
     ("gdelt_bq", "Global news volume via BigQuery GKG (free sandbox; DOC-API alternative)",
      gdelt_bq.build),
+    ("fotmob", "Season-avg FotMob (Opta) player ratings — merit cross-check, not a spine input",
+     fotmob.pull),
     ("statsbomb", "Semifinalist tournament squads (Tier-2 pool 3rd source)", statsbomb.pull),
     ("fbref_defense", "Cross-league defensive actions (def. merit)", fbref_defense.pull),
     ("features", "Build merit index + H-perp (residualised hype)", features.build),
@@ -55,7 +58,7 @@ STAGES = [
 # a stage to learn its status (calling a pull() would hit the network).
 IMPLEMENTED = {
     "awards", "understat", "understat_match", "wikidata", "pageviews", "gdelt", "gdelt_bq",
-    "statsbomb", "fbref_defense", "features", "pool", "models", "robustness", "report",
+    "fotmob", "statsbomb", "fbref_defense", "features", "pool", "models", "robustness", "report",
 }
 
 

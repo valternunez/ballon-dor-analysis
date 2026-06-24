@@ -238,9 +238,13 @@ A few limits:
   nomination test (Gate A) is attackers-only, while placement (Gate B) now includes defenders and
   keepers. The remaining gap: purely-positional center-backs (a Rúben Dias) still read low — great
   positioning leaves *fewer* actions to count, and no public stat captures it — so part of their H⊥ may
-  be unmeasured value rather than narrative.
-- **One attention proxy.** Wikipedia pageviews, all languages. A news-volume proxy (GDELT) is a
-  natural second opinion and is future work. Pageviews can also track a player's national-market size
+  be unmeasured value rather than narrative. As an external check, our merit agrees with an independent
+  Opta-based rating (FotMob) overall (Spearman ≈ 0.6, ≈ 0.66 for attackers); but that rating *also*
+  barely separates defenders, so the centre-back blind spot is a property of public event data, not of
+  our index alone.
+- **One attention proxy.** Wikipedia pageviews, all languages — the pool-wide primary. A news-volume
+  proxy (GDELT) is the independent second opinion (the nomination effect reproduces on it; see above).
+  Pageviews can also track a player's national-market size
   or diaspora; baseline fame absorbs the steady part, but some residual market effect may survive.
 - **Selection at Gate B.** The placement model only sees players who were nominated, for which a
   Heckman correction is the principled fix — applied here as a check rather than a definitive

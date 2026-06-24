@@ -312,3 +312,22 @@ BigQuery public GKG table. 245k player-days over 114 of the 128 finishers; valid
 **Reading:** the headline — narrative gets you **considered** — survives swapping the entire attention
 measure for a different corpus. Reported as prose (not on the caterpillar — it's a different signal,
 not the same H⊥ re-estimated under a spec choice, same treatment as the bootstrap/Heckman rows).
+
+### FotMob ratings cross-check: merit validated; the CB gap is inherent, not ours (2026-06-24)
+**What:** pulled FotMob's holistic player rating (algorithmic, ~300 Opta stats/match, 0–10) as an
+**independent** check on the merit index — never folded into `merit_z` (it's a proprietary,
+offence-weighted black box; folding it in would contaminate H⊥). 1099 player-seasons, 124/128 players,
+2017/18–2025/26, from the player page's server-rendered data (no token wall). Joined to our merit by
+`completed_season`; 509 matched finisher-seasons.
+**Result:**
+- **Overall agreement is strong: Spearman 0.61** (Pearson 0.63). For **attackers, 0.66** — our
+  box-score merit tracks an independent 300-stat Opta model closely, a real external validation.
+- **For defenders (0.29) and keepers (0.23) the two barely agree**, and FotMob *compresses* defenders
+  near its 6-baseline (mean 7.15 vs attackers 7.37; CB anchors bunched — Dias 6.95–7.16, Saliba
+  6.77–7.3, Van Dijk 7.16–7.45).
+**Reading:** the headline takeaway is that an independent, offence-weighted Opta rating **also** fails
+to separate positional centre-backs — so the CB limitation is a property of **public event data**, not
+a flaw unique to our index. This upgrades the CB caveat from "our index is a partial" to "no public
+single-number metric, ours or Opta's, confidently ranks positional CBs." **No spine change**: merit_z
+and the H⊥ de-fame are untouched; a ratings-augmented robustness spec was deliberately skipped (a weak,
+compressed defender signal would neither move H⊥ nor be an honest 'merit'). Cross-check only.

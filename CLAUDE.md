@@ -86,6 +86,14 @@ spike validates disambiguation. **The nomination effect replicates: Gate A +0.45
 Gate B +0.06 (same sign, not significant on the noisier finisher-fit sample). Surfaced as prose in the
 report + site robustness sections (not the caterpillar — a different signal, like bootstrap/Heckman).
 Auth = a user-created service-account key (in Downloads, never committed).
+**FotMob ratings cross-check DONE (2026-06-24)** — pulled FotMob's Opta-based season-avg player ratings
+(`data/fotmob.py`, `fotmob` stage; via the player page's `__NEXT_DATA__`, no token; SofaScore stayed
+Cloudflare-walled). **Cross-check only — never an input to `merit_z` or the de-fame** (it's a
+proprietary, offence-weighted black box). 1099 player-seasons, 124/128. Validation: our merit agrees
+with the Opta rating **overall Spearman 0.61 / attackers 0.66** (solid external check), but both
+**barely separate defenders (0.29)** — so the CB caveat is reframed as a *public-data* limit, not
+ours. No spine/headline change; ratings-augmented robustness spec deliberately skipped. CB caveat
+upgraded on site + report; stale "GDELT future work" caveat refreshed.
 **Robustness chart polished** (2026-06-20) — fixed a systemic SVG label-colour bug (`.attr`→`.style`
 fill; was muted by `.lab` CSS), regrouped the caterpillar into Gate A/Gate B blocks (one clean row each,
 plain-language Y labels), and added a "what each stress test means" dropdown. Site-only, no model change.

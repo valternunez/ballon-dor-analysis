@@ -600,3 +600,20 @@ in the repo). The earlier DOC-API module/cooldown machinery stays as-is (unused 
 0); placement stays same-sign but not significant on the noisier finisher-fit sample (see findings).
 Surfaced as prose in the report + site robustness sections (not the caterpillar — different signal,
 like bootstrap/Heckman). `proxy_gdelt` is now a live row in the cached robustness panel.
+
+### FotMob ratings cross-check — SofaScore dead, FotMob via page data (2026-06-24)
+Wanted a holistic match rating to sanity-check the merit index for positional defenders. **SofaScore
+stayed a dead end** (soccerdata's Sofascore reader exposes no player ratings; the earlier Cloudflare
+wall still stands). **FotMob worked** — but not via its JSON API (the old `www.fotmob.com/api/*` 404s;
+`apigw`/`data` endpoints are token-gated with the `x-mas` header). The robust path is the **player
+page's server-rendered `__NEXT_DATA__`**: one request per player yields every season's average rating
+(all-comps + per-league, 2017/18+), no token. IDs from the open `searchapi/suggest`. New
+`data/fotmob.py` (resumable per-player, like pageviews/gdelt), `fotmob` stage; 1099 player-seasons,
+124/128 players. **Methodology check (user asked):** FotMob's rating is algorithmic (~300 Opta stats,
+0–10, baseline 6) but proprietary-weighted and **offence-skewed** — so it's a legit independent signal
+yet shares our defensive blind spot, which is *why* it's a cross-check and never a `merit_z` input.
+**Decision held: cross-check only**, no spine/de-fame change. Outcome (see findings): merit agrees with
+the Opta rating overall (Spearman 0.61) and for attackers (0.66) — solid external validation — but both
+barely separate defenders (0.29), so the CB caveat is now framed as a public-data limit, not ours.
+Skipped the optional ratings-augmented robustness spec (a weak/compressed defender signal wouldn't move
+H⊥ and isn't honest 'merit'). Also refreshed the stale "GDELT is future work" caveat (GDELT shipped).
