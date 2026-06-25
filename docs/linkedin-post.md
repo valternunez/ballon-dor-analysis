@@ -35,7 +35,7 @@ Curious what football people and data people make of it.
 #DataScience #Football #Statistics #BallonDor
 ```
 
-**Image to attach:** `site/og-image.png` (the 1200×630 "Goals, or stories?" card).
+**Image to attach:** `site/og-image.jpg` (the 1200×630 "Goals, or stories?" card).
 Alternative visual if you'd rather lead with a chart: a screenshot of the scatter ("the matrix") or
 the two-gate bars.
 

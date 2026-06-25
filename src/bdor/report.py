@@ -117,6 +117,56 @@ def effect_sizes(stats: dict | None = None) -> dict:
     }
 
 
+def diagnostics() -> dict:
+    """MCMC convergence + discrimination diagnostics from the CACHED headline fits (no refit).
+
+    For the methods appendix: worst-case R-hat and min bulk-ESS across both posteriors, the total
+    divergence count, and the leakage-safe cross-validated ROC-AUC of the nomination model.
+    """
+    import arviz as az  # noqa: PLC0415
+
+    from .models import nomination, placement  # noqa: PLC0415
+
+    def _conv(idata) -> dict:
+        s = az.summary(idata)
+        ss = getattr(idata, "sample_stats", None)
+        div = int(ss["diverging"].sum()) if ss is not None and "diverging" in ss else 0
+        return {"rhat": float(s["r_hat"].max()), "ess": int(s["ess_bulk"].min()), "div": div}
+
+    a, b = _conv(nomination.fit_hperp()), _conv(placement.fit())
+    return {
+        "rhat_max": max(a["rhat"], b["rhat"]),
+        "ess_bulk_min": min(a["ess"], b["ess"]),
+        "divergences": a["div"] + b["div"],
+        "roc_auc": float(nomination.discrimination()),
+    }
+
+
+def prior_sensitivity_extent() -> dict | None:
+    """Per-gate H⊥ range across default/tight/wide priors (for the prose 'not the prior' note).
+
+    Reads the cached `prior_sensitivity` table (built by the robustness stage); returns the default
+    estimate plus the min/max across all three prior settings per gate, so the report can state how
+    little the headline moves. None if the cache hasn't been built yet.
+    """
+    from .cache import cache_path  # noqa: PLC0415
+
+    if not cache_path("prior_sensitivity").exists():
+        return None
+    return _prior_extent(_cache("prior_sensitivity"))
+
+
+def _prior_extent(t: pd.DataFrame) -> dict:
+    """Per-gate {default, min, max} H⊥ estimate across prior settings. Pure / offline-testable."""
+    def _g(gate: str) -> dict:
+        g = t[t["gate"] == gate]
+        default = float(g[g["prior"] == "default"]["estimate"].iloc[0])
+        return {"default": default, "min": float(g["estimate"].min()),
+                "max": float(g["estimate"].max())}
+
+    return {"a": _g("A_nomination"), "b": _g("B_placement")}
+
+
 def robustness_extras() -> dict:
     """Bootstrap + Heckman + strict-window rows, for the prose robustness notes."""
     p = load_panel()
@@ -133,6 +183,7 @@ def robustness_extras() -> dict:
         "bootstrap_a": _get("A_nomination", "bootstrap_hperp"),
         "bootstrap_b": _get("B_placement", "bootstrap_hperp"),
         "heckman_b": _get("B_placement", "heckman"),
+        "prior": prior_sensitivity_extent(),
         "strict_a": _get("A_nomination", "window_strict"),
         "strict_b": _get("B_placement", "window_strict"),
         # drop_club_importance = H⊥ refit WITHOUT the v3 team-centrality control (baseline has it).
@@ -175,7 +226,7 @@ def fig_two_gate(stats: dict | None = None):
 # bootstrap_hperp (re-standardized per resample) and heckman (OLS-on-logit) are different scales,
 # reported as prose robustness notes instead (see `robustness_extras`).
 _CATERPILLAR_SPECS = [
-    "baseline", "no_duopoly", "drop_low_baseline",
+    "baseline", "no_duopoly",
     "window_leaky", "window_strict", "drop_club_importance", "jackknife_year",
 ]
 

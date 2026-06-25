@@ -7,6 +7,7 @@ import pandas as pd
 from bdor.report import (
     _hperp_row,
     _per_year_scoreboard,
+    _prior_extent,
     _site_payload,
     case_studies,
     leaderboard,
@@ -44,6 +45,19 @@ def test_case_studies_pulls_named_players_with_hperp():
     players = set(cs["player"])
     assert "Luka Modrić" in players and "Robert Lewandowski" in players
     assert (cs["award_year"].isin([2018, 2019, 2022, 2023])).all()
+
+
+def test_prior_extent_summarizes_default_and_range_per_gate():
+    t = pd.DataFrame({
+        "gate": ["A_nomination"] * 3 + ["B_placement"] * 3,
+        "prior": ["default", "tight", "wide"] * 2,
+        "estimate": [0.70, 0.66, 0.72, 0.145, 0.12, 0.151],
+    })
+    out = _prior_extent(t)
+    assert out["a"]["default"] == 0.70
+    assert out["a"]["min"] == 0.66 and out["a"]["max"] == 0.72  # range brackets the default
+    assert out["b"]["default"] == 0.145
+    assert out["b"]["min"] == 0.12 and out["b"]["max"] == 0.151
 
 
 def test_hperp_row_extracts_posterior_summary():

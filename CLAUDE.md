@@ -64,7 +64,7 @@ documented PARTIAL** — shipped past a face-validity checkpoint (`cb_validity_a
 positional CBs (Dias 44th) + some FB noise — the public-data ceiling (decisions log). H⊥ de-fames vs
 all four dims (0-filled per role) → **defenders & keepers get an H⊥ for the first time** (fit n
 751→1025); Stage B adds `cb_def_z`+`gk_merit_z` co-controls, N 157→191. **Thesis robust** (Stage A
-+0.762→**+0.779**, Stage B +0.187→**+0.186**; no-duopoly Stage B CI now clears 0). GK leaderboard clean
++0.762→**+0.779**, Stage B +0.187→**+0.186**; no-duopoly Stage B CI grazes 0). GK leaderboard clean
 (Donnarumma/Oblak/Courtois/Alisson); Van Dijk H⊥ +0.54, Donnarumma +1.52. Site + logs updated.
 **"How we score it" explainer DONE** — static `#howto` section in `site/index.html` (+ `.howto-grid`
 in styles.css), inserted after the intro: two plain cards (Merit / Hype Score), no JS/data change.
@@ -145,7 +145,26 @@ card; **GoatCounter** snippet added commented-out (user pastes free site code to
 **ANALYTICS REMOVED (2026-06-21)** — GoatCounter snippet deleted from `site/index.html` at the user's
 request (no tracking on the site). Report page got the site favicon (inlined data-URI in the qmd
 `include-in-header`).
-**Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd`; club-importance v3.
+**AUDIT PASS #2 + FIX SWEEP DONE (2026-06-24)** — ran a 9-lens agent-team audit (UX, mobile, SWE,
+econometrics, applied-stats, journalist, football, devil's-advocate, reproducibility → synthesis).
+**No blockers**; analysis reproduces exactly (Gate A +0.696, Gate B +0.145, R-hat 1.00, 0 divergences,
+min ESS≈931) and the generated-regressor bootstrap is correct. Fixed all 22 findings (copy + disclosure,
+**no headline change**): site CI label **94%→95%** on the freq caterpillar (gate cards stay 94% HDI);
+**jackknife row relabelled** "leave-one-year spread"; stale static fallbacks **2.1×→2.0×, +9→+8pp,
+19→27%** + aria **+0.73→+0.70**; **Van Dijk verdict +0.92→+0.87** (now interpolated from `per_year` so
+it can't drift); **Kolo Muani "WC final goal"→"final chance"**, **Rodri "treble"→PL title + Euro 2024
+POTT**; **bootstrap interval surfaced** at the headline (site `#gates-boot` + report) — Gate A
+[+0.51,+1.07], Gate B [+0.02,+0.34]; **"gap runs both ways" / reverse-causality caveat** added (site +
+report limitations). Modeling: **`drop_low_baseline` dropped everywhere** (structural no-op — `pv_low_
+baseline` False for the all-famous pool); **`robustness.prior_sensitivity()` added** (tight/wide Normal
+on the H⊥ slope → Gate A stays [+0.67,+0.70], Gate B [+0.14,+0.15], cited in report+findings);
+**`report.diagnostics()`** added (live R-hat/ESS/divergences + **ROC-AUC now 0.80**, the old 0.845 was
+stale post-merit-leakage-rebuild). Mobile: **44px tap targets**, **tap-to-reveal tooltips** on
+scatter/leaderboard (scroll-safe `click`), leaderboard stack viewport-aware (no clip at ~360px), scatter
+aspect floor lowered. a11y: **`<main>` + skip-link**. Assets: **og-image.png→og-image.jpg** (191KB→48KB,
+`og:image:type` added). ruff + **109 tests** green; panel + data.js + figures refit; report re-rendered →
+`site/report/`; `?v=20260624e`.
+**Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd` pool-wide.
 
 ## Where the canon lives
 - `PROJECT_NOTES.md` — the locked methodology (thesis, funnel, merit index, H⊥, GDELT, modeling spec).

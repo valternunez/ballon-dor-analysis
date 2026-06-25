@@ -32,18 +32,38 @@
   };
   const hideTip = () => { tip.style.opacity = 0; };
   if (!MOBILE) document.addEventListener("touchstart", hideTip, { passive: true });
-  // attach hover (always) + tap (desktop/non-touch only) tooltip to a DOM node
+  // On touch, a `click` fires on a tap but NOT on a scroll-drag, so tap-to-reveal doesn't fight
+  // scrolling; clear the tip once the reader scrolls on, and auto-hide after a beat.
+  else {
+    document.addEventListener("scroll", hideTip, { passive: true });
+    document.addEventListener("click", hideTip, true);
+  }
+  let tipT;
+  const tapTip = (html, x, y) => {
+    showTip(html, x, y); clearTimeout(tipT); tipT = setTimeout(hideTip, 2800);
+  };
+  // attach hover (always) + tap tooltip to a DOM node. Desktop taps on touchstart; touch devices
+  // get the scroll-safe `click` path so per-point identity is reachable on phones too.
   function bindTip(node, html) {
     node.addEventListener("mousemove", e => showTip(html, e.clientX, e.clientY));
     node.addEventListener("mouseleave", hideTip);
-    if (!MOBILE) node.addEventListener("touchstart",
-      e => { e.stopPropagation(); showTip(html, e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+    if (!MOBILE) {
+      node.addEventListener("touchstart",
+        e => { e.stopPropagation(); showTip(html, e.touches[0].clientX, e.touches[0].clientY); },
+        { passive: true });
+    } else {
+      node.addEventListener("click", e => {
+        e.stopPropagation();
+        const r = node.getBoundingClientRect();
+        tapTip(html, r.left + r.width / 2, r.top);
+      });
+    }
   }
 
   // ---- curated editorial copy (matches the design) ----
   const DESC = {
     "Lamine Yamal|2024": "16-yo phenomenon", "Khvicha Kvaratskhelia|2023": "Napoli breakout",
-    "Randal Kolo Muani|2023": "World Cup final goal", "Nico Williams|2024": "Euro star turn",
+    "Randal Kolo Muani|2023": "World Cup final chance", "Nico Williams|2024": "Euro star turn",
     "Pedri|2021": "teenage prodigy", "Cole Palmer|2024": "breakout season",
     "Désiré Doué|2025": "treble teenager", "Gianluigi Donnarumma|2021": "Euro-winning keeper",
     "Kevin De Bruyne|2019": "elite, overlooked", "Lautaro Martínez|2021": "quietly elite",
@@ -60,11 +80,11 @@
   // come from data.js (per_year). Keep these two keys in sync with that payload.
   const YEARS = [
     { year: "2018", verdict: "The highest narrative residual of any winner in the sample — far more attention than his measured merit (20th in the field) explained, while Messi had the best season. Modrić played the deep-lying role the merit index reads least well, so part of that gap may be value the box score misses — an independent Opta rating places him above the field's median; even so, it is the case the usual complaint describes." },
-    { year: "2019", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest +0.92, sat well behind the field's best seasons, and Messi won among the very best on production." },
+    { year: "2019", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest {HYPE}, sat well behind the field's best seasons, and Messi won among the very best on production." },
     { year: "2021", verdict: "Lewandowski had the best season in the field, a record-breaking scorer with almost no extra buzz, and finished second. The narrative outweighed the goals." },
     { year: "2022", verdict: "Benzema took the vote on a Champions League run, while Mbappé again out-produced everyone. A deserved win, helped by the European campaign." },
     { year: "2023", verdict: "The best season, the most votes, and considerable attention after the World Cup. Little here to dispute." },
-    { year: "2024", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, helped by a treble narrative. An independent Opta rating, by contrast, ranks him near the top of the field: the box score undersells controlling midfielders, so much of his gap looks like value, not hype." },
+    { year: "2024", verdict: "Rodri won while ranking 14th on raw production — a holding midfielder whose value the box score barely captures, carried by a Premier League title and a Player-of-the-Tournament run at Euro 2024. An independent Opta rating, by contrast, ranks him near the top of the field: the box score undersells controlling midfielders, so much of his gap looks like value, not hype." },
     { year: "2025", verdict: "Dembélé won with little extra buzz, while Salah had the best season of anyone and finished fourth." },
   ];
 
@@ -169,6 +189,20 @@
       `<div class="gate-axis"><span style="left:0">0</span><span style="left:47.6%;transform:translateX(-50%)">+0.5</span>` +
       `<span style="left:95.2%;transform:translateX(-50%)">+1.0</span><span style="right:0;color:var(--faint)">log-odds, per SD</span></div>`;
     host.querySelectorAll(".gate-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
+    fillBoot();
+  }
+
+  // ---- propagated-uncertainty footnote (generated-regressor bootstrap) ----
+  function fillBoot() {
+    const host = el("gates-boot"); if (!host) return;
+    const rx = D.robust_extra; if (!rx || !rx.bootstrap_a || !rx.bootstrap_b) return;
+    const a = rx.bootstrap_a, b = rx.bootstrap_b;
+    const ci = r => `[${sgn(r.lo)}, ${sgn(r.hi)}]`;
+    // The Hype Score is itself an estimated residual, so the bars above understate its uncertainty.
+    // Re-fitting the whole de-fame step inside a bootstrap widens the intervals — both still clear zero.
+    host.textContent =
+      `Because the Hype Score is itself an estimate, we re-ran the entire calculation inside a ` +
+      `bootstrap. The honest, wider intervals — Gate A ${ci(a)}, Gate B ${ci(b)} — still sit above zero.`;
   }
 
   // ---- leaderboard rows ----
@@ -188,7 +222,11 @@
       const end = pos ? 50 + w : 50 - w;          // fill's outer edge, % of bar
       const lab = pos ? `left:${end.toFixed(1)}%;text-align:left`
         : `right:${(100 - end).toFixed(1)}%;text-align:right`;
-      const stack = pos ? end > 80 : end < 20;    // near the edge → won't fit inline on phones
+      // near the edge → won't fit inline. Narrow phones get a tighter threshold so mid-length bars
+      // (e.g. Kvaratskhelia +2.22 at ~360px) flip inside the bar instead of clipping off-screen.
+      const narrow = window.innerWidth <= 420;
+      const hiT = narrow ? 62 : 80, loT = narrow ? 38 : 20;
+      const stack = pos ? end > hiT : end < loT;
       return (
         `<div class="lb-row${stack ? " lb-row-stack" : ""}" data-tip="<b>${esc(r.player)}</b> · ${r.year}<br>Hype Score ${sgn(r.h_perp)} · finished #${r.rank}">
           <div class="lb-name"><div class="nm">${esc(r.player)}</div><div class="tag">${r.year} · ${esc(tag)}</div></div>
@@ -220,7 +258,7 @@
               ${cell("Biggest story", h, "var(--hot)", "Hype " + sgn(h.h_perp))}
               ${cell("Winner ●", w, "var(--gold)", "merit " + sgn(w.merit_z) + " · Hype " + sgn(w.h_perp))}
             </div>
-            <p class="py-verdict">${esc(VERDICT[String(p.year)] || "")}</p>
+            <p class="py-verdict">${esc((VERDICT[String(p.year)] || "").replace("{HYPE}", sgn(h.h_perp)))}</p>
           </div>
         </div>`);
     }).join("");
@@ -230,15 +268,18 @@
   function renderRobust() {
     const host = el("robust-card"); if (!host) return;
     const SPECS = [["baseline", "main model"], ["no_duopoly", "drop Messi & Ronaldo"],
-      ["drop_low_baseline", "drop low-fame players"], ["window_leaky", "window past ceremony"],
-      ["window_strict", "window before ceremony"],
+      ["window_leaky", "window past ceremony"], ["window_strict", "window before ceremony"],
       ["drop_club_importance", "ignore club importance"], ["jackknife_year", "leave a year out"]];
     const by = {}; (D.robustness || []).forEach(r => { by[`${r.gate}|${r.spec}`] = r; });
-    const pos = v => Math.max(0, v) * POSX;   // clamp tiny negatives to the zero edge
+    const pos = v => Math.min(100, Math.max(0, v) * POSX);  // 0-edge clamp + no track overflow
     const rows = (gate, col) => SPECS.map(([spec, lab]) => {
       const r = by[`${gate}|${spec}`]; if (!r) return "";
-      const l = pos(r.ci_low), w = Math.max(1.5, pos(r.ci_high) - l), e = r.estimate * POSX;
-      return `<div class="cat-row" data-tip="<b>${lab}</b><br>${sgn(r.estimate)} · 94% CI [${sgn(r.ci_low)}, ${sgn(r.ci_high)}]">
+      const l = pos(r.ci_low), w = Math.max(1.5, pos(r.ci_high) - l), e = pos(r.estimate);
+      // jackknife_year is a [min, max] leave-one-year envelope, not a confidence interval.
+      const range = spec === "jackknife_year"
+        ? `leave-one-year spread [${sgn(r.ci_low)}, ${sgn(r.ci_high)}]`
+        : `95% CI [${sgn(r.ci_low)}, ${sgn(r.ci_high)}]`;
+      return `<div class="cat-row" data-tip="<b>${lab}</b><br>${sgn(r.estimate)} · ${range}">
           <div class="cat-lab">${lab}</div>
           <div class="cat-track"><div class="cat-zero"></div>
             <div class="cat-ci" style="left:${l}%;width:${w}%;background:${col}"></div>
@@ -252,7 +293,7 @@
           <span style="left:95.2%;transform:translateX(-50%)">+1.0</span></div>
         <div class="cat-axu">log-odds<br>per SD</div></div>`;
     host.innerHTML =
-      `<div class="rb-head">Re-estimated across specifications · dot = estimate, bar = 94% range</div>` +
+      `<div class="rb-head">Re-estimated across specifications · dot = estimate, bar = 95% range</div>` +
       `<div class="cat-gate gold">Gate A — getting noticed</div>` + rows("A_nomination", GOLD) +
       `<div class="cat-gate ink-h">Gate B — finishing higher</div>` + rows("B_placement", INK) +
       axis +
@@ -293,6 +334,13 @@
         .on("mousemove", (e, d) => ptTip(d, e.clientX, e.clientY))
         .on("mouseleave", hideTip)
         .on("touchstart", (e, d) => { e.stopPropagation(); ptTip(d, e.touches[0].clientX, e.touches[0].clientY); });
+    } else {
+      // touch: tap a dot to reveal its identity (scroll-safe click path, like bindTip)
+      circ.on("click", (e, d) => {
+        e.stopPropagation();
+        const r = e.currentTarget.getBoundingClientRect();
+        ptTip(d, r.left + r.width / 2, r.top); clearTimeout(tipT); tipT = setTimeout(hideTip, 2800);
+      });
     }
 
     // labelled markers: brighter (lightened) haloed text + leader line, with collision-avoidance.
@@ -358,7 +406,10 @@
     drawScatter();
     initReveal();
     let rt;
-    window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(drawScatter, 200); });
+    window.addEventListener("resize", () => {
+      clearTimeout(rt);
+      rt = setTimeout(() => { drawScatter(); renderLeaderboard(); }, 200);
+    });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();

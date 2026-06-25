@@ -16,7 +16,8 @@
 <meta property="og:title" content="Goals or Stories? The Ballon d'Or, decoded" />
 <meta property="og:description" content="Hype roughly doubles your odds of a Ballon d'Or nomination — but barely moves who wins. A data investigation into hype, merit, and who really gets considered." />
 <meta property="og:url" content="https://valternunez.github.io/ballon-dor-analysis/" />
-<meta property="og:image" content="https://valternunez.github.io/ballon-dor-analysis/og-image.png" />
+<meta property="og:image" content="https://valternunez.github.io/ballon-dor-analysis/og-image.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="Goals, or stories? A data investigation into the Ballon d'Or." />
@@ -26,7 +27,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Goals or Stories? The Ballon d'Or, decoded" />
 <meta name="twitter:description" content="Hype roughly doubles your odds of a Ballon d'Or nomination — but barely moves who wins. A data investigation." />
-<meta name="twitter:image" content="https://valternunez.github.io/ballon-dor-analysis/og-image.png" />
+<meta name="twitter:image" content="https://valternunez.github.io/ballon-dor-analysis/og-image.jpg" />
 <meta name="twitter:image:alt" content="Goals, or stories? A data investigation into the Ballon d'Or." />
 
 <!-- Structured data (Google rich results) -->
@@ -36,7 +37,7 @@
   "@type": "Article",
   "headline": "Goals or Stories? The Ballon d'Or, decoded",
   "description": "Does the Ballon d'Or reward what players do, or what we say about them? A data investigation into hype, merit, and who really gets considered.",
-  "image": "https://valternunez.github.io/ballon-dor-analysis/og-image.png",
+  "image": "https://valternunez.github.io/ballon-dor-analysis/og-image.jpg",
   "author": { "@type": "Person", "name": "Valter Nunez" },
   "datePublished": "2026-06-24",
   "mainEntityOfPage": "https://valternunez.github.io/ballon-dor-analysis/",
@@ -45,9 +46,10 @@
 </script>
 
 <link rel="stylesheet" href="fonts/fonts.css" />
-<link rel="stylesheet" href="styles.css?v=20260624d" />
+<link rel="stylesheet" href="styles.css?v=20260624e" />
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="page">
 
   <!-- subtle top vignette glow -->
@@ -62,6 +64,8 @@
     <a href="report/ballon-dor.html" class="mono btn" title="Large interactive page — best on a fast connection">Full report →</a>
   </header>
 
+  <main id="main">
+
   <!-- ░ HERO ░ -->
   <section class="hero">
     <p class="mono kicker gold">The Ballon d'Or · 2018–2025</p>
@@ -71,7 +75,7 @@
     <div class="hero-stats">
       <div><div class="stat-num display">7</div><div class="mono stat-lab">award years</div></div>
       <div><div class="stat-num display">~190</div><div class="mono stat-lab">finisher-seasons</div></div>
-      <div><div class="stat-num display">H⊥</div><div class="mono stat-lab">the hype score</div></div>
+      <div><div class="stat-num display gold">5×</div><div class="mono stat-lab">more pull on getting noticed</div></div>
     </div>
 
     <div class="mono scroll-cue"><span class="bob" aria-hidden="true">↓</span> scroll</div>
@@ -128,8 +132,9 @@
       <p class="mono kicker gold">The finding</p>
       <h2 class="display h2-xl">The bias is in who gets <em class="gold">considered</em>, not who wins.</h2>
       <p class="section-sub wide">The award is two decisions: a 30-player shortlist (<em class="ink">do you get noticed?</em>), then a vote that ranks them (<em class="ink">do you finish higher?</em>). We test the narrative at each stage, holding merit and team success fixed. The nomination test covers attacking candidates, where a season's merit is best measured; defenders and keepers are judged at the placement stage.</p>
-      <div class="card2" id="gates-card" role="img" aria-label="Per-gate effect of a one-standard-deviation rise in Hype Score: large and positive at the nomination gate (about +0.73), small at the placement gate (about +0.15)."></div>
+      <div class="card2" id="gates-card" role="img" aria-label="Per-gate effect of a one-standard-deviation rise in Hype Score: large and positive at the nomination gate (about +0.70), small at the placement gate (about +0.15)."></div>
       <p class="punch">Narrative's effect on getting <em class="gold">noticed</em> is roughly <strong>five times</strong> its effect on where a nominee places.</p>
+      <p class="gates-boot mono" id="gates-boot"></p>
     </div>
   </section>
 
@@ -138,8 +143,8 @@
     <div class="wrap">
       <p class="mono kicker muted" style="margin-bottom:clamp(32px,5vw,48px)">In plain numbers — at equal merit &amp; team success</p>
       <div class="human-grid" id="human-grid">
-        <div class="human-cell"><div class="human-num display gold" id="hm-or-a">2.1×</div><div class="human-txt">the odds of making the shortlist — one extra standard deviation of buzz <strong class="ink">≈ doubles</strong> your chance of being on the list.</div></div>
-        <div class="human-cell"><div class="human-num display gold" id="hm-ame">+9<span class="pts"> pts</span></div><div class="human-txt">of probability — a typical candidate moves from <strong class="ink" id="hm-range">~19% to ~28%</strong> likely to be shortlisted.</div></div>
+        <div class="human-cell"><div class="human-num display gold" id="hm-or-a">2.0×</div><div class="human-txt">the odds of making the shortlist — one extra standard deviation of buzz <strong class="ink">≈ doubles</strong> your chance of being on the list.</div></div>
+        <div class="human-cell"><div class="human-num display gold" id="hm-ame">+8<span class="pts"> pts</span></div><div class="human-txt">of probability — a typical candidate moves from <strong class="ink" id="hm-range">~19% to ~27%</strong> likely to be shortlisted.</div></div>
         <div class="human-cell"><div class="human-num display ink" id="hm-or-b">1.16×</div><div class="human-txt">the odds of placing higher once a player is on the list — a <strong class="ink">modest</strong> effect, since production and trophies do most of the work.</div></div>
       </div>
     </div>
@@ -160,7 +165,7 @@
       </div>
       <div class="card2">
         <div class="scatter-frame">
-          <div class="y-axis-label mono">Attention — how much watched →</div>
+          <div class="y-axis-label mono">Attention — how much watched</div>
           <div class="scatter-main">
             <div class="scatter-plot" id="scatter-plot" role="img" aria-label="Scatter of every finisher: role-adjusted merit on the horizontal axis, attention on the vertical, each dot coloured by Hype Score. Warm dots high-left are over-attended; cool dots bottom-right are elite seasons few watched.">
               <span class="quad-h" aria-hidden="true"></span>
@@ -196,7 +201,7 @@
     <div class="wrap">
       <p class="mono kicker gold">The finding, year by year</p>
       <h2 class="display h2" style="max-width:22ch;margin-bottom:clamp(8px,2vw,14px)">Best season. Biggest story. Actual winner.</h2>
-      <p class="section-sub wide" style="margin-bottom:clamp(36px,5vw,52px)">“Biggest story” is the player with the most attention <em class="ink">beyond</em> what their season explains — not simply the most-viewed. What matters is where the <em class="ink">winner</em> sits between the best season and the biggest story.</p>
+      <p class="section-sub wide" style="margin-bottom:clamp(36px,5vw,52px)">“Biggest story” is the player with the most attention <em class="ink">beyond</em> what their season explains — not simply the most-viewed. What matters is where the <em class="ink">winner</em> sits between the best season and the biggest story. One honest caveat: this gap is attention beyond <em class="ink">measured</em> merit, so it can run either way — real value the box score misses (deep-lying roles like Rodri or Modrić especially), or attention that simply <em class="ink">followed</em> a great season, not only narrative inflation.</p>
       <div id="peryear-rows" class="peryear-list"></div>
     </div>
   </section>
@@ -230,6 +235,8 @@
     </div>
   </section>
 
+  </main>
+
   <!-- ░ CONCLUSION ░ -->
   <footer class="band">
     <div class="wrap">
@@ -253,7 +260,7 @@
 </div>
 
 <script src="vendor/d3.v7.min.js"></script>
-<script src="data.js?v=20260624d"></script>
-<script src="app.js?v=20260624d"></script>
+<script src="data.js?v=20260624e"></script>
+<script src="app.js?v=20260624e"></script>
 </body>
 </html>

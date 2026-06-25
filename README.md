@@ -16,8 +16,8 @@ The award is two decisions, so we test the Hype-Score question at each gate:
 
 | Gate | question | H⊥ effect (per SD, 94% interval) | in plain terms |
 |---|---|---|---|
-| **A — nomination** | do you make the 30-man shortlist? | **+0.70** [0.49, 0.91], P>0 > 0.99 | ≈ **doubles** the odds of being shortlisted (~+9 pts of probability) |
-| **B — placement** | given you're in, do you finish higher? | **+0.15** [0.02, 0.28], P>0 = 0.98 | adds only ~16% to the odds |
+| **A — nomination** | do you make the 30-man shortlist? | **+0.70** [0.49, 0.91], P>0 > 0.99 | ≈ **doubles** the odds of being shortlisted (~+8 pts of probability) |
+| **B — placement** | given you're in, do you finish higher? | **+0.15** [0.01, 0.28], P>0 = 0.97 | adds only ~16% to the odds |
 
 **The bias is in who gets *considered*, not who wins** — narrative's pull on nomination is ~5× its
 pull on placement. Gate A holds across every robustness check; Gate B is real but modest and

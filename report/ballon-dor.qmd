@@ -122,6 +122,13 @@ One chart carries the result.
   `{python} f"[{B['lo']:.2f}, {B['hi']:.2f}]"`). Once you're in the room, the vote is driven far more
   by production and trophies; narrative adds only a modest nudge.
 
+Because H⊥ is itself an *estimate* (a first-stage residual), those credible intervals understate its
+uncertainty a little. A bootstrap that re-estimates the whole pipeline and propagates that first-stage
+error — *Is it real, or an artifact?*, below — widens them to Gate A
+`{python} f"[{RX['bootstrap_a']['lo']:.2f}, {RX['bootstrap_a']['hi']:.2f}]"` and Gate B
+`{python} f"[{RX['bootstrap_b']['lo']:.2f}, {RX['bootstrap_b']['hi']:.2f}]"`, both still on the same
+side of zero. The conclusions below hold against that stricter bar.
+
 **In plain terms** (log-odds are not intuitive): at equal merit and team success, a
 one-standard-deviation rise in Hype Score **roughly `{python} f"{E['gate_a_or']['or']:.1f}"`× the odds
 of being shortlisted** — about **+`{python} f"{E['gate_a_ame']['mean']:.0f}"` percentage points**,
@@ -175,8 +182,8 @@ report.fig_merit_vs_attention().show(config={"displayModeBar": False, "responsiv
 ## Is it real, or an artifact?
 
 With a sample this small, one specification settles little. So I re-estimated the H⊥ effect under
-deliberately varied choices — dropping the Messi/Ronaldo duopoly, dropping breakout newcomers, leaving
-out each year in turn.
+deliberately varied choices — dropping the Messi/Ronaldo duopoly, shifting the attention window,
+removing the club-importance control, and leaving out each year in turn.
 
 ```{python}
 # | label: fig-robustness
@@ -208,6 +215,13 @@ placement effect the same sign (`{python} f"{RX['heckman_b']['est']:+.2f}"`), al
 that crosses zero. With no clean exclusion restriction and a sample this size, that last check is a
 sign test rather than a clean correction; the two-gate design is the real response to selection, since
 the bias falls at the gate modelled directly.
+
+The Bayesian headline is also **not a creature of its priors**. Re-fitting each gate under a
+deliberately *skeptical* (tight) and a near-flat (wide) Normal prior on the H⊥ coefficient barely
+moves it: across default, tight and wide the nomination effect stays within
+`{python} f"[{RX['prior']['a']['min']:.3f}, {RX['prior']['a']['max']:.3f}]"` and placement within
+`{python} f"[{RX['prior']['b']['min']:.3f}, {RX['prior']['b']['max']:.3f}]"` — the likelihood, not the
+prior, is doing the work.
 
 The strongest check uses a **different attention signal entirely**. Everything above measures attention
 as Wikipedia traffic; rebuilding H⊥ on **GDELT global news volume** — a separate corpus, the count of
@@ -252,6 +266,12 @@ A few limits:
   proxy (GDELT) is the independent second opinion (the nomination effect reproduces on it; see above).
   Pageviews can also track a player's national-market size
   or diaspora; baseline fame absorbs the steady part, but some residual market effect may survive.
+- **Direction, and what "beyond merit" can hide.** H⊥ is attention beyond *measured* merit, so on its
+  own it cannot fully separate genuine narrative lift from two other things: unmeasured value (the
+  role gap above), and *reverse causality* — in-window attention can be partly a **consequence** of a
+  great season, not only a cause of votes. Orthogonality to measured merit, the pre-ceremony window,
+  the role cross-check and the GDELT replication all bound this, but it is a limit of interpretation,
+  not something a residual can rule out by itself.
 - **Selection at Gate B.** The placement model only sees players who were nominated, for which a
   Heckman correction is the principled fix — applied here as a check rather than a definitive
   correction.
@@ -279,4 +299,13 @@ the placement model (Gate B), where every row is a finisher. Outcome models are
 Bayesian (a Beta regression for vote share, a logistic for nomination, year partial-pooling, fit with
 nutpie); the robustness panel uses fast frequentist anchors that track the posteriors. Everything is
 cache-first and reproducible via `python run.py <stage>`.
+
+```{python}
+# | output: asis
+D = report.diagnostics()
+print(f"**Sampler diagnostics.** Both posteriors converged cleanly: worst-case $\\hat R$ = "
+      f"{D['rhat_max']:.2f}, minimum bulk-ESS ≈ {D['ess_bulk_min']:,}, {D['divergences']} divergent "
+      f"transitions. The nomination model's leakage-safe (year-grouped) cross-validated ROC-AUC is "
+      f"{D['roc_auc']:.2f} — it separates nominees from the rest well above chance.")
+```
 :::

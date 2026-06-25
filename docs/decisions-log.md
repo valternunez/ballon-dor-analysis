@@ -627,3 +627,29 @@ earlier coarse "ratings share our blind spot" line. Chose (with the user) to **s
 report case studies + role caveat and the site per-year verdicts, framed honestly: part of those two
 winners' H⊥ is plausibly unmeasured merit, not narrative. **No model change** (cross-check only).
 Also recorded the calendar-year season-avg coarseness for 2018/2019/2021 (small; not re-windowed).
+
+### Audit pass #2 fix sweep — copy + disclosure, no headline change (2026-06-24)
+Ran the second multi-lens audit as a background Workflow (9 reviewers → synthesis lead), findings-only.
+No blockers; fixed all 22 items. Notable decisions:
+- **Prior gap → real refit, not just disclosure** (user's call). Added `robustness.prior_sensitivity()`
+  (tight/wide Normal on the H⊥ slope; auxiliary, does NOT touch the cached headline idata) and wired it
+  into the `robustness` stage + `report.robustness_extras`/`report.prior_sensitivity_extent`. Cited in
+  report + findings.
+- **No-op spec → dropped, not faked** (user's call). `drop_low_baseline` filtered 0 rows by
+  construction; removed from `robustness._build_panel`, `report._CATERPILLAR_SPECS`, the `app.js` SPECS
+  array, and docstrings, rather than re-engineering the pool to make it "bite" (which would change what
+  the study is). Refit the panel.
+- **94%→95% CI** only on the *frequentist* caterpillar (statsmodels `conf_int`/2.5–97.5 pct); the
+  Bayesian gate cards stay **94% HDI**. The jackknife row is a [min,max] envelope, relabelled so it's
+  not called a CI.
+- **Stale numbers**: static effect fallbacks (2.1×/+9/28%) the live JS already overwrote, an aria-label
+  (+0.73), and the Van Dijk verdict (+0.92) all disagreed with the live render; corrected, and the
+  Van Dijk figure is now interpolated from the `per_year` payload so it can't drift again. ROC-AUC
+  0.845 was stale (now 0.80, computed live via `report.diagnostics`).
+- **Bootstrap surfaced** at the headline (site `#gates-boot` caption + report sentence) instead of only
+  the optimistic naive HDI. Reverse-causality / unmeasured-merit caveat added (site per-year intro +
+  report limitations).
+- **Mobile + a11y**: 44px tap targets, scroll-safe tap-to-reveal tooltips on scatter/leaderboard,
+  viewport-aware leaderboard stacking, lower scatter height floor, `<main>` + skip-link.
+- **og-image.png → og-image.jpg** (191 KB → 48 KB at q85; text/gradient clean at preview size);
+  updated og/twitter/JSON-LD refs + `og:image:type`. All 24 vendored fonts are referenced — none pruned.

@@ -9,8 +9,8 @@ Engine = the **frequentist anchors** (statsmodels Beta for Stage B, Logit for St
 cell, and already shown to track the Bayesian posteriors (Stage B +0.192 Bayes vs +0.195 freq). The
 posteriors stay the headline; this shows the point estimate is stable.
 
-Specs (per gate): baseline · no_duopoly · drop_low_baseline · window_leaky · window_strict ·
-drop_club_importance · jackknife_year · (proxy_gdelt, when the GDELT pull has completed).
+Specs (per gate): baseline · no_duopoly · window_leaky · window_strict · drop_club_importance ·
+jackknife_year · (proxy_gdelt, when the GDELT pull has completed).
 `window_leaky` recomputes H⊥ with the hype window stretched to the ceremony date (the leakage we
 designed against) — H⊥ should INFLATE, demonstrating that the shortlist cut matters.
 `drop_club_importance` refits H⊥ without the v3 team-centrality control, showing the effect is
@@ -201,6 +201,67 @@ def _bootstrap_rows() -> list[dict]:
     return [_boot_row("A_nomination", a_est), _boot_row("B_placement", b_est)]
 
 
+# --- prior-sensitivity check (Bayesian; is the headline an artifact of the priors?) ----
+
+PRIOR_CACHE = "prior_sensitivity"
+# Sigma on the (standardized) h_perp_pv coefficient. bambi's default for a logit-scale slope is a
+# wide auto-scaled Normal; we bracket it with a deliberately TIGHT (skeptical) and a deliberately
+# WIDE (near-flat) Normal to show the posterior is driven by the data, not the prior.
+_PRIOR_SIGMAS = {"tight": 0.5, "wide": 5.0}
+
+
+def _fit_with_hperp_prior(formula: str, family: str, data: pd.DataFrame, sigma: float):
+    """Refit a gate model with a Normal(0, sigma) prior forced on the h_perp_pv slope (no cache)."""
+    import bambi as bmb  # noqa: PLC0415
+
+    priors = {"h_perp_pv": bmb.Prior("Normal", mu=0, sigma=sigma)}
+    model = bmb.Model(formula, data=data, family=family, priors=priors)
+    return model.fit(
+        draws=1000, tune=1000, chains=4, inference_method="nutpie",
+        nuts={"target_accept": 0.9}, random_seed=nomination._SEED, progressbar=False,
+    )
+
+
+def _prior_sensitivity() -> pd.DataFrame:
+    """H⊥ posterior (mean + 94% HDI) at each gate under default / tight / wide priors.
+
+    The default row reuses the cached headline fits (no refit); tight/wide refit the gate model with
+    a Normal(0, sigma) clamped on the h_perp_pv slope. If the three rows agree, the headline is the
+    likelihood's, not the prior's.
+    """
+    gates = [
+        ("A_nomination", nomination._FORMULA_HPERP, "bernoulli", nomination._prep_hperp(),
+         nomination.fit_hperp(), nomination.summary),
+        ("B_placement", placement._FORMULA, "beta", placement._prep(),
+         placement.fit(), placement.summary),
+    ]
+    rows = []
+    for gate, formula, family, data, headline_idata, summ in gates:
+        r = summ(headline_idata).loc["h_perp_pv"]
+        rows.append({"gate": gate, "prior": "default", "sigma": float("nan"),
+                     "estimate": float(r["mean"]), "ci_low": float(r["hdi94_lb"]),
+                     "ci_high": float(r["hdi94_ub"])})
+        for name, sigma in _PRIOR_SIGMAS.items():
+            r = summ(_fit_with_hperp_prior(formula, family, data, sigma)).loc["h_perp_pv"]
+            rows.append({"gate": gate, "prior": name, "sigma": float(sigma),
+                         "estimate": float(r["mean"]), "ci_low": float(r["hdi94_lb"]),
+                         "ci_high": float(r["hdi94_ub"])})
+    return pd.DataFrame(rows, columns=["gate", "prior", "sigma", "estimate", "ci_low", "ci_high"])
+
+
+def prior_sensitivity(*, refresh: bool = False) -> pd.DataFrame:
+    """Build (and cache) the prior-sensitivity table, printing a compact summary."""
+    out = cached_frame(PRIOR_CACHE, _prior_sensitivity, refresh=refresh)
+    print("\nPrior sensitivity - H_perp posterior (mean, 94% HDI) by gate x prior:\n")
+    for gate, g in out.groupby("gate"):
+        print(f"  {gate}:")
+        for r in g.itertuples():
+            tag = "default" if r.prior == "default" else f"{r.prior} N(0,{r.sigma:g})"
+            print(f"    {tag:<16} est={r.estimate:+.3f}  "
+                  f"94% HDI=[{r.ci_low:+.3f}, {r.ci_high:+.3f}]")
+    return out
+
+
 # --- GDELT second-proxy H⊥ (finisher-fit replication check) -----------------
 
 def _gdelt_available() -> bool:
@@ -253,10 +314,12 @@ def _build_panel() -> pd.DataFrame:
     strict = _strict_hperp()
     no_ci = _drop_club_importance_hperp()
 
+    # NB: a `drop_low_baseline` spec was removed — `pv_low_baseline` (baseline NaN or < threshold)
+    # is False for every row in the candidate/finisher pools (all high-fame players), so the filter
+    # dropped zero rows and duplicated baseline exactly. A vacuous stress test is worse than none.
     b_specs = {
         "baseline": bp,
         "no_duopoly": bp[~bp["is_duopoly"]],
-        "drop_low_baseline": bp[~bp["pv_low_baseline"].fillna(False)],
         "window_leaky": placement._prep(_model_features_from_hp(leaky)),
         "window_strict": placement._prep(_model_features_from_hp(strict)),
         "drop_club_importance": placement._prep(_model_features_from_hp(no_ci)),
@@ -264,7 +327,6 @@ def _build_panel() -> pd.DataFrame:
     a_specs = {
         "baseline": ap,
         "no_duopoly": ap[~ap["is_duopoly"]],
-        "drop_low_baseline": ap[~ap["pv_low_baseline"]],
         "window_leaky": nomination._prep_hperp(hperp_df=leaky),
         "window_strict": nomination._prep_hperp(hperp_df=strict),
         "drop_club_importance": nomination._prep_hperp(hperp_df=no_ci),
@@ -297,4 +359,5 @@ def build(*, refresh: bool = False) -> pd.DataFrame:
                 f"    {r.spec:<18} est={r.estimate:+.3f}  "
                 f"95% CI/spread=[{r.ci_low:+.3f}, {r.ci_high:+.3f}]  n={r.n}"
             )
+    prior_sensitivity(refresh=refresh)  # Bayesian: headline robust to tight/wide H⊥ priors
     return panel

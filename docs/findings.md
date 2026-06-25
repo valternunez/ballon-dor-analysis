@@ -354,3 +354,25 @@ verdicts.
 coarse proxy for the 3 calendar-year awards (2018/2019/2021 = half-of-two football seasons). Small
 distortion (Modrić 7.33 vs 7.17 across the two seasons); not worth a per-match re-window for a
 cross-check.
+
+### Audit pass #2 — the headline survives every new stress; ROC-AUC was stale (2026-06-24)
+A 9-lens agent-team audit (UX, mobile, SWE, econometrics, applied-stats, journalist, football,
+devil's-advocate, reproducibility) returned **no blockers**. The substantive analytical takeaways:
+- **Prior-sensitivity (new check).** Re-fitting both gates under a deliberately *tight* N(0,0.5) and a
+  *wide* N(0,5) prior on the H⊥ coefficient barely moves it — Gate A stays **[+0.67, +0.70]** (default
+  +0.696), Gate B **[+0.14, +0.15]** (default +0.145). The Bayesian headline is the likelihood's, not
+  the prior's. (`robustness.prior_sensitivity`.)
+- **Generated-regressor bootstrap, surfaced.** The propagated 95% intervals (de-fame re-fit inside each
+  resample) are **Gate A [+0.51, +1.07], Gate B [+0.02, +0.34]** — wider than the naive HDIs, both still
+  off zero. These were computed but buried; now shown at the headline (site + report).
+- **Convergence is clean:** worst R-hat 1.00, 0 divergent transitions, min bulk-ESS ≈ 931.
+- **ROC-AUC was stale.** The nomination model's year-grouped CV ROC-AUC is **0.80**, not the 0.845 the
+  docs carried (it dropped in the earlier merit-leakage match-window rebuild and the number was never
+  refreshed). The report now computes it live (`report.diagnostics`) so it can't go stale again.
+- **`drop_low_baseline` was a vacuous robustness spec** — `pv_low_baseline` (baseline NaN or below
+  threshold) is False for every row in the candidate/finisher pools (all high-fame players), so it
+  filtered 0 rows and duplicated baseline exactly. Removed from the panel/caterpillar rather than shown
+  as a check that tests nothing.
+- **Football copy errors caught:** "Kolo Muani World Cup *final goal*" (it was the saved final chance;
+  his goal was the semi) and a Rodri "treble narrative" (City's treble was 2022-23; his 2024 case was
+  the PL title + Euro 2024 Player of the Tournament). Reader-facing, not analytical.
