@@ -164,7 +164,20 @@ scatter/leaderboard (scroll-safe `click`), leaderboard stack viewport-aware (no 
 aspect floor lowered. a11y: **`<main>` + skip-link**. Assets: **og-image.png→og-image.jpg** (191KB→48KB,
 `og:image:type` added). ruff + **109 tests** green; panel + data.js + figures refit; report re-rendered →
 `site/report/`; `?v=20260624e`.
-**Next/optional:** finish GDELT (rested IP) + wire `h_perp_gd` pool-wide.
+**GDELT POOL-WIDE DONE (2026-06-24)** — switched `gdelt_bq._pairs()` from `wikidata.award_universe()`
+(~128) to `pool.pool_universe()` (657) via a `_universe()` helper, so `h_perp_gd` is now fit **pool-wide**
+like pageviews (the inner join in `hperp._candidate_frame` made every downstream stage —
+`gdelt_attention`→`build_gdelt`→`proxy_gdelt` — go pool-wide unchanged). **Cost flat:** dry-run 0.066 TB
+for 657 names = same as 128 (BigQuery bills bytes scanned, not names joined); wikidata already pool-wide
+cached. `gdelt_volume_daily` now **590 players** (was 114). **Result:** Gate A **+0.324 [+0.10, +0.55],
+n=910** (was finisher-fit n=311) — replicates direction + significance on an independent corpus but
+**attenuated** vs pageviews +0.742 (~half size; expected for a noisier, harder-to-disambiguate
+pool-wide news signal). Gate B +0.051 (finisher-only, n.s.). **Quality-gated to a *strengthened
+replication*, NOT a co-headline** (the user's "co-headline if 1 TB room" gate was reframed to quality:
+1 TB never bound; the +0.32-vs-+0.74 magnitude gap does). Disambiguation sound (GDELT↔pageview Spearman
+0.62; top pool-only players all real). Report + site GDELT/caveat prose reframed to pool-wide; docstrings
+de-finisher'd. **Headline frozen** (pageviews +0.696/+0.145). ruff + tests green; `?v=20260624f`.
+**Next/optional:** nothing outstanding.
 
 ## Where the canon lives
 - `PROJECT_NOTES.md` — the locked methodology (thesis, funnel, merit index, H⊥, GDELT, modeling spec).

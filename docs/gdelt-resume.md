@@ -4,6 +4,13 @@
 > cleared, so the second proxy now comes from the **BigQuery public GKG table** (`data/gdelt_bq.py`,
 > `python run.py gdelt_bq`) — free in a no-billing sandbox project, ~0.066 TB scan. It writes the same
 > `gdelt_volume_daily` cache. The notes below are kept only as the record of the DOC-API dead end.
+>
+> **POOL-WIDE DONE (2026-06-24).** The BigQuery pull now resolves over `pool.pool_universe()` (657),
+> not just the ~128 finishers — `gdelt_volume_daily` covers **590 players**. Scan cost stayed flat
+> (0.066 TB; BigQuery bills bytes scanned, not names joined). `h_perp_gd` is therefore a pool-wide
+> independent replication; the nomination effect reproduces (Gate A +0.32, attenuated vs pageviews
+> +0.74 — a noisier signal), kept as a strengthened replication, not a co-headline. See findings +
+> decisions logs. Nothing left to resume.
 
 **Paused at: 2026-06-19 16:38, resumed 2026-06-20 ~21:25 (got to 48), hard-banned again.**
 

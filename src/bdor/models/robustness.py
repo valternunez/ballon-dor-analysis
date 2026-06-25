@@ -15,7 +15,7 @@ jackknife_year · (proxy_gdelt, when the GDELT pull has completed).
 designed against) — H⊥ should INFLATE, demonstrating that the shortlist cut matters.
 `drop_club_importance` refits H⊥ without the v3 team-centrality control, showing the effect is
 stable with or without it. `proxy_gdelt` re-fits H⊥ on an independent news-volume proxy
-(finisher-fit, since GDELT covers only the award universe) — a replication check.
+(GDELT, now pulled pool-wide like pageviews) — a like-for-like independent replication.
 """
 
 from __future__ import annotations
@@ -262,7 +262,7 @@ def prior_sensitivity(*, refresh: bool = False) -> pd.DataFrame:
     return out
 
 
-# --- GDELT second-proxy H⊥ (finisher-fit replication check) -----------------
+# --- GDELT second-proxy H⊥ (pool-wide independent replication) --------------
 
 def _gdelt_available() -> bool:
     """True only if the assembled GDELT volume cache exists (i.e. the pull has completed).
@@ -275,7 +275,7 @@ def _gdelt_available() -> bool:
 
 
 def _gdelt_hperp() -> pd.DataFrame:
-    """Finisher-fit GDELT-proxy H⊥, renamed to flow through the standard `h_perp_pv` prep/anchors.
+    """Pool-wide GDELT-proxy H⊥, renamed to flow through the standard `h_perp_pv` prep/anchors.
 
     `hperp.build_gdelt()` de-fames GDELT news volume (prefix `gd`) instead of pageviews; renaming
     `h_perp_gd`/`gd_low_baseline` → `h_perp_pv`/`pv_low_baseline` lets the existing gate prep and
@@ -333,7 +333,7 @@ def _build_panel() -> pd.DataFrame:
     }
 
     # Second attention proxy (GDELT news volume) — only if the pull has completed (else skipped,
-    # never triggered live). Finisher-fit, so it's a replication check, not a pool-wide refit.
+    # never triggered live). Pulled pool-wide, so it's a like-for-like independent replication.
     if _gdelt_available():
         gd = _gdelt_hperp()
         b_specs["proxy_gdelt"] = placement._prep(_model_features_from_hp(gd))

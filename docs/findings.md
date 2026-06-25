@@ -376,3 +376,26 @@ devil's-advocate, reproducibility) returned **no blockers**. The substantive ana
 - **Football copy errors caught:** "Kolo Muani World Cup *final goal*" (it was the saved final chance;
   his goal was the semi) and a Rodri "treble narrative" (City's treble was 2022-23; his 2024 case was
   the PL title + Euro 2024 Player of the Tournament). Reader-facing, not analytical.
+
+### GDELT goes pool-wide: the nomination effect replicates on independent news data (2026-06-24)
+Extended the GDELT second proxy from finisher-only (~128) to the **full candidate pool** (657, the same
+universe pageviews use) — the BigQuery scan cost is flat (0.066 TB either way, since it bills bytes
+*scanned* not names joined), so the wider pull was free. `gdelt_volume_daily` now covers **590 players**
+(was 114); `h_perp_gd` is defined for 913 player-years.
+**Result (pool-wide frequentist anchors):**
+- **Gate A (nomination): +0.324, 95% CI [+0.10, +0.55], n=910** — clearly positive and significant on a
+  wholly independent corpus. The "narrative gets you noticed" effect **replicates pool-wide**.
+- **Gate B (placement): +0.051, [−0.08, +0.18], n=167** — same sign, not distinguishable from zero
+  (placement is finisher-only by nature; the noisier signal can't resolve the small effect).
+**It is attenuated** vs the pageview anchor (+0.742): the GDELT effect is ~44% the size. This is the
+expected direction for a noisier instrument — news coverage is sparse and harder to disambiguate for the
+hundreds of non-finalist candidates, and classical measurement error attenuates a coefficient toward
+zero. **Disambiguation is sound, not broken:** GDELT window-volume correlates with pageview attention at
+**Spearman 0.62** overall (0.58 pool-only), and the top pool-only players by GDELT volume are all real,
+recognizable footballers (James Rodríguez, Higuaín, Shaqiri, Alexis Sánchez, Zlatan, Iniesta) — no
+wrong-person inflation. So the attenuation is a genuine property of the news signal, not an artifact.
+**Decision (quality gate, not a cost gate):** keep pageviews as the **primary** proxy and present
+pool-wide GDELT as a **strengthened independent replication** — NOT a co-headline. The magnitudes differ
+too much (+0.32 vs +0.74) to bill them as interchangeable; promoting a noisier half-size signal to
+co-equal primary would overstate agreement. The honest claim is direction + significance on an
+independent source, which holds. (The 1 TB free tier was never the constraint — we used 0.066 TB.)

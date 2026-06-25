@@ -11,6 +11,12 @@ Output is the SAME `[player, date, volume]` frame the DOC-API path produced, cac
 `gdelt.VOLUME_CACHE`, so the feature wiring (`features/gdelt_attention`, `hperp.build_gdelt`, the
 `proxy_gdelt` spec) reads it unchanged. The metric is a daily article *count*, not the DOC API's
 normalized %, but H⊥ log-transforms and de-fames it, so the scale washes out.
+
+**Pool-wide.** The pull resolves over the full candidate pool (`pool.pool_universe()`, the same list
+pageviews use), not just the ~128 finishers — so `h_perp_gd` is a pool-wide refit, a like-for-like
+independent replication of the pageview H⊥, not a finisher-only check. Cost is flat: BigQuery bills
+bytes *scanned* (`DATE`+`V2Persons` over the partitions), and the names CTE is a post-scan in-memory
+join, so widening the name list from ~128 to ~657 scans the same bytes (`dry_run()` confirms).
 """
 
 from __future__ import annotations
@@ -108,9 +114,20 @@ def _client():
     return bigquery.Client()
 
 
+def _universe() -> list[str]:
+    """The pull universe: the full candidate pool (finishers ∪ Tier-2), matching pageviews.
+
+    Lazy import of `features.pool` to avoid a heavy import chain at load; this is the one knob that
+    makes the proxy pool-wide rather than finisher-only.
+    """
+    from ..features import pool  # noqa: PLC0415
+
+    return pool.pool_universe()
+
+
 def _pairs() -> list[tuple[str, str]]:
-    universe = wikidata.award_universe()
-    wd = wikidata.pull(universe)
+    universe = _universe()
+    wd = wikidata.pull(universe)  # resumable: only pool players not yet resolved are fetched
     aliases = {p: list(g.loc[g["kind"] == "alias", "value"]) for p, g in wd.groupby("player")}
     return _name_pairs({p: aliases.get(p, []) for p in universe})
 

@@ -133,9 +133,9 @@ def hperp_frame(
 
     `prefix` selects which attention signal to de-fame. `"pv"` (the default: Wikipedia pageviews,
     the primary proxy, fit pool-wide) reads `pv_baseline`/`pv_window_mean` → writes `h_perp_pv`.
-    `"gd"` (GDELT news volume; see `gdelt_attention`) reads `gd_*` → writes `h_perp_gd`. GDELT
-    covers only the ~128-player award universe, so `h_perp_gd` is a finisher-fit second-proxy
-    robustness signal, not a pool-wide refit like `h_perp_pv`.
+    `"gd"` (GDELT news volume; see `gdelt_attention`) reads `gd_*` → writes `h_perp_gd`. GDELT is
+    now pulled pool-wide too (the BigQuery path made the wider pull free), so `h_perp_gd` is a
+    pool-wide second-proxy refit — an independent replication of `h_perp_pv`, not just finishers.
 
     `regressors` overrides the de-fame regressor set (default `_REGRESSORS`); the robustness panel
     passes the pre-v3 set (no club-importance) to show H⊥ is stable with/without that control.
@@ -184,11 +184,11 @@ def build(*, refresh: bool = False) -> pd.DataFrame:
 
 
 def build_gdelt(*, refresh: bool = False) -> pd.DataFrame:
-    """Return the finisher-fit GDELT second-proxy H⊥ (`h_perp_gd`), cached.
+    """Return the pool-wide GDELT second-proxy H⊥ (`h_perp_gd`), cached.
 
     A robustness sibling of `build()`: same de-fame regression, but de-faming GDELT news volume
-    (`gdelt_attention`) instead of pageviews. GDELT covers only the award universe, so this is a
-    finisher-level replication check — not a pool-wide refit (see `hperp_frame`).
+    (`gdelt_attention`) instead of pageviews. GDELT is now pulled pool-wide (the same universe as
+    pageviews), so this is an independent pool-wide replication of `h_perp_pv` (see `hperp_frame`).
     """
     from . import gdelt_attention
 

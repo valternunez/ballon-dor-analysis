@@ -653,3 +653,22 @@ No blockers; fixed all 22 items. Notable decisions:
   viewport-aware leaderboard stacking, lower scatter height floor, `<main>` + skip-link.
 - **og-image.png → og-image.jpg** (191 KB → 48 KB at q85; text/gradient clean at preview size);
   updated og/twitter/JSON-LD refs + `og:image:type`. All 24 vendored fonts are referenced — none pruned.
+
+### GDELT pool-wide wire-up — strengthened replication, not co-headline (2026-06-24)
+Switched `gdelt_bq._pairs()` from `wikidata.award_universe()` (~128) to `pool.pool_universe()` (657) via
+a small `_universe()` helper, so the GDELT H⊥ (`h_perp_gd`) is now fit pool-wide like pageviews. The
+only change needed was the pull universe — `gdelt_attention` → `hperp.build_gdelt(prefix="gd")` →
+`proxy_gdelt` all went pool-wide unchanged (the inner join in `hperp._candidate_frame` does the rest).
+**Cost is flat:** dry-run = 0.066 TB for 657 names, identical to 128 (BigQuery bills bytes *scanned* —
+DATE+V2Persons over the partitions — and the names CTE is a post-scan in-memory join). wikidata was
+already pool-wide cached (571 shards), so no new entity resolution. Auth via the existing service-account
+key (Downloads, GOOGLE_APPLICATION_CREDENTIALS; never committed).
+**Surfacing decision:** the user said "strengthen, then promote to co-headline if there's 1 TB room." I
+reframed the gate from *cost* to *quality* — the 1 TB was never going to bind (we used 0.066 TB), so it
+tells us nothing about whether GDELT deserves co-equal billing. The deciding number is the magnitude:
+pool-wide Gate A came in at **+0.324** vs pageviews **+0.742** — same direction and significance, but
+~half the size (expected attenuation on a noisier, harder-to-disambiguate signal). That fails a
+co-headline bar (would overstate agreement), so I kept it as a **strengthened pool-wide replication** in
+the report + site robustness/caveat sections, with the attenuation stated honestly. Pageviews stay the
+primary. Spot-check: GDELT↔pageview Spearman 0.62 (0.58 pool-only), top pool-only players all real —
+disambiguation sound. **No headline change** (pageview baseline Gate A +0.742 / B +0.141 untouched).

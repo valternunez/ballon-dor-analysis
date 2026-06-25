@@ -224,14 +224,19 @@ moves it: across default, tight and wide the nomination effect stays within
 prior, is doing the work.
 
 The strongest check uses a **different attention signal entirely**. Everything above measures attention
-as Wikipedia traffic; rebuilding H⊥ on **GDELT global news volume** — a separate corpus, the count of
-news documents naming each player — the nomination effect survives and stays clearly positive
+as Wikipedia traffic; rebuilding H⊥ on **GDELT global news volume** — a separate corpus (the count of
+news documents naming each player), now pulled **pool-wide** over the same candidate universe as
+pageviews — the nomination effect replicates: clearly positive and significant
 (`{python} f"{RX['gdelt_a']['est']:+.2f}"`, 95% CI
-`{python} f"[{RX['gdelt_a']['lo']:.2f}, {RX['gdelt_a']['hi']:.2f}]"`). The placement effect stays the
-same sign but, on this smaller finisher-only sample and noisier signal, is no longer distinguishable
+`{python} f"[{RX['gdelt_a']['lo']:.2f}, {RX['gdelt_a']['hi']:.2f}]"`). It is *smaller* than the
+pageview effect, and that is expected: news coverage is sparse and harder to disambiguate for the
+hundreds of non-finalist candidates, so the signal is noisier and measurement error pulls the
+coefficient toward zero. The point is the **independent direction**, on a wholly separate data source —
+not the exact magnitude. Placement keeps its sign but, among the finishers, is no longer distinguishable
 from zero (`{python} f"{RX['gdelt_b']['est']:+.2f}"`). So the firm result — narrative gets you
-*noticed* — is not an artifact of one attention measure; it reproduces on independent news data. (GDELT
-covers only the finalists' news footprint, so this is a replication check, not the pool-wide fit.)
+*noticed* — is not an artifact of one attention measure: it reproduces, pool-wide, on independent news
+data. (We keep pageviews as the primary proxy: it is the cleaner, denser signal, and the news count is
+the corroborating second opinion.)
 
 A final check shows why the windowing matters. The attention window is cut *before* the ceremony. If it
 is allowed to run *past* the ceremony — catching the winner-announcement pageview spike — the placement
