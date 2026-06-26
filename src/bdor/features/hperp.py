@@ -113,7 +113,15 @@ def _candidate_frame(
         club_importance.build()[["player_key", "award_year", "minutes_share", "xg_share"]],
         on=["player_key", "award_year"], how="left",
     )
-    for c in ("minutes_share", "xg_share"):  # 0 = unmeasured (non-top-5), like the merit dims
+    # tournament_overachievement: pool-wide (pool.build derives nation for every member); a de-fame
+    # ROBUSTNESS control only — not in _REGRESSORS, so baseline H⊥ is untouched. 0 = no/par run.
+    base = base.merge(
+        pl[["player_key", "award_year", "tournament_overachievement"]].drop_duplicates(
+            ["player_key", "award_year"]
+        ),
+        on=["player_key", "award_year"], how="left",
+    )
+    for c in ("minutes_share", "xg_share", "tournament_overachievement"):  # 0 = unmeasured
         base[c] = base[c].astype(float).fillna(0.0)
     return base.merge(att.drop(columns=["player"]), on=["player_key", "award_year"], how="inner")
 

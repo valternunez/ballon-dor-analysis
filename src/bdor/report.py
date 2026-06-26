@@ -167,6 +167,26 @@ def _prior_extent(t: pd.DataFrame) -> dict:
     return {"a": _g("A_nomination"), "b": _g("B_placement")}
 
 
+def overachievement_case(name: str = "Modri", year: int = 2018) -> dict | None:
+    """Baseline vs overachievement-controlled H⊥ for one case (the Modrić illustration).
+
+    Refits H⊥ adding the tournament-overachievement de-fame control and reports how far the player's
+    residual falls — the vivid version of "how much of the narrative was the improbable run itself."
+    """
+    from .features import hperp  # noqa: PLC0415
+    from .models import robustness  # noqa: PLC0415
+
+    def _h(df: pd.DataFrame) -> float | None:
+        r = df[df["player"].str.contains(name) & (df["award_year"] == year)]
+        return float(r["h_perp_pv"].iloc[0]) if len(r) else None
+
+    base = _h(hperp.build())
+    ctrl = _h(hperp.hperp_frame(regressors=robustness._OVERACH_REGRESSORS))
+    if base is None or ctrl is None:
+        return None
+    return {"baseline": base, "controlled": ctrl}
+
+
 def robustness_extras() -> dict:
     """Bootstrap + Heckman + strict-window rows, for the prose robustness notes."""
     p = load_panel()
@@ -189,6 +209,9 @@ def robustness_extras() -> dict:
         # drop_club_importance = H⊥ refit WITHOUT the v3 team-centrality control (baseline has it).
         "noclub_a": _get("A_nomination", "drop_club_importance"),
         "noclub_b": _get("B_placement", "drop_club_importance"),
+        # overachievement = H⊥ refit ADDING a control for finishing beyond the pre-tournament seed.
+        "overach_a": _get("A_nomination", "overachievement"),
+        "overach_b": _get("B_placement", "overachievement"),
         # proxy_gdelt = H⊥ rebuilt on GDELT news volume (independent of pageviews); finisher-fit.
         "gdelt_a": _get("A_nomination", "proxy_gdelt"),
         "gdelt_b": _get("B_placement", "proxy_gdelt"),
@@ -227,7 +250,7 @@ def fig_two_gate(stats: dict | None = None):
 # reported as prose robustness notes instead (see `robustness_extras`).
 _CATERPILLAR_SPECS = [
     "baseline", "no_duopoly",
-    "window_leaky", "window_strict", "drop_club_importance", "jackknife_year",
+    "window_leaky", "window_strict", "drop_club_importance", "overachievement", "jackknife_year",
 ]
 
 

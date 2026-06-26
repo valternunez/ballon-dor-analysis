@@ -42,6 +42,7 @@ stats = report.headline_stats()
 A, B = stats["gate_a"], stats["gate_b"]
 E = report.effect_sizes(stats)        # odds ratios + Gate-A predicted-probability effect
 RX = report.robustness_extras()       # bootstrap (generated-regressor) + Heckman rows
+OC = report.overachievement_case()    # Modrić H⊥: baseline vs overachievement-controlled
 ```
 
 Every December, football argues about one trophy. Did the right player win the Ballon d'Or? The
@@ -163,7 +164,11 @@ the box score cannot see rather than narrative. An independent Opta rating (FotM
 caution — it places Modrić above the field's median, and ranks **Rodri** (the 2024 winner our
 production merit puts ~14th) near the *top* of his field. Both are high-involvement controlling
 midfielders whose passing and progression a goals-and-xG index undercounts; for them, some of the H⊥ is
-likely unmeasured merit rather than narrative.
+likely unmeasured merit rather than narrative. There is also a third factor specific to 2018: Croatia
+*overachieved* enormously — a final from outside the contenders. When we add a control for how far a
+nation beat its pre-tournament seed (below), Modrić's residual falls from
+`{python} f"{OC['baseline']:+.2f}"` to `{python} f"{OC['controlled']:+.2f}"` — so much of what looks
+like "narrative" was the improbable run itself, attention any unfancied finalist would have drawn.
 
 **Lewandowski, 2019.** The opposite case, and a cleaner one: one of the highest *merit* scores in seven
 years — a relentless goalscorer — paired with a *negative* H⊥. Elite production, little attention, and
@@ -197,14 +202,21 @@ year or pair of superstars drives it. The placement effect is stable but smaller
 Messi and Ronaldo: drop them and its interval grazes zero. The firm result is therefore the *nomination*
 effect; the placement effect is real but should be stated cautiously.
 
-Three further checks point the same way. **Capping the calendar window at the ceremony date** (so not even a
+Several further checks point the same way. **Capping the calendar window at the ceremony date** (so not even a
 single post-ceremony match can sneak in) leaves both gates essentially unchanged (Gate A
 `{python} f"{RX['strict_a']['est']:+.2f}"`, Gate B `{python} f"{RX['strict_b']['est']:+.2f}"`). **Controlling
 for club importance** — how central a player was to his side, measured by his share of the team's minutes and
 attacking output, since a blunt "won the league" flag is shared by every squad-mate — is built into the
 headline above; remove it and the effect barely changes (Gate A `{python} f"{RX['noclub_a']['est']:+.2f}"`,
 Gate B `{python} f"{RX['noclub_b']['est']:+.2f}"`), so a pivot like Rodri being central to his team is not
-what the narrative term is picking up. Because
+what the narrative term is picking up. **Controlling for tournament overachievement** — how far a
+player's nation finished beyond its pre-tournament seed, the thing that turns an unfancied run into a
+story — shrinks the effect but does not erase it at the gate that matters: nomination stays clearly
+positive (Gate A `{python} f"{RX['overach_a']['est']:+.2f}"`), while the smaller placement effect fades
+toward zero (Gate B `{python} f"{RX['overach_b']['est']:+.2f}"`). So a fairy-tale run explains *part* of
+the narrative residual for the players it touches (Modrić above), but the nomination bias is not just
+unmodelled surprise success. (The expectation is a curated pre-tournament seed from FIFA rankings — a
+softer input than the absolute results, so this is a sensitivity check, not a headline control.) Because
 H⊥ is itself an *estimated* residual, I **bootstrapped the whole pipeline** — re-estimating H⊥ on
 resampled data and refitting both gates each time, so the intervals carry that first-stage uncertainty
 too — and Gate A stays far from zero (95% CI

@@ -79,7 +79,7 @@
   // Only `year` and `verdict` are read (see VERDICT build below); the scoreboard's numbers
   // come from data.js (per_year). Keep these two keys in sync with that payload.
   const YEARS = [
-    { year: "2018", verdict: "The highest narrative residual of any winner in the sample — far more attention than his measured merit (20th in the field) explained, while Messi had the best season. Modrić played the deep-lying role the merit index reads least well, so part of that gap may be value the box score misses — an independent Opta rating places him above the field's median; even so, it is the case the usual complaint describes." },
+    { year: "2018", verdict: "The highest narrative residual of any winner in the sample — far more attention than his measured merit (20th in the field) explained, while Messi had the best season. Two things temper it: Modrić played the deep-lying role the merit index reads least well (an independent Opta rating places him above the field's median), and Croatia's improbable run to the final drove most of the rest — control for that overachievement and his gap shrinks dramatically. Even so, it is the case the usual complaint describes." },
     { year: "2019", verdict: "Little inflation this year: even the largest residual, Van Dijk's modest {HYPE}, sat well behind the field's best seasons, and Messi won among the very best on production." },
     { year: "2021", verdict: "Lewandowski had the best season in the field, a record-breaking scorer with almost no extra buzz, and finished second. The narrative outweighed the goals." },
     { year: "2022", verdict: "Benzema took the vote on a Champions League run, while Mbappé again out-produced everyone. A deserved win, helped by the European campaign." },
@@ -269,7 +269,8 @@
     const host = el("robust-card"); if (!host) return;
     const SPECS = [["baseline", "main model"], ["no_duopoly", "drop Messi & Ronaldo"],
       ["window_leaky", "window past ceremony"], ["window_strict", "window before ceremony"],
-      ["drop_club_importance", "ignore club importance"], ["jackknife_year", "leave a year out"]];
+      ["drop_club_importance", "ignore club importance"],
+      ["overachievement", "control for overachievement"], ["jackknife_year", "leave a year out"]];
     const by = {}; (D.robustness || []).forEach(r => { by[`${r.gate}|${r.spec}`] = r; });
     const pos = v => Math.min(100, Math.max(0, v) * POSX);  // 0-edge clamp + no track overflow
     const rows = (gate, col) => SPECS.map(([spec, lab]) => {

@@ -177,6 +177,19 @@ replication*, NOT a co-headline** (the user's "co-headline if 1 TB room" gate wa
 1 TB never bound; the +0.32-vs-+0.74 magnitude gap does). Disambiguation sound (GDELT↔pageview Spearman
 0.62; top pool-only players all real). Report + site GDELT/caveat prose reframed to pool-wide; docstrings
 de-finisher'd. **Headline frozen** (pageviews +0.696/+0.145). ruff + tests green; `?v=20260624f`.
+**TOURNAMENT OVERACHIEVEMENT control DONE (2026-06-25)** — added a de-fame **robustness control** for
+how far a player's nation finished beyond its pre-tournament seed (curated `expected` in
+`tournament_results.csv` from FIFA ranking/seeding; overachievement = max(0, result−expected): Croatia
+2018 +2, Morocco 2022 +2, Algeria 2019 +2, favourites who won 0). `team_success._tournament_
+overachievement` (pure, tested) + pool-wide in `pool.build()` (158 players nonzero); merged into
+`hperp._candidate_frame` 0-filled but **NOT** in `_REGRESSORS` (baseline frozen — model_features Δ=0).
+New `robustness._overachievement_hperp()` + `overachievement` panel/caterpillar spec;
+`report.overachievement_case()` for the Modrić delta. **Result:** Gate A **+0.742→+0.657** [+0.45,+0.87]
+(survives — nomination bias isn't just surprise success), Gate B **+0.141→+0.085** (fades, as expected
+for the fragile placement effect), **Modrić 2018 +1.357→+0.310** (most of the top residual *was*
+Croatia's run). Sensitivity-only (curated pre-event seed is softer than absolute results; asymmetric).
+Surfaced in report (robustness + Modrić case) + site (robustness para + Modrić verdict + caterpillar);
+fixed a stale site "breakout newcomers" line. ruff + 110 tests green; `?v=20260625a`.
 **Next/optional:** nothing outstanding.
 
 ## Where the canon lives

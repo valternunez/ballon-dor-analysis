@@ -78,9 +78,23 @@ def _tournament_result(
     return tourn.get((award_year, nation), 0)
 
 
+def _tournament_overachievement(
+    nation: str | None, award_year: int, overach: dict[tuple[int, str], int]
+) -> int:
+    """How far a nation's tournament finish beat its pre-tournament expectation (>=0).
+
+    `overach` maps (award_year, nation) -> max(0, result - expected), where `expected` is a curated
+    pre-tournament seed (FIFA ranking / consensus favourite, see tournament_results.csv). 0 when the
+    nation is unknown or didn't record a deep run. Croatia 2018 = +2; favourites who won = 0. Pure.
+    """
+    if nation is None:
+        return 0
+    return overach.get((award_year, nation), 0)
+
+
 # --- reference loaders ------------------------------------------------------
 
-def _load_references() -> tuple[dict, set, dict, dict]:
+def _load_references() -> tuple[dict, set, dict, dict, dict]:
     cl = pd.read_csv(REFERENCE_DIR / "cl_results.csv", dtype={"season": str})
     cl_lookup = {(r.season, r.club): int(r.cl_round) for r in cl.itertuples()}
 
@@ -91,10 +105,13 @@ def _load_references() -> tuple[dict, set, dict, dict]:
     tourn = (
         tour.groupby(["award_year", "nation"])["result"].max().to_dict()
     )  # max result if a nation features in multiple tournaments that year
+    # Overachievement = finish beyond the pre-tournament seed (>=0); 0 when on/below expectation.
+    tour["overach"] = (tour["result"] - tour["expected"]).clip(lower=0)
+    overach = tour.groupby(["award_year", "nation"])["overach"].max().to_dict()
 
     nat = pd.read_csv(REFERENCE_DIR / "player_nation.csv")
     nation = dict(zip(nat["player"], nat["nation"], strict=True))
-    return cl_lookup, champs, tourn, nation
+    return cl_lookup, champs, tourn, nation, overach
 
 
 # --- build ------------------------------------------------------------------
@@ -113,7 +130,7 @@ def _judged_season_clubs() -> dict[tuple[str, str], set[str]]:
 
 def _build_team_success() -> pd.DataFrame:
     aw = awards.pull()
-    cl_lookup, champs, tourn, nation = _load_references()
+    cl_lookup, champs, tourn, nation, overach = _load_references()
     us_clubs = _judged_season_clubs()
 
     rows: list[dict] = []
@@ -137,6 +154,9 @@ def _build_team_success() -> pd.DataFrame:
                 "won_cl": cl_round == 5,
                 "won_league": _won_league(clubs, seasons, champs),
                 "tournament_result": _tournament_result(nat, award_year, tourn),
+                "tournament_overachievement": _tournament_overachievement(
+                    nat, award_year, overach
+                ),
             }
         )
     return pd.DataFrame(rows).sort_values(["award_year", "player"]).reset_index(drop=True)

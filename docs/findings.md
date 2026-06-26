@@ -399,3 +399,24 @@ pool-wide GDELT as a **strengthened independent replication** — NOT a co-headl
 too much (+0.32 vs +0.74) to bill them as interchangeable; promoting a noisier half-size signal to
 co-equal primary would overstate agreement. The honest claim is direction + significance on an
 independent source, which holds. (The 1 TB free tier was never the constraint — we used 0.066 TB.)
+
+### Tournament overachievement: the nomination effect survives it; Modrić is mostly the run (2026-06-25)
+Added a de-fame **robustness control** for *tournament overachievement* — how far a player's nation
+finished beyond its pre-tournament seed (curated `expected` in tournament_results.csv from FIFA
+ranking/seeding; overachievement = max(0, result − expected); Croatia 2018 = +2, Morocco 2022 = +2,
+Algeria 2019 = +2, favourites who won = 0). 158 pool players carry a nonzero value. It is **not** a
+baseline regressor — baseline H⊥ / leaderboard / headline are byte-identical (model_features Δ = 0).
+**Refitting H⊥ with the control added:**
+- **Gate A (nomination): +0.742 → +0.657** [+0.45, +0.87], n=955 — drops ~11% but stays clearly
+  positive and significant. The "narrative gets you noticed" effect is **not** just unmodelled surprise
+  team success.
+- **Gate B (placement): +0.141 → +0.085** [−0.04, +0.21], n=188 — the already-small, already-fragile
+  placement effect fades to non-significant. Consistent with the standing "Gate B is real but modest,
+  state cautiously" caveat.
+- **Modrić 2018 (the vivid case): H⊥ +1.357 → +0.310.** Most of the single highest narrative residual in
+  the dataset *was* Croatia's improbable run beyond their seed — attention any unfancied finalist draws —
+  not pure voter narrative. Sharpens (doesn't overturn) the Modrić reading: role blind-spot + Opta
+  rescue + overachievement together explain the bulk of his gap.
+**Caveat:** the expectation is a curated pre-tournament seed (softer than the absolute results), and the
+signal is asymmetric (captures positive overachievement among deep-run nations, not favourites who
+flopped) — hence a sensitivity check, never the baseline. The headline holds against it where it counts.

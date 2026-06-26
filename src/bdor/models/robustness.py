@@ -10,7 +10,9 @@ cell, and already shown to track the Bayesian posteriors (Stage B +0.192 Bayes v
 posteriors stay the headline; this shows the point estimate is stable.
 
 Specs (per gate): baseline · no_duopoly · window_leaky · window_strict · drop_club_importance ·
-jackknife_year · (proxy_gdelt, when the GDELT pull has completed).
+overachievement · jackknife_year · (proxy_gdelt, when the GDELT pull has completed).
+`overachievement` refits H⊥ with an added control for a nation finishing beyond its pre-tournament
+seed (Croatia 2018) — testing whether the residual is just unmodelled surprise team success.
 `window_leaky` recomputes H⊥ with the hype window stretched to the ceremony date (the leakage we
 designed against) — H⊥ should INFLATE, demonstrating that the shortlist cut matters.
 `drop_club_importance` refits H⊥ without the v3 team-centrality control, showing the effect is
@@ -102,6 +104,23 @@ def _drop_club_importance_hperp() -> pd.DataFrame:
     neither manufactures nor erases the result.
     """
     return hperp.hperp_frame(regressors=_PRE_V3_REGRESSORS)
+
+
+# --- tournament-overachievement control (de-fame sensitivity) ---------------
+
+_OVERACH_REGRESSORS = [*hperp._REGRESSORS, "tournament_overachievement"]
+
+
+def _overachievement_hperp() -> pd.DataFrame:
+    """Refit H⊥ ADDING a tournament-overachievement control (not in the baseline regressor set).
+
+    Asks: is the narrative residual just unmodelled *surprise* team success? A nation finishing
+    beyond its pre-tournament seed (Croatia 2018) draws huge attention the absolute team-success
+    terms miss. De-faming against it tests whether H⊥ survives; if so, the effect isn't merely
+    overachievement. The control is finisher-light (0 for the many pool members with no deep run),
+    so Gate A should barely move, while contested tournament cases (Modrić) shrink.
+    """
+    return hperp.hperp_frame(regressors=_OVERACH_REGRESSORS)
 
 
 # --- one cell = the H⊥ coefficient from a frequentist fit -------------------
@@ -313,6 +332,7 @@ def _build_panel() -> pd.DataFrame:
     leaky = _leaky_hperp()
     strict = _strict_hperp()
     no_ci = _drop_club_importance_hperp()
+    overach = _overachievement_hperp()
 
     # NB: a `drop_low_baseline` spec was removed — `pv_low_baseline` (baseline NaN or < threshold)
     # is False for every row in the candidate/finisher pools (all high-fame players), so the filter
@@ -323,6 +343,7 @@ def _build_panel() -> pd.DataFrame:
         "window_leaky": placement._prep(_model_features_from_hp(leaky)),
         "window_strict": placement._prep(_model_features_from_hp(strict)),
         "drop_club_importance": placement._prep(_model_features_from_hp(no_ci)),
+        "overachievement": placement._prep(_model_features_from_hp(overach)),
     }
     a_specs = {
         "baseline": ap,
@@ -330,6 +351,7 @@ def _build_panel() -> pd.DataFrame:
         "window_leaky": nomination._prep_hperp(hperp_df=leaky),
         "window_strict": nomination._prep_hperp(hperp_df=strict),
         "drop_club_importance": nomination._prep_hperp(hperp_df=no_ci),
+        "overachievement": nomination._prep_hperp(hperp_df=overach),
     }
 
     # Second attention proxy (GDELT news volume) — only if the pull has completed (else skipped,

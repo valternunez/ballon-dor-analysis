@@ -672,3 +672,29 @@ co-headline bar (would overstate agreement), so I kept it as a **strengthened po
 the report + site robustness/caveat sections, with the attenuation stated honestly. Pageviews stay the
 primary. Spot-check: GDELT↔pageview Spearman 0.62 (0.58 pool-only), top pool-only players all real —
 disambiguation sound. **No headline change** (pageview baseline Gate A +0.742 / B +0.141 untouched).
+
+### Tournament overachievement as a de-fame robustness control (2026-06-25)
+User asked whether to "weigh" tournaments / reward overachievement (Croatia 2018 carrying to a final as
+non-favourites; Leverkusen-type invincible runs). Chose (with the user): **tournaments only**, as a
+**robustness control**, not baseline and not merit-credit (a team result can't be attributed to one
+player). Implementation mirrors club-importance v3 / `drop_club_importance`:
+- New curated `expected` column in `data/reference/tournament_results.csv` (pre-tournament FIFA
+  ranking/seeding bucket: top favourite 5 … minnow 1). `team_success._load_references` builds an
+  overachievement lookup = max(0, result − expected); `_tournament_overachievement` helper (pure,
+  tested). `pool.build()` computes it pool-wide (nation already known pool-wide via StatsBomb squads);
+  added to `_FEATURE_COLS`.
+- `hperp._candidate_frame` merges `tournament_overachievement` (0-filled), but it is **NOT** in
+  `_REGRESSORS` — baseline H⊥ untouched (verified: model_features Δ = 0). `robustness._overachievement_
+  hperp()` refits with `_REGRESSORS + ["tournament_overachievement"]`; new `overachievement` panel spec
+  (Gate A + B) and caterpillar row; `report.overachievement_case()` exposes the Modrić baseline-vs-
+  controlled delta for the case study.
+- **Result:** Gate A +0.742→+0.657 (survives), Gate B +0.141→+0.085 (fades, as expected for the fragile
+  placement effect), Modrić 2018 +1.357→+0.310. Surfaced in report (robustness sentence + Modrić case)
+  and site (robustness paragraph + Modrić verdict + caterpillar row). Also fixed a stale site sentence
+  ("dropping breakout newcomers" → "shifting the attention window") left from the drop_low_baseline
+  removal.
+**Why sensitivity-only (not baseline):** `expected` is a curated pre-event seed — reproducible from FIFA
+rankings but softer/more subjective than the absolute results, and asymmetric (only positive
+overachievement among deep-run nations). Folding it into the baseline would risk defining away the very
+narrative the study measures. As a stress test it answers the sharp question — "is the nomination bias
+just unmodelled surprise success?" — and the answer is no.

@@ -37,7 +37,8 @@ _FEATURE_COLS = [
     "player", "award_year", "position_family",
     "in_production", "in_team_success", "in_tournament",
     "merit_z", "merit_pc1", "merit_pc2", "minutes",
-    "cl_round", "won_cl", "won_league", "nation", "tournament_result", "nominated",
+    "cl_round", "won_cl", "won_league", "nation", "tournament_result",
+    "tournament_overachievement", "nominated",
 ]
 
 
@@ -133,7 +134,7 @@ def _us_award_year(us: pd.DataFrame) -> pd.DataFrame:
 
 def _qualifying_club_seasons() -> set[tuple[str, str]]:
     """(season_code, reference-club) that reached a CL semifinal or won a domestic league."""
-    cl_lookup, champs, _tourn, _nation = team_success._load_references()
+    cl_lookup, champs, _tourn, _nation, _overach = team_success._load_references()
     cl_sf = {key for key, rnd in cl_lookup.items() if rnd >= 3}
     return cl_sf | set(champs)
 
@@ -181,7 +182,7 @@ def _build_pool() -> pd.DataFrame:
     pool = pool.merge(usa.drop(columns=["player"]), on=["player_key", "award_year"], how="left")
 
     # Club-based team-success for EVERY member (team_success.build() is finisher-only).
-    cl_lookup, champs, tourn, _nation = team_success._load_references()
+    cl_lookup, champs, tourn, _nation, overach = team_success._load_references()
 
     def _club_success(row: pd.Series) -> pd.Series:
         seasons = team_success._season_codes(int(row["award_year"]))
@@ -209,6 +210,12 @@ def _build_pool() -> pd.DataFrame:
     pool["nation"] = pool["player_key"].map(nat)
     pool["tournament_result"] = [
         team_success._tournament_result(n if isinstance(n, str) else None, int(ay), tourn)
+        for n, ay in zip(pool["nation"], pool["award_year"], strict=True)
+    ]
+    # Overachievement vs pre-tournament seed (de-fame robustness control; 0 if no/par run).
+    pool["tournament_overachievement"] = [
+        team_success._tournament_overachievement(
+            n if isinstance(n, str) else None, int(ay), overach)
         for n, ay in zip(pool["nation"], pool["award_year"], strict=True)
     ]
 
