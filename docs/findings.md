@@ -420,3 +420,21 @@ baseline regressor — baseline H⊥ / leaderboard / headline are byte-identical
 **Caveat:** the expectation is a curated pre-tournament seed (softer than the absolute results), and the
 signal is asymmetric (captures positive overachievement among deep-run nations, not favourites who
 flopped) — hence a sensitivity check, never the baseline. The headline holds against it where it counts.
+
+### 2026 Hype-Watch — a forward-looking teaser (NOT a study finding) (2026-06-26)
+Built a standalone, clearly-labelled "Hype-Watch": a provisional attention-beyond-merit ranking for
+2026 ATTACKERS on the completed 2025-26 club season + a pre-World-Cup attention window (ends
+2026-06-10). It is **fully isolated from the study** — the modelled 2018-25 payload is byte-identical
+to HEAD, headline frozen (+0.696/+0.145); 2026 is NOT in SPINE_YEARS and touches neither gate (no 2026
+outcome exists until ~Sept/Oct). De-fame is fit WITHIN the 2026 field on log(baseline) + attacking
+merit + a data-derived team-strength proxy (team npxG+xAG — no fabricated trophies); restricted to an
+above-median baseline (established following) so a breakout's spike from a near-zero base can't
+dominate (the study's low-baseline guard, applied live).
+**Snapshot (as of 10 June 2026, pre-WC):** most *over*-attended — **Olise +0.45** (15G 19A breakout
+buzz at Bayern), João Pedro +0.29, Saka +0.21, Mbappé +0.21, Yildiz/Ferrán +0.20, Pedri +0.17 (2G but
+heavy buzz), Güler +0.15. Most *under*-attended (more output than buzz) — **Harry Kane** (36 goals,
+little noise — the "goals, no hype" profile), **Vinícius**, and notably **Lamine Yamal slightly
+negative**: his 2024 breakout fame is now fully priced into his baseline, so he's no longer
+*over*-attended. The lens working live. **Heavy caveat (surfaced on site):** no winner yet, attackers
+only, team success a proxy, and the World Cup — the biggest narrative driver — is excluded and will
+rewrite it. A teaser, not a result.

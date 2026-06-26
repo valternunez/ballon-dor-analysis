@@ -455,8 +455,29 @@ def _per_year_scoreboard(df: pd.DataFrame) -> list[dict]:
     return out
 
 
+def hype_watch_payload(top_n: int = 12) -> dict | None:
+    """The 2026 Hype-Watch teaser payload (cache-only; None if the teaser hasn't been built).
+
+    Reads the standalone `hype_watch_2026` cache — never triggers the live network pull — so the
+    study's `report` build stays offline-stable. Forward-looking, NOT a modelled year (see
+    `features/hype_watch`).
+    """
+    from .cache import cache_path  # noqa: PLC0415
+    from .features import hype_watch  # noqa: PLC0415
+
+    if not cache_path(hype_watch.CACHE_NAME).exists():
+        return None
+    df = _cache(hype_watch.CACHE_NAME).sort_values("h_perp_2026", ascending=False).head(top_n)
+    rows = [
+        {"player": r["player"], "team": r["team"], "goals": int(r["goals"]),
+         "assists": int(r["assists"]), "h_perp": round(float(r["h_perp_2026"]), 2)}
+        for _, r in df.iterrows()
+    ]
+    return {"snapshot": hype_watch.SNAPSHOT_LABEL, "rows": rows}
+
+
 def _site_payload(stats, lb, cases, panel, scatter, defame, spike, per_year,
-                  effects=None, robust_extra=None) -> dict:
+                  effects=None, robust_extra=None, hype_watch=None) -> dict:
     """Pure assembler: the distilled results the scrollytelling page consumes (offline-testable)."""
     return {
         "headline": {"gateA": stats["gate_a"], "gateB": stats["gate_b"]},
@@ -469,6 +490,7 @@ def _site_payload(stats, lb, cases, panel, scatter, defame, spike, per_year,
         "defame": defame,
         "spike": spike,
         "per_year": per_year,
+        "hype_watch": hype_watch,
     }
 
 
@@ -494,6 +516,7 @@ def export_site_data(path: Path | str = SITE_DATA) -> dict:
         per_year=_per_year_scoreboard(mf),
         effects=effect_sizes(stats),
         robust_extra=robustness_extras(),
+        hype_watch=hype_watch_payload(),
     )
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

@@ -27,7 +27,7 @@ from bdor.data import (
     understat,
     wikidata,
 )
-from bdor.features import pool
+from bdor.features import hype_watch, pool
 from bdor.models import robustness
 
 # (stage name, description, callable). Order = dependency order.
@@ -52,6 +52,8 @@ STAGES = [
     ("models", "Stage-A nomination + Stage-B placement (PyMC/bambi)", models.run),
     ("robustness", "H-perp coefficient-stability panel (frequentist)", robustness.build),
     ("report", "Generate writeup figures (Quarto reads report/ballon-dor.qmd)", report.run),
+    ("hype_watch", "2026 forward-looking Hype-Watch teaser (NOT modelled; isolated)",
+     hype_watch.build),
 ]
 
 # Stages with a working implementation. Listed explicitly so `--list` never has to *call*
@@ -59,6 +61,7 @@ STAGES = [
 IMPLEMENTED = {
     "awards", "understat", "understat_match", "wikidata", "pageviews", "gdelt", "gdelt_bq",
     "fotmob", "statsbomb", "fbref_defense", "features", "pool", "models", "robustness", "report",
+    "hype_watch",
 }
 
 

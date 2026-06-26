@@ -82,7 +82,7 @@ def test_site_payload_has_expected_keys_and_record_shapes():
         robust_extra={"bootstrap_a": {"est": 0.7}},
     )
     assert set(payload) == {"headline", "effects", "robust_extra", "leaderboard", "cases",
-                            "robustness", "scatter", "defame", "spike", "per_year"}
+                            "robustness", "scatter", "defame", "spike", "per_year", "hype_watch"}
     assert payload["headline"]["gateA"]["mean"] == 0.72
     assert isinstance(payload["leaderboard"], list) and isinstance(payload["leaderboard"][0], dict)
 

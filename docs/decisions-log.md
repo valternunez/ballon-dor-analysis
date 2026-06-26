@@ -698,3 +698,26 @@ rankings but softer/more subjective than the absolute results, and asymmetric (o
 overachievement among deep-run nations). Folding it into the baseline would risk defining away the very
 narrative the study measures. As a stress test it answers the sharp question — "is the nomination bias
 just unmodelled surprise success?" — and the answer is no.
+
+### 2026 Hype-Watch teaser — built, isolated, honestly caveated (2026-06-26)
+User asked to add a 2026 teaser even though the award has no outcome yet. Analysis: 2026 can't be a
+modelled year (both gates need the outcome; shortlist ~Aug, ceremony ~Sept/Oct), and waiting for the
+World Cup wouldn't change that — the real moment to add 2026 as an out-of-sample spine year is the
+ceremony. User chose to build a forward-looking teaser now anyway, so the priority was making it honest
+and **non-contaminating**.
+- New standalone `features/hype_watch.py` + `run.py hype_watch` stage + cache-guarded
+  `report.hype_watch_payload` (reads the teaser cache only — never triggers a live pull during the
+  study's `report` build). Separate caches (`understat_2526_seasons`, `pageviews_2026_hypewatch`) so
+  the study's pageview/understat caches are never refreshed. Verified: study `data.js` payload
+  byte-identical to HEAD; headline frozen.
+- **No fabricated data.** Final 2025-26 standings / CL results are past reliable knowledge, so instead
+  of curating trophies we de-fame on a **data-derived team-strength proxy** (team total npxG+xAG from
+  the same Understat pull). Attackers only (no 2025-26 FBref defensive reference). Pre-WC window so we
+  don't ship half a tournament's attention.
+- **Face-validity fix:** the first cut was topped by obscure breakouts (Yan Diomande, baseline 123)
+  whose attention spiked from a tiny base — the thin-baseline artifact. Added an above-median baseline
+  floor ("established following"), which cleaned the field to recognisable names (Olise, João Pedro,
+  Saka, Mbappé, Pedri, Güler) and surfaced the interesting under-attended tail (Kane, Yamal, Vinícius).
+- Site: a visually-distinct `#hypewatch-section` (Live/provisional badge, diverging over/under bars,
+  snapshot date, prominent "not part of the study / WC will rewrite this" caveats). The Quarto report is
+  deliberately left clean (peer-facing study only).

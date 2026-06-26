@@ -190,7 +190,20 @@ for the fragile placement effect), **Modrić 2018 +1.357→+0.310** (most of the
 Croatia's run). Sensitivity-only (curated pre-event seed is softer than absolute results; asymmetric).
 Surfaced in report (robustness + Modrić case) + site (robustness para + Modrić verdict + caterpillar);
 fixed a stale site "breakout newcomers" line. ruff + 110 tests green; `?v=20260625a`.
-**Next/optional:** nothing outstanding.
+**2026 HYPE-WATCH teaser DONE (2026-06-26)** — forward-looking, **fully isolated** site teaser (NOT a
+modelled year; study payload byte-identical to HEAD, headline frozen). New `features/hype_watch.py` +
+`run.py hype_watch` stage + cache-guarded `report.hype_watch_payload`; SEPARATE caches
+(`understat_2526_seasons`, `pageviews_2026_hypewatch`) so the study's caches are never touched.
+Provisional attention-beyond-merit for 2026 **attackers** on the completed 2025-26 club season + a
+**pre-WC** window (ends 2026-06-10); within-field de-fame on log(baseline)+att_merit_z+**team-strength
+proxy** (team npxG+xAG — no fabricated 2025-26 trophies); **above-median baseline floor** drops
+thin-baseline breakouts (the low-baseline artifact, applied live). Snapshot top: **Olise +0.45**, João
+Pedro, Saka, Mbappé, Pedri, Güler; under-attended tail: **Kane** (goals-no-buzz), **Yamal** (2024 fame
+now priced in → slightly negative), Vinícius. Site `#hypewatch-section` = Live/provisional badge,
+diverging over/under bars, snapshot date, prominent "not the study / WC will rewrite this" caveats;
+Quarto report left clean. ruff + 112 tests green; `?v=20260626a`. **The right time to add 2026 as a real
+out-of-sample 8th spine year is after the ~Sept/Oct 2026 ceremony.**
+**Next/optional:** add 2026 as a real spine year post-ceremony (out-of-sample test of the thesis).
 
 ## Where the canon lives
 - `PROJECT_NOTES.md` — the locked methodology (thesis, funnel, merit index, H⊥, GDELT, modeling spec).

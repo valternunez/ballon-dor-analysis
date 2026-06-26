@@ -397,6 +397,30 @@
     document.querySelectorAll(".reveal").forEach(n => io.observe(n));
   }
 
+  // ---- 2026 Hype-Watch (forward-looking teaser; hidden if the teaser cache isn't built) ----
+  function renderHypeWatch() {
+    const sec = el("hypewatch-section"), host = el("hypewatch-card"), hw = D.hype_watch;
+    if (!sec || !host || !hw || !hw.rows || !hw.rows.length) { if (sec) sec.style.display = "none"; return; }
+    const asof = el("hw-asof");
+    if (asof) asof.textContent = "As of " + hw.snapshot + " · pre-World-Cup · attackers only";
+    const rows = hw.rows.slice().sort((a, b) => b.h_perp - a.h_perp);
+    const max = d3.max(rows, d => Math.abs(d.h_perp)) * 1.05 || 1;
+    const F = 48 / max;  // half-track scale: |h_perp|*F % from the centre line
+    host.className = "hw-rows";
+    host.innerHTML = rows.map((r, i) => {
+      const pos = r.h_perp >= 0, w = Math.max(1.5, Math.abs(r.h_perp) * F);
+      const fill = `left:${pos ? 50 : 50 - w}%;width:${w}%;background:${pos ? HOT : COOL}`;
+      const lab = pos ? "more buzz than output" : "more output than buzz";
+      return `<div class="hw-row" data-tip="<b>${esc(r.player)}</b> · ${esc(r.team)}<br>2025-26: ${r.goals} G, ${r.assists} A · ${sgn(r.h_perp)} (${lab})">
+          <div class="hw-rank mono">${i + 1}</div>
+          <div class="hw-id"><div class="hw-name">${esc(r.player)}</div><div class="hw-meta mono">${esc(r.team)} · ${r.goals}G ${r.assists}A</div></div>
+          <div class="hw-track"><div class="hw-zero"></div><div class="hw-fill" style="${fill}"></div></div>
+          <div class="hw-val mono" style="color:${pos ? HOT : COOL}">${sgn(r.h_perp)}</div>
+        </div>`;
+    }).join("");
+    host.querySelectorAll(".hw-row").forEach(r => bindTip(r, r.getAttribute("data-tip")));
+  }
+
   function start() {
     fillHuman();
     renderDefame();
@@ -404,6 +428,7 @@
     renderLeaderboard();
     renderPerYear();
     renderRobust();
+    renderHypeWatch();
     drawScatter();
     initReveal();
     let rt;
