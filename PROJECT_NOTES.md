@@ -348,9 +348,12 @@ The differentiator signal, but the messiest — disambiguation is the whole job.
 ### Repo shape — DECIDED
 - `src/` = cache-first pulls + feature builders + model code (reproducible spine). NOT notebooks —
   pulls are slow/rate-limited/idempotent; need resumability, diffs, testability.
-- `data/raw|cache|processed/` = parquet, gitignored.
-- `notebooks/` = scratch EDA only, disposable, not imported.
-- `*.qmd` = Quarto case studies + results → the blog ("notebooks that ship").
+- `data/raw/` + the bulky/re-pullable `data/cache/` shards = gitignored. But a **frozen analysis
+  snapshot** (the derived model/feature outputs + `*.nc` posteriors + the assembled attention/news
+  signals, ~15 MB) IS committed, so the published site/report/headline reproduce **offline, exactly**
+  from a clone — a re-pull would drift. `data/reference/` (curated CSVs) is committed. See README.
+- `*.qmd` = Quarto case studies + results → the blog ("notebooks that ship"; the repo has no scratch
+  notebooks dir — exploratory work is disposable, logic lives in `src/`).
 - `run.py` / Makefile = orchestrate stages. Cache fitted Bayesian model objects (slow fits).
 - Rule: imported/re-run → module; read by a human → notebook/Quarto. Slow Bayesian fits → script
   that caches model objects; `.qmd` reads results.

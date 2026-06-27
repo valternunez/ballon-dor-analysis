@@ -14,7 +14,6 @@ BASE_DIR: Path = Path(__file__).resolve().parents[2]
 DATA_DIR: Path = BASE_DIR / "data"
 RAW_DIR: Path = DATA_DIR / "raw"
 CACHE_DIR: Path = DATA_DIR / "cache"
-PROCESSED_DIR: Path = DATA_DIR / "processed"
 REFERENCE_DIR: Path = DATA_DIR / "reference"
 
 DOCS_DIR: Path = BASE_DIR / "docs"
@@ -94,5 +93,5 @@ def completed_season(award_year: int) -> str:
 
 def ensure_dirs() -> None:
     """Create the gitignored data subdirectories if missing (idempotent)."""
-    for d in (RAW_DIR, CACHE_DIR, PROCESSED_DIR, REFERENCE_DIR):
+    for d in (RAW_DIR, CACHE_DIR, REFERENCE_DIR):
         d.mkdir(parents=True, exist_ok=True)

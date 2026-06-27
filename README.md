@@ -44,9 +44,11 @@ src/bdor/
   models/              nomination (Gate A), placement (Gate B), robustness panel, _report helpers.
   report.py            Figures + result loaders for the Quarto writeup and the site data export.
 data/reference/        Checked-in canonical data (award_windows.csv, CL/league/tournament results, …).
-data/raw|cache/        Pulled/derived data (gitignored — parquet + raw JSON; rebuild from the pulls).
+data/cache/            Mostly gitignored, BUT a committed ~15 MB frozen snapshot (derived model/feature
+                       outputs + *.nc posteriors + attention/news signals) reproduces the published
+                       results offline. Bulky re-pullable raw caches + raw JSON stay gitignored.
 site/                  Public scrollytelling site (index.html + app.js + styles.css + data.js + vendored libs).
-report/                Quarto writeup (.qmd) + exported figure PNGs.
+report/                Quarto writeup (.qmd); figure PNGs are regenerated build artifacts (gitignored).
 tests/                 Offline unit tests (pure helpers on synthetic data; no network).
 run.py                 Pipeline orchestrator — stages in dependency order.
 ```
@@ -65,23 +67,36 @@ The Bayesian models sample with **nutpie** (numba NUTS) — no C compiler needed
 
 ## Reproduce
 
+### 1. Reproduce the published results — offline, exact (recommended)
+
+A **frozen analysis snapshot** is committed under `data/cache/` (derived model/feature outputs + the
+`*.nc` posteriors + the attention/news signals), so the published figures, `site/data.js`, and the
+headline numbers regenerate from a clone with **no network and no credentials**:
+
 ```bash
-python run.py --list                   # show all stages in dependency order
+python run.py report                   # regenerates report/figures + site/data.js from the snapshot
+QUARTO_PYTHON=.venv/Scripts/python.exe quarto render report/ballon-dor.qmd
+cp report/ballon-dor.html site/report/ballon-dor.html   # refresh the copy the live site links to
+pytest -q && ruff check src tests run.py
+```
+
+This is the only path that yields the **exact** published numbers — re-pulling (below) hits live data
+that has since drifted.
+
+### 2. Full rebuild from source (optional — re-pulls live data, will drift)
+
+```bash
+python run.py --list                   # all stages in dependency order
 python run.py awards understat understat_match wikidata pageviews statsbomb fbref_defense
 python run.py features models robustness report
 ```
 
-Pulls are **slow, rate-limited, and cached** — run once, never re-fetch (the match-level Understat pull
-is ~15k pages). Render the report with the Quarto CLI (a separate install):
-
-```bash
-QUARTO_PYTHON=.venv/Scripts/python.exe quarto render report/ballon-dor.qmd
-cp report/ballon-dor.html site/report/ballon-dor.html   # refresh the copy the live site links to
-```
-
-The public site auto-deploys to GitHub Pages on push (`.github/workflows/pages.yml` publishes `site/`).
-
-Before calling anything done: `pytest -q` green + `ruff check src tests run.py` clean.
+Heavier and partly external: pulls are **slow + rate-limited** (the match-level Understat pull is ~15k
+pages); `fbref_defense` needs **R + worldfootballR** (recent seasons fall back to the committed
+reference CSVs); the GDELT second proxy (`gdelt_bq`) needs a **Google Cloud service-account credential**
+(`GOOGLE_APPLICATION_CREDENTIALS`, free sandbox tier). Add `--refresh`-equivalent re-pulls only if you
+want fresh (drifted) data. The public site auto-deploys to GitHub Pages on push to `site/**`
+(`.github/workflows/pages.yml`).
 
 ## Data sources
 
